@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{7F25DBAB-FA25-47E9-ADDA-727B6408A2E2}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Brain3D</RootNamespace>
+    <AssemblyName>Brain3D</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows</XnaPlatform>
+    <XnaProfile>Reach</XnaProfile>
+    <XnaCrossPlatformGroupID>77ab66a4-9849-4248-9569-27556bde2626</XnaCrossPlatformGroupID>
+    <XnaOutputType>Game</XnaOutputType>
+    <ApplicationIcon>Files\Game.ico</ApplicationIcon>
+    <Thumbnail>Files\GameThumbnail.png</Thumbnail>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\x86\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+    <XnaCompressContent>false</XnaCompressContent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\x86\Release</OutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+    <XnaCompressContent>true</XnaCompressContent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="Microsoft.Xna.Framework.GamerServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="mscorlib" />
+    <Reference Include="Nuclex.Fonts">
+      <HintPath>..\Libraries\Nuclex.Fonts.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.Fonts.Content.TrueTypeImporter">
+      <HintPath>..\Libraries\Nuclex.Fonts.Content.TrueTypeImporter.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.Graphics">
+      <HintPath>..\Libraries\Nuclex.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="Nuclex.UserInterface">
+      <HintPath>..\Libraries\Nuclex.UserInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Net" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Animation\AnimatedElement.cs" />
+    <Compile Include="Animation\AnimatedNeuron.cs" />
+    <Compile Include="Animation\AnimatedReceptor.cs" />
+    <Compile Include="Animation\AnimatedState.cs" />
+    <Compile Include="Animation\AnimatedSynapse.cs" />
+    <Compile Include="Animation\AnimatedVector.cs" />
+    <Compile Include="Animation\Animation.cs" />
+    <Compile Include="Balancing\BalancedElement.cs" />
+    <Compile Include="Balancing\BalancedNeuron.cs" />
+    <Compile Include="Balancing\BalancedReceptor.cs" />
+    <Compile Include="Balancing\BalancedSynapse.cs" />
+    <Compile Include="BorderedDisk.cs" />
+    <Compile Include="Brain\BrainElement.cs" />
+    <Compile Include="Brain\Brain.cs" />
+    <Compile Include="CompositeElement.cs" />
+    <Compile Include="Creation\CreatedElement.cs" />
+    <Compile Include="GraphicsElement.cs" />
+    <Compile Include="Label3D.cs" />
+    <Compile Include="Pipe.cs" />
+    <Compile Include="Sequence\BuiltElement.cs" />
+    <Compile Include="Camera.cs" />
+    <Compile Include="Charting\ChartedNeuron.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Charting\Charting.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Charting\Charting.Designer.cs" />
+    <Compile Include="Circle.cs" />
+    <Compile Include="Global\Comparer.cs" />
+    <Compile Include="Global\Constant.cs" />
+    <Compile Include="Creation\CreatedNeuron.cs" />
+    <Compile Include="Creation\CreatedSynapse.cs" />
+    <Compile Include="Creation\Creation.cs" />
+    <Compile Include="Creation\CreationData.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Creation\CreationFrame.cs" />
+    <Compile Include="Creation\CreationHistory.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Sequence\CreationSequence.cs" />
+    <Compile Include="Disk.cs" />
+    <Compile Include="Balancing\GraphBalancing.cs" />
+    <Compile Include="Display.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Graphics\GraphicsDeviceControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Graphics\GraphicsDeviceService.cs" />
+    <Compile Include="DrawableElement.cs" />
+    <Compile Include="Global\Interfaces.cs" />
+    <Compile Include="Layers\Layer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Brain\Neuron.cs" />
+    <Compile Include="Global\Presentation.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Global\Program.cs" />
+    <Compile Include="Global\Query.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Global\Query.Designer.cs">
+      <DependentUpon>Query.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Sequence\QuerySequence.cs" />
+    <Compile Include="Brain\Receptor.cs" />
+    <Compile Include="Sequence\ResultSequence.cs" />
+    <Compile Include="Ring.cs" />
+    <Compile Include="Sequence\Sequence.cs" />
+    <Compile Include="Sequence\SequenceElement.cs" />
+    <Compile Include="Sequence\SequenceNeuron.cs" />
+    <Compile Include="Sequence\SequenceReceptor.cs" />
+    <Compile Include="Animation\ShiftedNeuron.cs" />
+    <Compile Include="Graphics\ServiceContainer.cs" />
+    <Compile Include="Global\Simulation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Global\Simulation.Designer.cs">
+      <DependentUpon>Simulation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Signal.cs" />
+    <Compile Include="Spherical.cs" />
+    <Compile Include="Layers\StateBar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Global\Structures.cs" />
+    <Compile Include="StateDisk.cs" />
+    <Compile Include="Brain\Synapse.cs" />
+    <Compile Include="Text3D.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Files\config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\data.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Game.ico" />
+    <Content Include="Files\GameThumbnail.png">
+      <XnaPlatformSpecific>true</XnaPlatformSpecific>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Brain3DContent\Brain3DContent.contentproj">
+      <Name>Brain3DContent</Name>
+      <XnaReferenceType>Content</XnaReferenceType>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 4.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Charting\Charting.resx" />
+    <EmbeddedResource Include="Global\Simulation.resx">
+      <DependentUpon>Simulation.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <!--
+      To modify your build process, add your task inside one of the targets below and uncomment it. 
+      Other similar extension points exist, see Microsoft.Common.targets.
+      <Target Name="BeforeBuild">
+      </Target>
+      <Target Name="AfterBuild">
+      </Target>
+    -->
+</Project>

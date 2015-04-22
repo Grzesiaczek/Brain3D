@@ -1,0 +1,1148 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Nuclex.Fonts.Content.TrueTypeImporter.4.0.0.0.Fakes</name>
+    </assembly>
+    <members>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimCygonRectanglePacker">
+            <summary>Shim type of Nuclex.Fonts.Content.CygonRectanglePacker</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimCygonRectanglePacker.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimCygonRectanglePacker.#ctor(Nuclex.Fonts.Content.CygonRectanglePacker)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimCygonRectanglePacker.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimCygonRectanglePacker.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimCygonRectanglePacker.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimCygonRectanglePacker.ConstructorInt32Int32">
+            <summary>Sets the shim of CygonRectanglePacker.CygonRectanglePacker(Int32 packingAreaWidth, Int32 packingAreaHeight)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimCygonRectanglePacker.TryPackInt32Int32PointOut">
+            <summary>Sets the shim of CygonRectanglePacker.TryPack(Int32 rectangleWidth, Int32 rectangleHeight, Point&amp; placement)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimCygonRectanglePacker.integrateRectangleInt32Int32Int32">
+            <summary>Sets the shim of CygonRectanglePacker.integrateRectangle(Int32 left, Int32 width, Int32 bottom)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimCygonRectanglePacker.tryFindBestPlacementInt32Int32PointOut">
+            <summary>Sets the shim of CygonRectanglePacker.tryFindBestPlacement(Int32 rectangleWidth, Int32 rectangleHeight, Point&amp; placement)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimCygonRectanglePacker.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimCygonRectanglePacker.AllInstances.TryPackInt32Int32PointOut">
+            <summary>Sets the shim of CygonRectanglePacker.TryPack(Int32 rectangleWidth, Int32 rectangleHeight, Point&amp; placement)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimCygonRectanglePacker.AllInstances.integrateRectangleInt32Int32Int32">
+            <summary>Sets the shim of CygonRectanglePacker.integrateRectangle(Int32 left, Int32 width, Int32 bottom)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimCygonRectanglePacker.AllInstances.tryFindBestPlacementInt32Int32PointOut">
+            <summary>Sets the shim of CygonRectanglePacker.tryFindBestPlacement(Int32 rectangleWidth, Int32 rectangleHeight, Point&amp; placement)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor">
+            <summary>Shim type of Nuclex.Fonts.Content.FreeTypeFontProcessor</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.#ctor(Nuclex.Fonts.Content.FreeTypeFontProcessor)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.Bind(System.IDisposable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.ConstructorFontDescriptionFontHinter">
+            <summary>Sets the shim of FreeTypeFontProcessor.FreeTypeFontProcessor(FontDescription fontDescription, FontHinter hinter)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.Dispose">
+            <summary>Sets the shim of FreeTypeFontProcessor.Dispose()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.DisposeBoolean">
+            <summary>Sets the shim of FreeTypeFontProcessor.Dispose(Boolean )</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.GetKerningCharChar">
+            <summary>Sets the shim of FreeTypeFontProcessor.GetKerning(Char leftCharacter, Char rightCharacter)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.LineHeightGet">
+            <summary>Sets the shim of FreeTypeFontProcessor.get_LineHeight()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.LoadCharacterChar">
+            <summary>Sets the shim of FreeTypeFontProcessor.LoadCharacter(Char character)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.MeasureCharacterChar">
+            <summary>Sets the shim of FreeTypeFontProcessor.MeasureCharacter(Char character)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor._FreeTypeFontProcessor">
+            <summary>Sets the shim of FreeTypeFontProcessor.!FreeTypeFontProcessor()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor._FreeTypeFontProcessor01">
+            <summary>Sets the shim of FreeTypeFontProcessor.~FreeTypeFontProcessor()</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.AllInstances.Dispose">
+            <summary>Sets the shim of FreeTypeFontProcessor.Dispose()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.AllInstances.DisposeBoolean">
+            <summary>Sets the shim of FreeTypeFontProcessor.Dispose(Boolean )</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.AllInstances.GetKerningCharChar">
+            <summary>Sets the shim of FreeTypeFontProcessor.GetKerning(Char leftCharacter, Char rightCharacter)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.AllInstances.LineHeightGet">
+            <summary>Sets the shim of FreeTypeFontProcessor.get_LineHeight()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.AllInstances.LoadCharacterChar">
+            <summary>Sets the shim of FreeTypeFontProcessor.LoadCharacter(Char character)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.AllInstances.MeasureCharacterChar">
+            <summary>Sets the shim of FreeTypeFontProcessor.MeasureCharacter(Char character)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.AllInstances._FreeTypeFontProcessor">
+            <summary>Sets the shim of FreeTypeFontProcessor.!FreeTypeFontProcessor()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontProcessor.AllInstances._FreeTypeFontProcessor01">
+            <summary>Sets the shim of FreeTypeFontProcessor.~FreeTypeFontProcessor()</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontRasterizer">
+            <summary>Shim type of Nuclex.Fonts.Content.FreeTypeFontRasterizer</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontRasterizer.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontRasterizer.#ctor(Nuclex.Fonts.Content.FreeTypeFontRasterizer)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontRasterizer.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontRasterizer.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontRasterizer.Bind(System.IDisposable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontRasterizer.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontRasterizer.ConstructorFontDescriptionFontHinter">
+            <summary>Sets the shim of FreeTypeFontRasterizer.FreeTypeFontRasterizer(FontDescription fontDescription, FontHinter hinter)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontRasterizer.GetAdvancementChar">
+            <summary>Sets the shim of FreeTypeFontRasterizer.GetAdvancement(Char character)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontRasterizer.GetOffsetCharFontOrigin">
+            <summary>Sets the shim of FreeTypeFontRasterizer.GetOffset(Char character, FontOrigin origin)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontRasterizer.RasterizeChar">
+            <summary>Sets the shim of FreeTypeFontRasterizer.Rasterize(Char character)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontRasterizer.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontRasterizer.AllInstances.GetAdvancementChar">
+            <summary>Sets the shim of FreeTypeFontRasterizer.GetAdvancement(Char character)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontRasterizer.AllInstances.GetOffsetCharFontOrigin">
+            <summary>Sets the shim of FreeTypeFontRasterizer.GetOffset(Char character, FontOrigin origin)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontRasterizer.AllInstances.RasterizeChar">
+            <summary>Sets the shim of FreeTypeFontRasterizer.Rasterize(Char character)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontTessellator">
+            <summary>Shim type of Nuclex.Fonts.Content.FreeTypeFontTessellator</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontTessellator.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontTessellator.#ctor(Nuclex.Fonts.Content.FreeTypeFontTessellator)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontTessellator.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontTessellator.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontTessellator.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontTessellator.Constructor">
+            <summary>Sets the shim of FreeTypeFontTessellator.FreeTypeFontTessellator()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontTessellator.TessellateVectorFontCharacterContent">
+            <summary>Sets the shim of FreeTypeFontTessellator.Tessellate(VectorFontCharacterContent characterContent)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontTessellator.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontVectorizer">
+            <summary>Shim type of Nuclex.Fonts.Content.FreeTypeFontVectorizer</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontVectorizer.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontVectorizer.#ctor(Nuclex.Fonts.Content.FreeTypeFontVectorizer)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontVectorizer.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontVectorizer.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontVectorizer.Bind(System.IDisposable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontVectorizer.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontVectorizer.ConstructorFontDescription">
+            <summary>Sets the shim of FreeTypeFontVectorizer.FreeTypeFontVectorizer(FontDescription fontDescription)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontVectorizer.GetAdvancementChar">
+            <summary>Sets the shim of FreeTypeFontVectorizer.GetAdvancement(Char character)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontVectorizer.VectorizeChar">
+            <summary>Sets the shim of FreeTypeFontVectorizer.Vectorize(Char character)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontVectorizer.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontVectorizer.AllInstances.GetAdvancementChar">
+            <summary>Sets the shim of FreeTypeFontVectorizer.GetAdvancement(Char character)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeFontVectorizer.AllInstances.VectorizeChar">
+            <summary>Sets the shim of FreeTypeFontVectorizer.Vectorize(Char character)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager">
+            <summary>Shim type of Nuclex.Fonts.Content.FreeTypeManager</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.#ctor(Nuclex.Fonts.Content.FreeTypeManager)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.Bind(System.IDisposable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.Constructor">
+            <summary>Sets the shim of FreeTypeManager.FreeTypeManager()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.Dispose">
+            <summary>Sets the shim of FreeTypeManager.Dispose()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.DisposeBoolean">
+            <summary>Sets the shim of FreeTypeManager.Dispose(Boolean )</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.StaticConstructor">
+            <summary>Sets the shim of FreeTypeManager.FreeTypeManager()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager._FreeTypeManager">
+            <summary>Sets the shim of FreeTypeManager.~FreeTypeManager()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.initializeFreeType">
+            <summary>Sets the shim of FreeTypeManager.initializeFreeType()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.shutdownFreeType">
+            <summary>Sets the shim of FreeTypeManager.shutdownFreeType()</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.AllInstances.Dispose">
+            <summary>Sets the shim of FreeTypeManager.Dispose()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.AllInstances.DisposeBoolean">
+            <summary>Sets the shim of FreeTypeManager.Dispose(Boolean )</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimFreeTypeManager.AllInstances._FreeTypeManager">
+            <summary>Sets the shim of FreeTypeManager.~FreeTypeManager()</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor">
+            <summary>Shim type of Nuclex.Fonts.Content.NuclexSpriteFontDescriptionProcessor</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.#ctor(Nuclex.Fonts.Content.NuclexSpriteFontDescriptionProcessor)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.Bind(Microsoft.Xna.Framework.Content.Pipeline.IContentProcessor)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.Constructor">
+            <summary>Sets the shim of NuclexSpriteFontDescriptionProcessor.NuclexSpriteFontDescriptionProcessor()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.HinterGet">
+            <summary>Sets the shim of NuclexSpriteFontDescriptionProcessor.get_Hinter()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.HinterSetFontHinter">
+            <summary>Sets the shim of NuclexSpriteFontDescriptionProcessor.set_Hinter(FontHinter value)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.OriginGet">
+            <summary>Sets the shim of NuclexSpriteFontDescriptionProcessor.get_Origin()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.OriginSetFontOrigin">
+            <summary>Sets the shim of NuclexSpriteFontDescriptionProcessor.set_Origin(FontOrigin value)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.ProcessFontDescriptionContentProcessorContext">
+            <summary>Sets the shim of NuclexSpriteFontDescriptionProcessor.Process(FontDescription input, ContentProcessorContext context)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.determineOptimalTextureSizeFontDescriptionFreeTypeFontRasterizer">
+            <summary>Sets the shim of NuclexSpriteFontDescriptionProcessor.determineOptimalTextureSize(FontDescription input, FreeTypeFontRasterizer rasterizer)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.AllInstances.HinterGet">
+            <summary>Sets the shim of NuclexSpriteFontDescriptionProcessor.get_Hinter()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.AllInstances.HinterSetFontHinter">
+            <summary>Sets the shim of NuclexSpriteFontDescriptionProcessor.set_Hinter(FontHinter value)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.AllInstances.OriginGet">
+            <summary>Sets the shim of NuclexSpriteFontDescriptionProcessor.get_Origin()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.AllInstances.OriginSetFontOrigin">
+            <summary>Sets the shim of NuclexSpriteFontDescriptionProcessor.set_Origin(FontOrigin value)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.AllInstances.ProcessFontDescriptionContentProcessorContext">
+            <summary>Sets the shim of NuclexSpriteFontDescriptionProcessor.Process(FontDescription input, ContentProcessorContext context)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexSpriteFontDescriptionProcessor.AllInstances.determineOptimalTextureSizeFontDescriptionFreeTypeFontRasterizer">
+            <summary>Sets the shim of NuclexSpriteFontDescriptionProcessor.determineOptimalTextureSize(FontDescription input, FreeTypeFontRasterizer rasterizer)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimNuclexVectorFontDescriptionProcessor">
+            <summary>Shim type of Nuclex.Fonts.Content.NuclexVectorFontDescriptionProcessor</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimNuclexVectorFontDescriptionProcessor.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimNuclexVectorFontDescriptionProcessor.#ctor(Nuclex.Fonts.Content.NuclexVectorFontDescriptionProcessor)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimNuclexVectorFontDescriptionProcessor.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimNuclexVectorFontDescriptionProcessor.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimNuclexVectorFontDescriptionProcessor.Bind(Microsoft.Xna.Framework.Content.Pipeline.IContentProcessor)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexVectorFontDescriptionProcessor.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexVectorFontDescriptionProcessor.Constructor">
+            <summary>Sets the shim of NuclexVectorFontDescriptionProcessor.NuclexVectorFontDescriptionProcessor()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexVectorFontDescriptionProcessor.ProcessFontDescriptionContentProcessorContext">
+            <summary>Sets the shim of NuclexVectorFontDescriptionProcessor.Process(FontDescription input, ContentProcessorContext context)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimNuclexVectorFontDescriptionProcessor.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimNuclexVectorFontDescriptionProcessor.AllInstances.ProcessFontDescriptionContentProcessorContext">
+            <summary>Sets the shim of NuclexVectorFontDescriptionProcessor.Process(FontDescription input, ContentProcessorContext context)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimOutOfSpaceException">
+            <summary>Shim type of Nuclex.Fonts.Content.OutOfSpaceException</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimOutOfSpaceException.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimOutOfSpaceException.#ctor(Nuclex.Fonts.Content.OutOfSpaceException)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimOutOfSpaceException.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimOutOfSpaceException.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimOutOfSpaceException.Bind(System.Runtime.Serialization.ISerializable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimOutOfSpaceException.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimOutOfSpaceException.Constructor">
+            <summary>Sets the shim of OutOfSpaceException.OutOfSpaceException()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimOutOfSpaceException.ConstructorSerializationInfoStreamingContext">
+            <summary>Sets the shim of OutOfSpaceException.OutOfSpaceException(SerializationInfo info, StreamingContext context)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimOutOfSpaceException.ConstructorString">
+            <summary>Sets the shim of OutOfSpaceException.OutOfSpaceException(String message)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimOutOfSpaceException.ConstructorStringException">
+            <summary>Sets the shim of OutOfSpaceException.OutOfSpaceException(String message, Exception inner)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimOutOfSpaceException.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimRectanglePacker">
+            <summary>Shim type of Nuclex.Fonts.Content.RectanglePacker</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimRectanglePacker.#ctor(Nuclex.Fonts.Content.RectanglePacker)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimRectanglePacker.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimRectanglePacker.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimRectanglePacker.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimRectanglePacker.ConstructorInt32Int32">
+            <summary>Sets the shim of RectanglePacker.RectanglePacker(Int32 packingAreaWidth, Int32 packingAreaHeight)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimRectanglePacker.PackInt32Int32">
+            <summary>Sets the shim of RectanglePacker.Pack(Int32 rectangleWidth, Int32 rectangleHeight)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimRectanglePacker.PackingAreaHeightGet">
+            <summary>Sets the shim of RectanglePacker.get_PackingAreaHeight()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimRectanglePacker.PackingAreaWidthGet">
+            <summary>Sets the shim of RectanglePacker.get_PackingAreaWidth()</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimRectanglePacker.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimRectanglePacker.AllInstances.PackInt32Int32">
+            <summary>Sets the shim of RectanglePacker.Pack(Int32 rectangleWidth, Int32 rectangleHeight)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimRectanglePacker.AllInstances.PackingAreaHeightGet">
+            <summary>Sets the shim of RectanglePacker.get_PackingAreaHeight()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimRectanglePacker.AllInstances.PackingAreaWidthGet">
+            <summary>Sets the shim of RectanglePacker.get_PackingAreaWidth()</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent">
+            <summary>Shim type of Nuclex.Fonts.Content.SpriteFontContent</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.#ctor(Nuclex.Fonts.Content.SpriteFontContent)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.CharacterMapGet">
+            <summary>Sets the shim of SpriteFontContent.get_CharacterMap()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.Constructor">
+            <summary>Sets the shim of SpriteFontContent.SpriteFontContent()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.CroppingGet">
+            <summary>Sets the shim of SpriteFontContent.get_Cropping()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.DefaultCharacterGet">
+            <summary>Sets the shim of SpriteFontContent.get_DefaultCharacter()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.DefaultCharacterSetNullableOfChar">
+            <summary>Sets the shim of SpriteFontContent.set_DefaultCharacter(Nullable`1&lt;Char&gt; value)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.GlyphsGet">
+            <summary>Sets the shim of SpriteFontContent.get_Glyphs()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.KerningGet">
+            <summary>Sets the shim of SpriteFontContent.get_Kerning()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.LineSpacingGet">
+            <summary>Sets the shim of SpriteFontContent.get_LineSpacing()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.LineSpacingSetInt32">
+            <summary>Sets the shim of SpriteFontContent.set_LineSpacing(Int32 value)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.SpacingGet">
+            <summary>Sets the shim of SpriteFontContent.get_Spacing()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.SpacingSetSingle">
+            <summary>Sets the shim of SpriteFontContent.set_Spacing(Single value)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.TextureGet">
+            <summary>Sets the shim of SpriteFontContent.get_Texture()</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.AllInstances.CharacterMapGet">
+            <summary>Sets the shim of SpriteFontContent.get_CharacterMap()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.AllInstances.CroppingGet">
+            <summary>Sets the shim of SpriteFontContent.get_Cropping()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.AllInstances.DefaultCharacterGet">
+            <summary>Sets the shim of SpriteFontContent.get_DefaultCharacter()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.AllInstances.DefaultCharacterSetNullableOfChar">
+            <summary>Sets the shim of SpriteFontContent.set_DefaultCharacter(Nullable`1&lt;Char&gt; value)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.AllInstances.GlyphsGet">
+            <summary>Sets the shim of SpriteFontContent.get_Glyphs()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.AllInstances.KerningGet">
+            <summary>Sets the shim of SpriteFontContent.get_Kerning()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.AllInstances.LineSpacingGet">
+            <summary>Sets the shim of SpriteFontContent.get_LineSpacing()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.AllInstances.LineSpacingSetInt32">
+            <summary>Sets the shim of SpriteFontContent.set_LineSpacing(Int32 value)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.AllInstances.SpacingGet">
+            <summary>Sets the shim of SpriteFontContent.get_Spacing()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.AllInstances.SpacingSetSingle">
+            <summary>Sets the shim of SpriteFontContent.set_Spacing(Single value)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontContent.AllInstances.TextureGet">
+            <summary>Sets the shim of SpriteFontContent.get_Texture()</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimSpriteFontWriter">
+            <summary>Shim type of Nuclex.Fonts.Content.SpriteFontWriter</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimSpriteFontWriter.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimSpriteFontWriter.#ctor(Nuclex.Fonts.Content.SpriteFontWriter)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimSpriteFontWriter.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimSpriteFontWriter.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontWriter.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontWriter.Constructor">
+            <summary>Sets the shim of SpriteFontWriter.SpriteFontWriter()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontWriter.GetRuntimeReaderTargetPlatform">
+            <summary>Sets the shim of SpriteFontWriter.GetRuntimeReader(TargetPlatform targetPlatform)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontWriter.GetRuntimeTypeTargetPlatform">
+            <summary>Sets the shim of SpriteFontWriter.GetRuntimeType(TargetPlatform targetPlatform)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontWriter.WriteContentWriterSpriteFontContent">
+            <summary>Sets the shim of SpriteFontWriter.Write(ContentWriter output, SpriteFontContent fontContent)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimSpriteFontWriter.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontWriter.AllInstances.GetRuntimeReaderTargetPlatform">
+            <summary>Sets the shim of SpriteFontWriter.GetRuntimeReader(TargetPlatform targetPlatform)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontWriter.AllInstances.GetRuntimeTypeTargetPlatform">
+            <summary>Sets the shim of SpriteFontWriter.GetRuntimeType(TargetPlatform targetPlatform)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimSpriteFontWriter.AllInstances.WriteContentWriterSpriteFontContent">
+            <summary>Sets the shim of SpriteFontWriter.Write(ContentWriter output, SpriteFontContent fontContent)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent">
+            <summary>Shim type of Nuclex.Fonts.Content.VectorFontCharacterContent</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.#ctor(Nuclex.Fonts.Content.VectorFontCharacterContent)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.AdvancementGet">
+            <summary>Sets the shim of VectorFontCharacterContent.get_Advancement()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.AdvancementSetVector2">
+            <summary>Sets the shim of VectorFontCharacterContent.set_Advancement(Vector2 value)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.Constructor">
+            <summary>Sets the shim of VectorFontCharacterContent.VectorFontCharacterContent()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.FacesGet">
+            <summary>Sets the shim of VectorFontCharacterContent.get_Faces()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.OutlinesGet">
+            <summary>Sets the shim of VectorFontCharacterContent.get_Outlines()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.VerticesGet">
+            <summary>Sets the shim of VectorFontCharacterContent.get_Vertices()</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.AllInstances.AdvancementGet">
+            <summary>Sets the shim of VectorFontCharacterContent.get_Advancement()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.AllInstances.AdvancementSetVector2">
+            <summary>Sets the shim of VectorFontCharacterContent.set_Advancement(Vector2 value)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.AllInstances.FacesGet">
+            <summary>Sets the shim of VectorFontCharacterContent.get_Faces()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.AllInstances.OutlinesGet">
+            <summary>Sets the shim of VectorFontCharacterContent.get_Outlines()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.AllInstances.VerticesGet">
+            <summary>Sets the shim of VectorFontCharacterContent.get_Vertices()</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.ShimFace">
+            <summary>Shim type of Nuclex.Fonts.Content.VectorFontCharacterContent+Face</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.ShimFace.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.ShimFace.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.ShimFace.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.ShimFace.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.ShimFace.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.ShimOutline">
+            <summary>Shim type of Nuclex.Fonts.Content.VectorFontCharacterContent+Outline</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.ShimOutline.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.ShimOutline.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.ShimOutline.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.ShimOutline.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterContent.ShimOutline.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterWriter">
+            <summary>Shim type of Nuclex.Fonts.Content.VectorFontCharacterWriter</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterWriter.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterWriter.#ctor(Nuclex.Fonts.Content.VectorFontCharacterWriter)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterWriter.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterWriter.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterWriter.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterWriter.Constructor">
+            <summary>Sets the shim of VectorFontCharacterWriter.VectorFontCharacterWriter()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterWriter.GetRuntimeReaderTargetPlatform">
+            <summary>Sets the shim of VectorFontCharacterWriter.GetRuntimeReader(TargetPlatform targetPlatform)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterWriter.GetRuntimeTypeTargetPlatform">
+            <summary>Sets the shim of VectorFontCharacterWriter.GetRuntimeType(TargetPlatform targetPlatform)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterWriter.WriteContentWriterVectorFontCharacterContent">
+            <summary>Sets the shim of VectorFontCharacterWriter.Write(ContentWriter output, VectorFontCharacterContent characterContent)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterWriter.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterWriter.AllInstances.GetRuntimeReaderTargetPlatform">
+            <summary>Sets the shim of VectorFontCharacterWriter.GetRuntimeReader(TargetPlatform targetPlatform)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterWriter.AllInstances.GetRuntimeTypeTargetPlatform">
+            <summary>Sets the shim of VectorFontCharacterWriter.GetRuntimeType(TargetPlatform targetPlatform)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontCharacterWriter.AllInstances.WriteContentWriterVectorFontCharacterContent">
+            <summary>Sets the shim of VectorFontCharacterWriter.Write(ContentWriter output, VectorFontCharacterContent characterContent)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent">
+            <summary>Shim type of Nuclex.Fonts.Content.VectorFontContent</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.#ctor(Nuclex.Fonts.Content.VectorFontContent)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.CharacterMapGet">
+            <summary>Sets the shim of VectorFontContent.get_CharacterMap()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.CharactersGet">
+            <summary>Sets the shim of VectorFontContent.get_Characters()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.Constructor">
+            <summary>Sets the shim of VectorFontContent.VectorFontContent()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.KerningTableGet">
+            <summary>Sets the shim of VectorFontContent.get_KerningTable()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.LineHeightGet">
+            <summary>Sets the shim of VectorFontContent.get_LineHeight()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.LineHeightSetSingle">
+            <summary>Sets the shim of VectorFontContent.set_LineHeight(Single value)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.AllInstances.CharacterMapGet">
+            <summary>Sets the shim of VectorFontContent.get_CharacterMap()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.AllInstances.CharactersGet">
+            <summary>Sets the shim of VectorFontContent.get_Characters()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.AllInstances.KerningTableGet">
+            <summary>Sets the shim of VectorFontContent.get_KerningTable()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.AllInstances.LineHeightGet">
+            <summary>Sets the shim of VectorFontContent.get_LineHeight()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.AllInstances.LineHeightSetSingle">
+            <summary>Sets the shim of VectorFontContent.set_LineHeight(Single value)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.ShimKerningPair">
+            <summary>Shim type of Nuclex.Fonts.Content.VectorFontContent+KerningPair</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.ShimKerningPair.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.ShimKerningPair.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.ShimKerningPair.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.ShimKerningPair.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimVectorFontContent.ShimKerningPair.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimVectorFontWriter">
+            <summary>Shim type of Nuclex.Fonts.Content.VectorFontWriter</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontWriter.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontWriter.#ctor(Nuclex.Fonts.Content.VectorFontWriter)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontWriter.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.ShimVectorFontWriter.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontWriter.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontWriter.Constructor">
+            <summary>Sets the shim of VectorFontWriter.VectorFontWriter()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontWriter.GetRuntimeReaderTargetPlatform">
+            <summary>Sets the shim of VectorFontWriter.GetRuntimeReader(TargetPlatform targetPlatform)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontWriter.GetRuntimeTypeTargetPlatform">
+            <summary>Sets the shim of VectorFontWriter.GetRuntimeType(TargetPlatform targetPlatform)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontWriter.WriteContentWriterVectorFontContent">
+            <summary>Sets the shim of VectorFontWriter.Write(ContentWriter output, VectorFontContent fontContent)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.ShimVectorFontWriter.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontWriter.AllInstances.GetRuntimeReaderTargetPlatform">
+            <summary>Sets the shim of VectorFontWriter.GetRuntimeReader(TargetPlatform targetPlatform)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontWriter.AllInstances.GetRuntimeTypeTargetPlatform">
+            <summary>Sets the shim of VectorFontWriter.GetRuntimeType(TargetPlatform targetPlatform)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.ShimVectorFontWriter.AllInstances.WriteContentWriterVectorFontContent">
+            <summary>Sets the shim of VectorFontWriter.Write(ContentWriter output, VectorFontContent fontContent)</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.StubCygonRectanglePacker">
+            <summary>Stub type of Nuclex.Fonts.Content.CygonRectanglePacker</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubCygonRectanglePacker.#ctor(System.Int32,System.Int32)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubCygonRectanglePacker.InitializeStub">
+            <summary>Initializes a new instance of type StubCygonRectanglePacker</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubCygonRectanglePacker.Pack(System.Int32,System.Int32)">
+            <summary>Sets the stub of RectanglePacker.Pack(Int32 rectangleWidth, Int32 rectangleHeight)</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubCygonRectanglePacker.PackInt32Int32">
+            <summary>Sets the stub of RectanglePacker.Pack(Int32 rectangleWidth, Int32 rectangleHeight)</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubCygonRectanglePacker.TryPack(System.Int32,System.Int32,Microsoft.Xna.Framework.Point@)">
+            <summary>Sets the stub of CygonRectanglePacker.TryPack(Int32 rectangleWidth, Int32 rectangleHeight, Point&amp; placement)</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubCygonRectanglePacker.TryPackInt32Int32PointOut">
+            <summary>Sets the stub of CygonRectanglePacker.TryPack(Int32 rectangleWidth, Int32 rectangleHeight, Point&amp; placement)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubCygonRectanglePacker.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubCygonRectanglePacker.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubCygonRectanglePacker.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontProcessor">
+            <summary>Stub type of Nuclex.Fonts.Content.FreeTypeFontProcessor</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontProcessor.#ctor(Microsoft.Xna.Framework.Content.Pipeline.Graphics.FontDescription,Nuclex.Fonts.Content.FontHinter)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontProcessor.Dispose(System.Boolean)">
+            <summary>Sets the stub of FreeTypeFontProcessor.Dispose(Boolean )</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontProcessor.DisposeBoolean">
+            <summary>Sets the stub of FreeTypeFontProcessor.Dispose(Boolean )</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontProcessor.InitializeStub">
+            <summary>Initializes a new instance of type StubFreeTypeFontProcessor</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontProcessor.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontProcessor.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontProcessor.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontRasterizer">
+            <summary>Stub type of Nuclex.Fonts.Content.FreeTypeFontRasterizer</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontRasterizer.#ctor(Microsoft.Xna.Framework.Content.Pipeline.Graphics.FontDescription,Nuclex.Fonts.Content.FontHinter)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontRasterizer.Dispose(System.Boolean)">
+            <summary>Sets the stub of FreeTypeFontProcessor.Dispose(Boolean )</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontRasterizer.DisposeBoolean">
+            <summary>Sets the stub of FreeTypeFontProcessor.Dispose(Boolean )</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontRasterizer.InitializeStub">
+            <summary>Initializes a new instance of type StubFreeTypeFontRasterizer</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontRasterizer.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontRasterizer.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontRasterizer.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontTessellator">
+            <summary>Stub type of Nuclex.Fonts.Content.FreeTypeFontTessellator</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontTessellator.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontTessellator.InitializeStub">
+            <summary>Initializes a new instance of type StubFreeTypeFontTessellator</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontTessellator.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontTessellator.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontTessellator.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontVectorizer">
+            <summary>Stub type of Nuclex.Fonts.Content.FreeTypeFontVectorizer</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontVectorizer.#ctor(Microsoft.Xna.Framework.Content.Pipeline.Graphics.FontDescription)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontVectorizer.Dispose(System.Boolean)">
+            <summary>Sets the stub of FreeTypeFontProcessor.Dispose(Boolean )</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontVectorizer.DisposeBoolean">
+            <summary>Sets the stub of FreeTypeFontProcessor.Dispose(Boolean )</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontVectorizer.InitializeStub">
+            <summary>Initializes a new instance of type StubFreeTypeFontVectorizer</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontVectorizer.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontVectorizer.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubFreeTypeFontVectorizer.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.StubFreeTypeManager">
+            <summary>Stub type of Nuclex.Fonts.Content.FreeTypeManager</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubFreeTypeManager.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubFreeTypeManager.Dispose(System.Boolean)">
+            <summary>Sets the stub of FreeTypeManager.Dispose(Boolean )</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubFreeTypeManager.DisposeBoolean">
+            <summary>Sets the stub of FreeTypeManager.Dispose(Boolean )</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubFreeTypeManager.InitializeStub">
+            <summary>Initializes a new instance of type StubFreeTypeManager</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubFreeTypeManager.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubFreeTypeManager.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubFreeTypeManager.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.StubNuclexSpriteFontDescriptionProcessor">
+            <summary>Stub type of Nuclex.Fonts.Content.NuclexSpriteFontDescriptionProcessor</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubNuclexSpriteFontDescriptionProcessor.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubNuclexSpriteFontDescriptionProcessor.InitializeStub">
+            <summary>Initializes a new instance of type StubNuclexSpriteFontDescriptionProcessor</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubNuclexSpriteFontDescriptionProcessor.Process(Microsoft.Xna.Framework.Content.Pipeline.Graphics.FontDescription,Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext)">
+            <summary>Sets the stub of NuclexSpriteFontDescriptionProcessor.Process(FontDescription input, ContentProcessorContext context)</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubNuclexSpriteFontDescriptionProcessor.ProcessFontDescriptionContentProcessorContext">
+            <summary>Sets the stub of NuclexSpriteFontDescriptionProcessor.Process(FontDescription input, ContentProcessorContext context)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubNuclexSpriteFontDescriptionProcessor.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubNuclexSpriteFontDescriptionProcessor.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubNuclexSpriteFontDescriptionProcessor.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.StubNuclexVectorFontDescriptionProcessor">
+            <summary>Stub type of Nuclex.Fonts.Content.NuclexVectorFontDescriptionProcessor</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubNuclexVectorFontDescriptionProcessor.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubNuclexVectorFontDescriptionProcessor.InitializeStub">
+            <summary>Initializes a new instance of type StubNuclexVectorFontDescriptionProcessor</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubNuclexVectorFontDescriptionProcessor.Process(Microsoft.Xna.Framework.Content.Pipeline.Graphics.FontDescription,Microsoft.Xna.Framework.Content.Pipeline.ContentProcessorContext)">
+            <summary>Sets the stub of NuclexVectorFontDescriptionProcessor.Process(FontDescription input, ContentProcessorContext context)</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubNuclexVectorFontDescriptionProcessor.ProcessFontDescriptionContentProcessorContext">
+            <summary>Sets the stub of NuclexVectorFontDescriptionProcessor.Process(FontDescription input, ContentProcessorContext context)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubNuclexVectorFontDescriptionProcessor.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubNuclexVectorFontDescriptionProcessor.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubNuclexVectorFontDescriptionProcessor.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException">
+            <summary>Stub type of Nuclex.Fonts.Content.OutOfSpaceException</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.#ctor(System.String)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.#ctor(System.String,System.Exception)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.AttachBackingFieldToHelpLink">
+            <summary>Attaches delegates to emulate StubOutOfSpaceException.HelpLink as a property with a backing field.</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.AttachBackingFieldToSource">
+            <summary>Attaches delegates to emulate StubOutOfSpaceException.Source as a property with a backing field.</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.DataGet">
+            <summary>Sets the stub of Exception.get_Data()</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.GetBaseException">
+            <summary>Sets the stub of Exception.GetBaseException()</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.GetBaseException01">
+            <summary>Sets the stub of Exception.GetBaseException()</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>Sets the stub of Exception.GetObjectData(SerializationInfo info, StreamingContext context)</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.GetObjectDataSerializationInfoStreamingContext">
+            <summary>Sets the stub of Exception.GetObjectData(SerializationInfo info, StreamingContext context)</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.HelpLinkGet">
+            <summary>Sets the stub of Exception.get_HelpLink()</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.HelpLinkSetString">
+            <summary>Sets the stub of Exception.set_HelpLink(String value)</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.InitializeStub">
+            <summary>Initializes a new instance of type StubOutOfSpaceException</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.MessageGet">
+            <summary>Sets the stub of Exception.get_Message()</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.SourceGet">
+            <summary>Sets the stub of Exception.get_Source()</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.SourceSetString">
+            <summary>Sets the stub of Exception.set_Source(String value)</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.StackTraceGet">
+            <summary>Sets the stub of Exception.get_StackTrace()</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.ToString">
+            <summary>Sets the stub of Exception.ToString()</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.ToString01">
+            <summary>Sets the stub of Exception.ToString()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.Data">
+            <summary>Sets the stub of Exception.get_Data()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.HelpLink">
+            <summary>Sets the stub of Exception.get_HelpLink()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.Message">
+            <summary>Sets the stub of Exception.get_Message()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.Source">
+            <summary>Sets the stub of Exception.get_Source()</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubOutOfSpaceException.StackTrace">
+            <summary>Sets the stub of Exception.get_StackTrace()</summary>
+        </member>
+        <member name="T:Nuclex.Fonts.Content.Fakes.StubRectanglePacker">
+            <summary>Stub type of Nuclex.Fonts.Content.RectanglePacker</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubRectanglePacker.#ctor(System.Int32,System.Int32)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubRectanglePacker.InitializeStub">
+            <summary>Initializes a new instance of type StubRectanglePacker</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubRectanglePacker.Pack(System.Int32,System.Int32)">
+            <summary>Sets the stub of RectanglePacker.Pack(Int32 rectangleWidth, Int32 rectangleHeight)</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubRectanglePacker.PackInt32Int32">
+            <summary>Sets the stub of RectanglePacker.Pack(Int32 rectangleWidth, Int32 rectangleHeight)</summary>
+        </member>
+        <member name="M:Nuclex.Fonts.Content.Fakes.StubRectanglePacker.TryPack(System.Int32,System.Int32,Microsoft.Xna.Framework.Point@)">
+            <summary>Sets the stub of RectanglePacker.TryPack(Int32 rectangleWidth, Int32 rectangleHeight, Point&amp; placement)</summary>
+        </member>
+        <member name="F:Nuclex.Fonts.Content.Fakes.StubRectanglePacker.TryPackInt32Int32PointOut">
+            <summary>Sets the stub of RectanglePacker.TryPack(Int32 rectangleWidth, Int32 rectangleHeight, Point&amp; placement)</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubRectanglePacker.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubRectanglePacker.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:Nuclex.Fonts.Content.Fakes.StubRectanglePacker.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+    </members>
+</doc>
