@@ -20,12 +20,11 @@ namespace Brain3D
         Mode mode;
         QuerySequence query;
 
-        GraphBalancing balancing;
+        Balancing balancing;
         StateBar stateBar;
 
         List<AnimatedNeuron> neurons;
         List<AnimatedSynapse> synapses;
-        List<AnimatedReceptor> receptors;
 
         bool activation = false;
         bool loaded = false;
@@ -40,14 +39,12 @@ namespace Brain3D
         public event EventHandler animationStop;
         public event EventHandler balanceFinished;
         public event EventHandler queryAccepted;
-        public event EventHandler frameChanged;
-        public event EventHandler framesChanged;
 
         #endregion
 
         public Animation(Display display) : base(display)
         {
-            balancing = GraphBalancing.Instance;
+            balancing = Balancing.Instance;
             balancing.balanceEnded += balanceEnded;
             balancing.balanceState += balanceState;
             balancing.balanceUpdate += balanceUpdate;
@@ -57,34 +54,32 @@ namespace Brain3D
 
             neurons = new List<AnimatedNeuron>();
             synapses = new List<AnimatedSynapse>();
-            receptors = new List<AnimatedReceptor>();
         }
 
         #region funkcje inicjujące
 
-        Vector3 randomPoint(Random random, int radius)
+        Vector3 randomPoint(Random random)
         {
-            Vector3 vector;
+            Vector3 area;
 
-            while(true)
+            if (Constant.Space == SpaceMode.Box)
+                area = Constant.Box;
+            else
             {
-                float x = random.Next(-radius, radius);
-                float y = random.Next(-radius, radius);
-                float z = random.Next(-radius, radius);
-
-                vector = new Vector3(x, y, z);
-
-                if (vector.Length() < radius)
-                    break;
+                float radius = Constant.Radius * 0.7f;
+                area = new Vector3(radius, radius, radius);
             }
 
-            return vector;
+            float x = random.Next((int)-area.X + 1, (int)area.X - 1);
+            float y = random.Next((int)-area.Y + 1, (int)area.Y - 1);
+            float z = random.Next((int)-area.Z + 1, (int)area.Z - 1);
+
+            return new Vector3(x, y, z);
         }
 
         public void clear()
         {
             neurons.Clear();
-            receptors.Clear();
             synapses.Clear();
             display.clear();
         }
@@ -96,7 +91,7 @@ namespace Brain3D
 
             foreach (Neuron neuron in brain.Neurons)
             {
-                Vector3 position = randomPoint(random, 16);
+                Vector3 position = randomPoint(random);
                 neurons.Add(new AnimatedNeuron(neuron, position));
             }
 
@@ -130,7 +125,7 @@ namespace Brain3D
 
             if (neurons.Find(k => k.Neuron == neuron) == null)
             {
-                Vector3 position = randomPoint(random, 16);
+                Vector3 position = randomPoint(random);
                 AnimatedNeuron an = new AnimatedNeuron(neuron, position);
                 CreatedNeuron cn = new CreatedNeuron(an);
 
@@ -178,9 +173,6 @@ namespace Brain3D
                 display.add(synapse);
                 synapse.create();
             }
-
-            foreach (AnimatedReceptor receptor in receptors)
-                display.add(receptor);
         }
 
         public void create(Creation creation)
@@ -194,7 +186,7 @@ namespace Brain3D
         void fastBalancing()
         {
             stateBar.Phase = StateBarPhase.BalanceNormal;
-            balancing.balance(neurons, synapses, receptors);
+            balancing.balance(neurons, synapses);
         }
 
         public void setBar(StateBar stateBar)
@@ -214,8 +206,10 @@ namespace Brain3D
             if (frame == 0)
             {
                 frame = 1;
-                frameChanged(frame, null);
+                display.changeFrame(1);
             }
+            else
+                time = frame * 10;
 
             animation = true;
             timer.Start();
@@ -255,7 +249,7 @@ namespace Brain3D
                 neuron.setFrame(frame);
 
             query.tick(frame);
-            frameChanged(frame, null);
+            display.changeFrame(frame);
         }
 
         public override void changeFrame(int frame)
@@ -279,7 +273,7 @@ namespace Brain3D
         {
             stopBalance();
             stateBar.Phase = StateBarPhase.BalanceNormal;
-            balancing.animate(neurons, synapses, receptors, 40);
+            balancing.animate(neurons, synapses, 40);
         }
 
         public void stopBalance()
@@ -308,12 +302,6 @@ namespace Brain3D
         #endregion
 
         #region różne
-
-        public void labelChanged(bool value)
-        {
-            foreach (AnimatedNeuron neuron in neurons)
-                neuron.Label = value;
-        }
 
         public void stateChanged(bool value)
         {
@@ -351,7 +339,7 @@ namespace Brain3D
         {
             frame = 0;
 
-            frameChanged(frame, null);
+            display.changeFrame(frame);
             query.clear();
 
             foreach (String word in words)
@@ -366,10 +354,6 @@ namespace Brain3D
 
                 receptor.initialize(interval, 0, intensivity);
                 new SequenceReceptor(query, receptor);
-
-                AnimatedReceptor ar = new AnimatedReceptor(receptor, an);
-                synapses.Add(new AnimatedSynapse(ar, an, synapse));
-                receptors.Add(ar);
             }
 
             query.arrange();
@@ -383,14 +367,10 @@ namespace Brain3D
             if (result == DialogResult.Cancel)
                 return;
 
-            foreach (AnimatedReceptor ar in receptors)
-                synapses.Remove(ar.Output);
-
-            receptors.Clear();
             brain.erase(false);
             addQuery(query.Data, query.Interval, query.Intensity);
 
-            balancing.animate(neurons, synapses, receptors, 160);
+            balancing.animate(neurons, synapses, 40);
             queryAccepted(this.query, new EventArgs());
             loaded = true;
         }
@@ -405,8 +385,7 @@ namespace Brain3D
             create();
             balance();
 
-            framesChanged(length, null);
-            frameChanged(frame, null);
+            display.changeState(frame, length);
         }
 
         protected override void tick(object sender, EventArgs e)
@@ -475,8 +454,6 @@ namespace Brain3D
                 }
             }*/
         }
-
-
 
         #endregion
     }

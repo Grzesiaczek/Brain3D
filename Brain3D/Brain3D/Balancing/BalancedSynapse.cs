@@ -8,40 +8,57 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class BalancedSynapse : BalancedElement
+    class BalancedSynapse
     {
         AnimatedSynapse synapse;
 
-        BalancedElement pre;
-        BalancedElement post;
+        BalancedNeuron pre;
+        BalancedNeuron post;
 
-        static float k = 8;
+        static float k = 10;
+        float factor;
 
-        public BalancedSynapse(AnimatedSynapse synapse, Dictionary<AnimatedElement, BalancedElement> map)
+        public BalancedSynapse(AnimatedSynapse synapse, Dictionary<AnimatedNeuron, BalancedNeuron> map)
         {
             this.synapse = synapse;
             pre = map[synapse.Pre];
-            post = map[synapse.Post]; 
+            post = map[synapse.Post];
+
+            factor = k / (1 + synapse.Weight);
         }
 
         public void attract()
         {
             Vector3 delta = post.Position - pre.Position;
-            Vector3 shift = delta / k;
+            Vector3 shift = delta / factor;
 
-            pre.move(shift);
-            post.move(-shift);
+            shift.X *= Math.Abs(delta.X);
+            shift.Y *= Math.Abs(delta.Y);
+            shift.Z *= Math.Abs(delta.Z);
+
+            pre.move(shift / pre.Factor);
+            post.move(-shift / post.Factor);
+
+            pre.repulse(post.Position, true);
+            post.repulse(pre.Position, true);
         }
 
-        public void repulse(BalancedNeuron neuron, float factor)
+        public void repulse(BalancedNeuron neuron)
         {
-            /*if (neuron == pre || neuron == post)
+            if (neuron == pre || neuron == post)
                 return;
 
+            Vector3 vec = synapse.Post.Position - synapse.Pre.Position;
             Vector3 pos = neuron.Position - synapse.Pre.Position;
+            Vector3 shift = Vector3.Zero;
+            vec.Z = 0;
 
-            float a = synapse.Vector.Position.Y;
-            float b = synapse.Vector.Position.X;
+            String start = ((AnimatedNeuron)synapse.Pre).Name;
+            String end = ((AnimatedNeuron)synapse.Post).Name;
+            String word = neuron.Name;
+
+            float a = vec.Y;
+            float b = vec.X;
             float c = b * pos.X + a * pos.Y;
             float x, y;
             float eq; // punkt równowagi
@@ -60,7 +77,7 @@ namespace Brain3D
             }
             else
             {
-                x = c * b / (synapse.Vector.Length * synapse.Vector.Length);
+                x = c * b / (vec.LengthSquared());
                 eq = x / b;
                 y = a * eq;
             }
@@ -69,33 +86,21 @@ namespace Brain3D
                 return;
 
             float force = 0;
-            float tau = 0;
-            float distance = Math.Abs(b * pos.Y - a * pos.X) / synapse.Vector.Length;
+            float distance = Math.Abs(b * pos.Y - a * pos.X) / vec.Length();
 
-            if (distance < Constant.Radius)
-            {
-                tau = k / Constant.Diameter;
-                force = 3 * factor * tau * tau;
-            }
-            else if (distance < Constant.Diameter)
-            {
-                tau = k / Constant.Radius;
-                force = factor * tau * tau * (2.5f * Constant.Radius - distance) / Constant.Diameter;
-            }
-            else
-            {
-                tau = k / distance;
-                force = factor * tau * tau;
-            }
+            if (distance == 0)
+                return;
 
-            //shift = new PointF(force * (pos.X - x) / distance, force * (pos.Y - y) / distance);
-            neuron.move(shift.X, shift.Y);
+            force = 20 * (1.56f - (float)Math.Atan(distance - 2));
 
+            shift = new Vector3(force * (pos.X - x) / distance, force * (pos.Y - y) / distance, 0);
+            neuron.move(shift);
+            
             eq = - eq;
-            post.move(shift.X * eq, shift.Y * eq);
+            post.move(shift * eq);
 
             eq = -1 - eq;
-            pre.move(shift.X * eq, shift.Y * eq);*/
+            pre.move(shift * eq);
         }
 
         public void rotate()
@@ -115,14 +120,6 @@ namespace Brain3D
 
             post.move(x, y);
             pre.move(-x, -y);*/
-        }
-
-        public AnimatedSynapse Synapse
-        {
-            get
-            {
-                return synapse;
-            }
         }
     }
 }

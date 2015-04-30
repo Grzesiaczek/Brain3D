@@ -15,16 +15,14 @@ namespace Brain3D
         static String path;
         static StringFormat format;
 
-        static float alpha;
-        static float beta;
-
-        static float diameter;
-        static float radius;
-
         static float pi2;
         static float pi4;
 
-        static float size;
+        static Vector3 box;
+        static float radius;
+
+        static SpaceMode space;
+        public static event EventHandler spaceChanged;
 
         public static void load()
         {
@@ -46,15 +44,7 @@ namespace Brain3D
                 path = node.InnerText;
 
                 node = node.NextSibling;
-                radius = Int32.Parse(node.InnerText);
-
-                node = node.NextSibling;
-                alpha = Single.Parse(node.InnerText, System.Globalization.CultureInfo.InvariantCulture);
-
-                node = node.NextSibling;
-                beta = Single.Parse(node.InnerText, System.Globalization.CultureInfo.InvariantCulture);
-
-                diameter = radius * 2;
+                int text = Int32.Parse(node.InnerText);
             }
             catch(Exception)
             {
@@ -64,7 +54,10 @@ namespace Brain3D
             pi2 = (float)Math.PI / 2;
             pi4 = (float)Math.PI / 4;
 
-            size = 25;
+            box = new Vector3(48, 30, 4);
+            radius = 25;
+
+            space = SpaceMode.Box;
         }
 
         public static void save()
@@ -99,26 +92,6 @@ namespace Brain3D
         static void loadDefault()
         {
             changePath(System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Files"));
-            radius = 24;
-            diameter = 48;
-
-            alpha = 0.9f;
-            beta = 0.7f;
-        }
-
-        static String addPostfix(String postfix)
-        {
-            return System.IO.Path.Combine(path, postfix);
-        }
-
-        public static String SaveFolder()
-        {
-            return addPostfix("Save");
-        }
-
-        public static String SimulationFolder()
-        {
-            return addPostfix("Simulation");
         }
 
         public static String Path
@@ -139,33 +112,34 @@ namespace Brain3D
             {
                 return format;
             }
+        }
+
+        public static SpaceMode Space
+        {
+            get
+            {
+                return space;
+            }
             set
             {
-                format = value;
+                space = value;
+                spaceChanged(space, null);
             }
         }
 
-        public static float Alpha
+        public static Vector3 Box
         {
             get
             {
-                return alpha;
+                return box;
             }
         }
 
-        public static float Beta
+        public static float Radius
         {
             get
             {
-                return beta;
-            }
-        }
-
-        public static float Size
-        {
-            get
-            {
-                return size;
+                return radius;
             }
         }
 

@@ -19,9 +19,9 @@ namespace Brain3D
         public static void initialize(int value)
         {
             length = value;
-            size = 10 * length;
+            size = 10 * length + 1;
 
-            tmax = 250;
+            tmax = 200;
             omega = 1000;
         }
     }

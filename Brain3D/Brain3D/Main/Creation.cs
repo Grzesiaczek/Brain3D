@@ -42,8 +42,6 @@ namespace Brain3D
         public event EventHandler animationStop;
         public event EventHandler brainCreated;
         public event EventHandler creationFinished;
-        public event EventHandler frameChanged;
-        public event EventHandler framesChanged;
 
         #endregion
 
@@ -113,9 +111,6 @@ namespace Brain3D
 
             foreach (AnimatedSynapse synapse in synapses)
             {
-                if (synapse.Pre is AnimatedReceptor)
-                    continue;
-
                 CreatedSynapse cSynapse = new CreatedSynapse(synapse);
                 mapSynapses.Add(synapse.Synapse, cSynapse);
 
@@ -123,9 +118,7 @@ namespace Brain3D
                     mapSynapses.Add(synapse.Duplex, cSynapse);
             }
 
-            framesChanged(length, null);
-            frameChanged(count, null);
-
+            display.changeState(count, length);
             int index = 1;
 
             foreach (CreationSequence cs in sequences)
@@ -198,7 +191,7 @@ namespace Brain3D
             }
 
             setFrame(count - 1);
-            frameChanged(count, null);
+            display.changeFrame(count);
         }
 
         public override void forth()
@@ -248,7 +241,7 @@ namespace Brain3D
         public override void space()
         {
             addFrame();
-            frameUp();
+            display.changeState(++count, ++length);
         }
 
         public override void enter()
@@ -268,7 +261,7 @@ namespace Brain3D
 
         public override void delete()
         {
-            frameDown();
+            display.changeState(--count, --length);
         }
 
         #endregion
@@ -345,7 +338,7 @@ namespace Brain3D
             if (count == length || tuple.Item1 == -1)
                 tuple = new Tuple<int, int>(0, -1);
 
-            frameAdd();
+            display.changeState(count, ++length);
             display.show(sequence);
             built = true;
         }
@@ -363,7 +356,7 @@ namespace Brain3D
 
         void setFrame(int index)
         {
-            frameChanged(index, null);
+            display.changeFrame(index);
             bool forward = true;
 
             if (count > index)
@@ -413,25 +406,6 @@ namespace Brain3D
             }
 
             setFrame(count + 1);
-            frameChanged(count, null);
-        }
-
-        void frameAdd()
-        {
-            framesChanged(++length, null);
-            frameChanged(count, null);
-        }
-
-        void frameUp()
-        {
-            framesChanged(++length, null);
-            frameChanged(++count, null);
-        }
-
-        void frameDown()
-        {
-            framesChanged(--length, null);
-            frameChanged(--count, null);
         }
 
         #endregion

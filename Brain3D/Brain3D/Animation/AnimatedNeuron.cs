@@ -25,10 +25,7 @@ namespace Brain3D
 
         StateDisk disk;
 
-        bool labelled = true;
-        bool state = true;
         bool refraction;
-
         float radius;
         double value;
 
@@ -42,16 +39,11 @@ namespace Brain3D
         {
             this.neuron = neuron;
             this.position = position;
-            
-            initialize();
 
             input = new List<AnimatedSynapse>();
             output = new List<AnimatedSynapse>();
-        }
 
-        void initialize()
-        {
-            radius = 1;
+            radius = 1.2f;
 
             disk = new StateDisk(position, radius);
             label = new Label3D(Name, position);
@@ -87,7 +79,7 @@ namespace Brain3D
                     refraction = false;
 
                 disk.changeValue((float)value);
-                number.Text = ((int)(value * 100)).ToString();
+                number.Text = ((int)(Math.Abs(value) * 100)).ToString();
             } 
         }
 
@@ -107,6 +99,17 @@ namespace Brain3D
         {
             NeuronData data = neuron.Activity[frame * 10];
             setData(data);
+        }
+
+        public override Vector3 pointVector(Vector2 angle2)
+        {
+            double angle = Math.Acos(angle2.X);
+            float rad = radius * 1.05f;
+
+            if (angle2.Y < 0)
+                angle = 2 * Math.PI - angle;
+
+            return Vector3.Transform(new Vector3((float)Math.Cos(angle) * rad,(float)Math.Sin(angle) * rad, 0.1f), camera.Rotation) + position;
         }
 
         public void checkCollision(List<AnimatedNeuron> neurons)
@@ -177,27 +180,19 @@ namespace Brain3D
             }
         }
 
-        public bool Label
+        public float Radius
         {
             get
             {
-                return labelled;
-            }
-            set
-            {
-                labelled = value;
+                return radius;
             }
         }
 
         public bool State
         {
-            get
-            {
-                return state;
-            }
             set
             {
-                state = value;
+                number.Suppress = !value;
             }
         }
 

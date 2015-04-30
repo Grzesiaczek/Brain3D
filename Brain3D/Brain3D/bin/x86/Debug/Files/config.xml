@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <data>
   <path>N:\Magisterka</path>
-  <radius>24</radius>
-  <alpha>0.9</alpha>
-  <beta>0.7</beta>
+  <omega>100</omega>
+  <tmax>20</tmax>
 </data>

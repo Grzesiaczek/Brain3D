@@ -19,12 +19,14 @@ namespace Brain3D
 
         public Camera(float radius)
         {
-            position = new Vector3(0, 0, -radius);
+            position = new Vector3(0, 0, radius);
             target = Vector3.Zero;
             up = Vector3.Up;
             
             spherical = new Spherical(position);
             rotation = Matrix.CreateFromYawPitchRoll(-spherical.Longitude - Constant.PI2, spherical.Latitude, 0);
+
+            Constant.spaceChanged += new EventHandler(spaceChanged);
         }
 
         void refresh()
@@ -35,38 +37,112 @@ namespace Brain3D
 
         public void moveLeft()
         {
-            spherical.Longitude += 0.025f;
-            refresh();
+            if (Constant.Space == SpaceMode.Box)
+            {
+                position.X -= 0.25f;
+
+                if (position.X + Constant.Box.X < 0)
+                    position.X = -Constant.Box.X;
+
+                target.X = position.X;
+            }
+            else
+            {
+                spherical.Longitude += 0.025f;
+                refresh();
+            }
         }
 
         public void moveRight()
         {
-            spherical.Longitude -= 0.025f;
-            refresh();
+            if (Constant.Space == SpaceMode.Box)
+            {
+                position.X += 0.25f;
+
+                if (position.X > Constant.Box.X)
+                    position.X = Constant.Box.X;
+
+                target.X = position.X;
+            }
+            else
+            {
+                spherical.Longitude -= 0.025f;
+                refresh();
+            }
         }
 
         public void moveUp()
         {
-            spherical.Latitude += 0.025f;
-            refresh();
+            if (Constant.Space == SpaceMode.Box)
+            {
+                position.Y += 0.25f;
+
+                if (position.Y > Constant.Box.Y)
+                    position.Y = Constant.Box.Y;
+
+                target.Y = position.Y;
+            }
+            else
+            {
+                spherical.Latitude += 0.025f;
+                refresh();
+            }
         }
 
         public void moveDown()
         {
-            spherical.Latitude -= 0.025f;
-            refresh();
+            if (Constant.Space == SpaceMode.Box)
+            {
+                position.Y -= 0.25f;
+
+                if (position.Y + Constant.Box.Y < 0)
+                    position.Y = -Constant.Box.Y;
+
+                target.Y = position.Y;
+            }
+            else
+            {
+                spherical.Latitude += 0.025f;
+                refresh();
+            }
         }
 
         public void farther()
         {
-            spherical.Radius += 0.25f;
-            refresh();
+            if (Constant.Space == SpaceMode.Box)
+            {
+                position.Z += 0.25f;
+
+                if (position.Z > 100)
+                    position.Z = 100;
+            }
+            else
+            {
+                spherical.Radius += 0.25f;
+                refresh();
+            }
         }
 
         public void closer()
         {
-            spherical.Radius -= 0.25f;
-            refresh();
+            if (Constant.Space == SpaceMode.Box)
+            {
+                position.Z -= 0.25f;
+
+                if (position.Z < 10)
+                    position.Z = 10;
+            }
+            else
+            {
+                spherical.Radius -= 0.25f;
+                refresh();
+            }
+        }
+
+        void spaceChanged(object sender, EventArgs e)
+        {
+            if (Constant.Space == SpaceMode.Sphere)
+                spherical = new Spherical(position);
         }
 
         public Vector3 Position

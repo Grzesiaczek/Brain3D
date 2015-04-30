@@ -15,6 +15,7 @@ namespace Brain3D
         VertexPositionColor[] left;
         VertexPositionColor[] right;
 
+        Color[] palette;
         Vector3 direction;
 
         int points;
@@ -25,7 +26,29 @@ namespace Brain3D
             this.end = end;
 
             points = start.Points;
-            color = Color.Purple;
+            palette = new Color[points];
+
+            palette[0] = Color.Purple;
+            palette[8] = Color.Brown;
+
+            int r = palette[8].R - palette[0].R;
+            int g = palette[8].G - palette[0].G;
+            int b = palette[8].B - palette[0].B;
+
+            for (int i = 1; i < 8; i++)
+            {
+                int red = palette[0].R + i * r / 8;
+                int green = palette[0].G + i * g / 8;
+                int blue = palette[0].B + i * b / 8;
+
+                palette[i] = new Color(red, green, blue);
+            }
+
+            for (int i = 9; i < 16; i++)
+                palette[i] = palette[16 - i];
+
+            for (int i = 16; i < 32; i++)
+                palette[i] = palette[i - 16];
 
             left = new VertexPositionColor[points + 1];
             right = new VertexPositionColor[points + 1];
@@ -42,10 +65,10 @@ namespace Brain3D
             start.refresh();
             end.refresh();
 
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < points; i++)
             {
-                left[i] = new VertexPositionColor(start.Data[i], color);
-                right[i] = new VertexPositionColor(end.Data[i], color);
+                left[i] = new VertexPositionColor(start.Data[i], palette[i]);
+                right[i] = new VertexPositionColor(end.Data[i], palette[i]);
             }
 
             left[points] = left[0];
@@ -60,8 +83,8 @@ namespace Brain3D
 
             for (int i = 0; i < points; i++)
             {
-                triangles[2 * i] = right[i];
-                triangles[2 * i + 1] = left[i];
+                triangles[2 * i] = left[i];
+                triangles[2 * i + 1] = right[i];
             }
 
             triangles[2 * points] = triangles[0];

@@ -21,8 +21,8 @@ namespace Brain3D
         BorderedDisk state;
         Signal signal;
 
-        Vector3 shiftDisk = new Vector3(0.5f, 0, 0);
-        Vector3 shiftState = new Vector3(0.8f, 0, -0.001f);
+        Vector3 shiftDisk = new Vector3(0.5f, 0, 0.8f);
+        Vector3 shiftState = new Vector3(0.8f, 0, -0.82f);
 
         bool active;
         bool activated;
@@ -56,7 +56,7 @@ namespace Brain3D
 
         #region sterowanie
 
-        //z ray
+        //walnąć Ray
         public bool active2(Point location)
         {
             /*if (synapse.Weight == 0)
@@ -106,8 +106,8 @@ namespace Brain3D
         {
             base.refresh();
 
-            shiftDisk = Vector3.Transform(new Vector3(0.5f * vector.Angle.X, 0.5f * vector.Angle.Y, 0), camera.Rotation);
-            shiftState = Vector3.Transform(new Vector3(0.8f * vector.Angle.X, 0.8f * vector.Angle.Y, -0.001f), camera.Rotation);
+            shiftDisk = Vector3.Transform(new Vector3(0.5f * vector.Angle.X, 0.5f * vector.Angle.Y, -0.083f), camera.Rotation);
+            shiftState = Vector3.Transform(new Vector3(0.8f * vector.Angle.X, 0.8f * vector.Angle.Y, -0.081f), camera.Rotation);
 
             disk.Position = position + shiftDisk;
             state.Position = position + shiftState;
@@ -193,22 +193,6 @@ namespace Brain3D
             get
             {
                 return weight;
-            }
-            set
-            {
-                weight = value;
-            }
-        }
-
-        public override Vector3 Position
-        {
-            get
-            {
-                return position;
-            }
-            set
-            {
-                position = value;
             }
         }
 

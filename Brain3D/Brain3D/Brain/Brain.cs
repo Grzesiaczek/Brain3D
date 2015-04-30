@@ -42,7 +42,7 @@ namespace Brain3D
 
             tr = 3;
             ts = 2;
-            tmax = 25;
+            tmax = 20;
 
             omega = 100;
             gamma = 4;
@@ -70,7 +70,7 @@ namespace Brain3D
 
         public void simulate(int length)
         {
-            length *= 10;
+            length *= 10 + 1;
             Neuron neuron = neurons.Find(k => k.Word.Equals("monkey"));
             Neuron lovely = neurons.Find(k => k.Word.Equals("small"));
             //Neuron neuron = neurons.Find(k => k.Word.Equals("jupiter"));

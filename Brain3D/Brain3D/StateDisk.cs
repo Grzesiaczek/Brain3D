@@ -68,7 +68,7 @@ namespace Brain3D
 
         public void setValue(float value)
         {
-            innerCircle.Radius = radius - radius * value;
+            innerCircle.Radius = radius * (1 - value);
             changeCircle.Radius = innerCircle.Radius;
 
             this.value = value;
@@ -91,13 +91,13 @@ namespace Brain3D
 
             if (value < 0)
             {
-                innerCircle.Radius = -value;
+                innerCircle.Radius = -value * radius;
                 disk.Color = Color.LightBlue;
                 outer.Color = Color.LightYellow;
             }
             else if (value < 1)
             {
-                innerCircle.Radius = 1 - value;
+                innerCircle.Radius = radius * (1 - value);
                 disk.Color = Color.LightYellow;
                 outer.Color = Color.LightGreen;
             }
@@ -109,7 +109,7 @@ namespace Brain3D
 
         public void refract()
         {
-            innerCircle.Radius = 1;
+            innerCircle.Radius = radius;
             disk.Color = Color.IndianRed;
             outer.Color = Color.LightYellow;
 

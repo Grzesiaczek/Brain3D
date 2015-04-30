@@ -33,7 +33,6 @@ namespace Brain3D
 
         Mode mode;
         FormWindowState state;
-        Drawable visible;
 
         #endregion
 
@@ -64,9 +63,7 @@ namespace Brain3D
 
         void chart()
         {
-            presentation = creation;
-            visible = charting;
-            charting.show();
+            presentation = charting;
             mode = Mode.Chart;
         }
 
@@ -78,23 +75,20 @@ namespace Brain3D
         {
             brain = new Brain();
 
-            charting = new Charting();
+            charting = new Charting(display);
             animation = new Animation(display);
             creation = new Creation(display);
             stateBar = new StateBar();
 
             Controls.Add(display);
-            Controls.Add(charting);
 
             animation.setBar(stateBar);
 
             BrainElement.initialize(250);
             Neuron.initialize();
 
-            Padding margin = new Padding(0, 0, rightPanel.Width + 20, 100);
-            charting.setMargin(margin);
-
-            display.setMargin(margin.Right);
+            display.loadTrackBar(trackBarFrame);
+            display.setMargin(rightPanel.Width + 20);
             display.resize();
 
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
@@ -116,13 +110,9 @@ namespace Brain3D
             animation.animationStop += new EventHandler(animationStop);
             animation.balanceFinished += new EventHandler(balanceFinished);
             animation.queryAccepted += new EventHandler(queryAccepted);
-            animation.frameChanged += new EventHandler(frameChanged);
-            animation.framesChanged += new EventHandler(framesChanged);
 
             creation.animationStop += new EventHandler(animationStop);
             creation.creationFinished += new EventHandler(creationFinished);
-            creation.frameChanged += new EventHandler(frameChanged);
-            creation.framesChanged += new EventHandler(framesChanged);
             creation.brainCreated += new EventHandler(brainCreated);
 
             Presentation.factorChanged += new EventHandler(factorChanged);
@@ -251,7 +241,6 @@ namespace Brain3D
             switch (keyData)
             {
                 case Keys.F1:
-                    visible.save();
                     break;
                 case Keys.F4:
 
@@ -346,7 +335,7 @@ namespace Brain3D
             int py = Height - 80;
 
             rightPanel.Left = px;
-            rightPanel.Height = py + 20;
+            rightPanel.Height = py + 40;
 
             trackBarFrame.Width = px - 120;
             trackBarFrame.Top = py;
@@ -358,7 +347,6 @@ namespace Brain3D
 
         private void resizeEnd(object sender, EventArgs e)
         {
-            charting.resize();
             display.resize();
         }
         #endregion
@@ -426,22 +414,13 @@ namespace Brain3D
             buttonQuery.Enabled = true;
         }
 
-        private void change(Drawable area)
-        {
-            if (visible.Equals(area))
-                return;
-
-            presentation.stop();
-            visible.hide();
-            area.show();
-            visible = area;
-        }
         #endregion
 
         #region obsługa zdarzeń
 
         private void Simulation_Load(object sender, EventArgs e)
         {
+
             List<CreationSequence> sequences = new List<CreationSequence>();
             /*
             sequences.Add(brain.addSentence("type new sequence"));
@@ -456,7 +435,7 @@ namespace Brain3D
             sequences.Add(brain.addSentence("it learns quickly"));
             sequences.Add(brain.addSentence("my monkey is lovely"));
             sequences.Add(brain.addSentence("i have also a small dog"));
-
+            
             creation.load(sequences);
             animation.loadBrain(brain);
             charting.loadBrain(brain);
@@ -464,6 +443,8 @@ namespace Brain3D
             //animation.create(creation);
             animation.show();
             simulate();
+            WindowState = FormWindowState.Maximized;
+            
             //openData("Files\\data.xml");
         }
 
@@ -485,17 +466,6 @@ namespace Brain3D
             trackBarScale.Value = (int)sender;
 
             //AnimatedElement.Factor = (float)(int)sender / 100;
-        }
-
-        private void frameChanged(object sender, EventArgs e)
-        {
-            trackBarFrame.Value = (int)sender;
-        }
-
-        private void framesChanged(object sender, EventArgs e)
-        {
-            frames = (int)sender;
-            trackBarFrame.Maximum = frames;
         }
 
         private void queryAccepted(object sender, EventArgs e)
@@ -600,17 +570,25 @@ namespace Brain3D
             animation.balance();
         }
 
-        private void checkBoxAutoBalance_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxState_CheckedChanged(object sender, EventArgs e)
         {
-            
+            animation.stateChanged(checkBoxState.Checked);
         }
 
-        private void checkBoxScreenBalance_CheckedChanged(object sender, EventArgs e)
+        private void radioButtonBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBoxScreenBalance.Checked)
-                GraphBalancing.Instance.ScreenBalance = true;
-            else
-                GraphBalancing.Instance.ScreenBalance = false;
+            if (!radioButtonBox.Checked)
+                return;
+
+            Constant.Space = SpaceMode.Box;
+        }
+
+        private void radioButtonSphere_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!radioButtonSphere.Checked)
+                return;
+
+            Constant.Space = SpaceMode.Sphere;
         }
     }
 }

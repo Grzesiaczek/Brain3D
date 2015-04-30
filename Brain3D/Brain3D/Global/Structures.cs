@@ -14,6 +14,7 @@ namespace Brain3D
     enum Mode { Chart, Creation, Manual, Query }
     enum SequenceElementType { Normal, Built, Active, Activated, Receptor, ActiveReceptor}
     enum StateBarPhase { Idle, Activation, BalanceNormal, BalanceExtra}
+    enum SpaceMode { Box, Sphere }
 
     #endregion
 

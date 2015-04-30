@@ -9,7 +9,6 @@ C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Nuclex.Graphics.dll
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\obj\x86\Debug\Brain3D.csprojResolveAssemblyReference.cache
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\obj\x86\Debug\Brain3D.Charting.Charting.resources
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\obj\x86\Debug\Brain3D.Simulation.resources
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\obj\x86\Debug\Brain3D.csproj.GenerateResource.Cache
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\obj\x86\Debug\Brain3D.exe

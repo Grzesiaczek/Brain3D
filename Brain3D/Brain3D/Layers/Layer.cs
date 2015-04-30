@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Brain3D
 {
-    class Layer : UserControl, Drawable
+    class Layer : UserControl
     {
         protected Graphics graphics;
         protected System.Windows.Forms.Timer timer;

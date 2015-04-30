@@ -10,6 +10,7 @@ namespace Brain3D
 {
     class Circle : GraphicsElement
     {
+        Vector3[] circle;
         Vector3[] data;
         Vector3 direction;
 
@@ -31,7 +32,13 @@ namespace Brain3D
 
             direction = Vector3.Zero;
             points = total / factor;
+
+            circle = new Vector3[points];
             data = new Vector3[points];
+
+            for (int i = 0, j = 0; i < points; i++, j += factor)
+                circle[i] = new Vector3(cos[j], sin[j], 0);
+
             refresh();
         }
 
@@ -53,14 +60,14 @@ namespace Brain3D
         {
             if (direction.Length() == 0)
             {
-                for (int i = 0, j = 0; i < points; i++, j += factor)
-                    data[i] = Vector3.Transform(new Vector3(cos[j] * radius, sin[j] * radius, 0), camera.Rotation) + position;
+                for (int i = 0; i < points; i++)
+                    data[i] = Vector3.Transform(circle[i] * radius, camera.Rotation) + position;
 
                 return;
             }
 
-            for (int i = 0, j = 0; i < points; i++, j += factor)
-                data[i] = Vector3.Transform(new Vector3(cos[j] * radius, sin[j] * radius, 0), new Spherical(direction).getRotation()) + position;
+            for (int i = 0; i < points; i++)
+                data[i] = Vector3.Transform(circle[i] * radius, new Spherical(direction).getRotation()) + position;
         }
 
         public int Points

@@ -12,8 +12,8 @@ namespace Brain3D
 {
     class Text3D : DrawableElement
     {
-        static TextBatch batch;
-        static VectorFont font;
+        protected static TextBatch batch;
+        protected static VectorFont font;
 
         protected Text text;
         protected Matrix matrix;
@@ -22,18 +22,16 @@ namespace Brain3D
         protected Vector3 shift;
         protected float scale;
 
+        bool suppress;
+
+        protected Text3D() { }
+
         public Text3D(String data, Vector3 position)
         {
             this.position = position;
-
-            text = font.Fill(data);
             color = Color.DarkSlateBlue;
-
             scale = 0.07f;
-            shift = new Vector3(-text.Width / 2, -text.Height * 0.3f, 0);
-            constant = Matrix.CreateTranslation(shift) * Matrix.CreateScale(scale) * Matrix.CreateRotationY((float)Math.PI);
-
-            refresh();
+            Text = data;
         }
 
         public static void initialize()
@@ -49,6 +47,9 @@ namespace Brain3D
 
         public override void draw()
         {
+            if (suppress)
+                return;
+
             batch.Begin();
             batch.DrawText(text, matrix, color);
             batch.End();
@@ -59,21 +60,17 @@ namespace Brain3D
             set
             {
                 text = font.Fill(value);
-                shift = new Vector3(-text.Width / 2, -text.Height * 0.3f, 0);
+                shift = new Vector3(-text.Width / 2, 0, 0);
                 constant = Matrix.CreateTranslation(shift) * Matrix.CreateScale(scale) * Matrix.CreateRotationY((float)Math.PI);
                 refresh();
             }
         }
 
-        public override Vector3 Position
+        public bool Suppress
         {
-            get
-            {
-                return position;
-            }
             set
             {
-                position = value;
+                suppress = value;
             }
         }
 

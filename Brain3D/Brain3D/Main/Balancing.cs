@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
@@ -9,16 +10,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class GraphBalancing
+    class Balancing
     {
         #region deklaracje
 
         List<BalancedNeuron> neurons;
-        List<BalancedReceptor> receptors;
         List<BalancedSynapse> synapses;
 
         System.Windows.Forms.Timer timer;
-        Dictionary<AnimatedElement, BalancedElement> map;
+        Dictionary<AnimatedNeuron, BalancedNeuron> map;
 
         float delta;
         float step;
@@ -28,10 +28,9 @@ namespace Brain3D
         int steps;
 
         bool action;
-        bool initialized;
-        bool screenBalance = true;
+        bool balance2d;
 
-        static GraphBalancing instance = new GraphBalancing();
+        static Balancing instance = new Balancing();
 
         public event EventHandler balanceEnded;
         public event EventHandler balanceState;
@@ -39,13 +38,15 @@ namespace Brain3D
 
         #endregion
 
-        private GraphBalancing()
+        private Balancing()
         {
             step = 0.02f;
 
             timer = new System.Windows.Forms.Timer();
             timer.Tick += new EventHandler(tick);
             timer.Interval = 25;
+
+            Constant.spaceChanged += new EventHandler(spaceChanged);
         }
 
         public void animate()
@@ -54,23 +55,23 @@ namespace Brain3D
             timer.Start();
         }
 
-        public void animate(List<AnimatedNeuron> neurons, List<AnimatedSynapse> synapses, List<AnimatedReceptor> receptors, int steps)
+        public void animate(List<AnimatedNeuron> neurons, List<AnimatedSynapse> synapses, int steps)
         {
             if (action)
                 return;
 
-            initialize(neurons, synapses, receptors);
+            initialize(neurons, synapses);
 
             this.steps = steps;
             animate();
         }
 
-        public void balance(List<AnimatedNeuron> neurons, List<AnimatedSynapse> synapses, List<AnimatedReceptor> receptors)
+        public void balance(List<AnimatedNeuron> neurons, List<AnimatedSynapse> synapses)
         {
             if (action)
                 return;
 
-            initialize(neurons, synapses, receptors);
+            initialize(neurons, synapses);
             int count = 0;
 
             while(true)
@@ -89,15 +90,14 @@ namespace Brain3D
             action = false;
         }
 
-        void initialize(List<AnimatedNeuron> neurons, List<AnimatedSynapse> synapses, List<AnimatedReceptor> receptors)
+        void initialize(List<AnimatedNeuron> neurons, List<AnimatedSynapse> synapses)
         {
             action = true;
             treshold = 0.5f;
 
             this.neurons = new List<BalancedNeuron>();
-            this.receptors = new List<BalancedReceptor>();
             this.synapses = new List<BalancedSynapse>();
-            map = new Dictionary<AnimatedElement, BalancedElement>();
+            map = new Dictionary<AnimatedNeuron, BalancedNeuron>();
 
             foreach (AnimatedNeuron an in neurons)
             {
@@ -106,28 +106,39 @@ namespace Brain3D
                 map.Add(an, neuron);
             }
 
-            foreach (AnimatedReceptor ar in receptors)
-            {
-                BalancedReceptor receptor = new BalancedReceptor(ar);
-                this.receptors.Add(receptor);
-                map.Add(ar, receptor);
-            }
-
             foreach (AnimatedSynapse synapse in synapses)
                 this.synapses.Add(new BalancedSynapse(synapse, map));
         }
 
         void tick(object sender, EventArgs e)
         {
+            /*Thread thread = new Thread(tick);
+            thread.Start();*/
+
+            tick();
+        }
+
+        void tick()
+        {
             if (interval < steps)
                 interval += 1;
 
             for (int i = 0; i < interval; i++)
             {
+                foreach (BalancedNeuron neuron in neurons)
+                    neuron.zero();
+
                 calculate();
                 update();
             }
-
+            
+            if (!balance2d && Constant.Space == SpaceMode.Box && Math.Abs(delta) < 3)
+            {
+                interval = 2;
+                steps /= 2;
+                balance2d = true;
+            }
+            
             if (Math.Abs(delta) < treshold)
                 finish();
             else
@@ -145,39 +156,23 @@ namespace Brain3D
 
                 foreach (BalancedNeuron n2 in neurons)
                     if(n1 != n2)
-                        n1.repulse(n2.Position);
-
-                if (screenBalance)
-                {
-                    foreach (BalancedNeuron n2 in neurons)
-                        if (n1 != n2)
-                            n1.repulse(n2.Neuron);
-                }
+                        n1.repulse(n2.Position, false);
             }
 
             foreach (BalancedSynapse synapse in synapses)
+            {
                 synapse.attract();
 
-            /*
-            foreach (BalancedReceptor r1 in receptors)
-            {
-                r1.attract(5 * alpha);
-
-                foreach (BalancedReceptor r2 in receptors)
-                {
-                    if (r1 == r2)
-                        continue;
-
-                    r1.repulse(r2, beta);
-                }
+                if(balance2d)
+                    foreach (BalancedNeuron neuron in neurons)
+                        synapse.repulse(neuron);
             }
+
+            /*
 
             foreach (BalancedSynapse bs in synapses)
             {
                 bs.rotate();
-
-                foreach (BalancedNeuron bn in neurons)
-                    bs.repulse(bn, beta);
             }*/
         }
 
@@ -187,9 +182,6 @@ namespace Brain3D
 
             foreach (BalancedNeuron neuron in neurons)
                 delta += neuron.update(step);
-
-            foreach (BalancedReceptor receptor in receptors)
-                delta += receptor.update();
         }
 
         void finish()
@@ -208,20 +200,16 @@ namespace Brain3D
             return true;
         }
 
-        public static GraphBalancing Instance
+        void spaceChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        public static Balancing Instance
         {
             get
             {
                 return instance;
-            }
-        }
-
-        public bool ScreenBalance
-        {
-            set
-            {
-                screenBalance = value;
-                animate();
             }
         }
     }

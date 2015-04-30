@@ -35,9 +35,11 @@
             this.labelPace = new System.Windows.Forms.Label();
             this.changeFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.rightPanel = new System.Windows.Forms.GroupBox();
+            this.panelSpace = new System.Windows.Forms.Panel();
+            this.radioButtonBox = new System.Windows.Forms.RadioButton();
+            this.radioButtonSphere = new System.Windows.Forms.RadioButton();
+            this.checkBoxState = new System.Windows.Forms.CheckBox();
             this.buttonBalance = new System.Windows.Forms.Button();
-            this.checkBoxScreenBalance = new System.Windows.Forms.CheckBox();
-            this.checkBoxAutoBalance = new System.Windows.Forms.CheckBox();
             this.buttonLoad = new System.Windows.Forms.Button();
             this.trackBarDensity = new System.Windows.Forms.TrackBar();
             this.trackBarScale = new System.Windows.Forms.TrackBar();
@@ -58,6 +60,7 @@
             this.buttonForth = new System.Windows.Forms.Button();
             this.trackBarFrame = new System.Windows.Forms.TrackBar();
             this.rightPanel.SuspendLayout();
+            this.panelSpace.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarDensity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarLength)).BeginInit();
@@ -118,9 +121,9 @@
             // 
             // rightPanel
             // 
+            this.rightPanel.Controls.Add(this.panelSpace);
+            this.rightPanel.Controls.Add(this.checkBoxState);
             this.rightPanel.Controls.Add(this.buttonBalance);
-            this.rightPanel.Controls.Add(this.checkBoxScreenBalance);
-            this.rightPanel.Controls.Add(this.checkBoxAutoBalance);
             this.rightPanel.Controls.Add(this.buttonLoad);
             this.rightPanel.Controls.Add(this.trackBarDensity);
             this.rightPanel.Controls.Add(this.trackBarScale);
@@ -146,6 +149,52 @@
             this.rightPanel.TabIndex = 19;
             this.rightPanel.TabStop = false;
             // 
+            // panelSpace
+            // 
+            this.panelSpace.Controls.Add(this.radioButtonBox);
+            this.panelSpace.Controls.Add(this.radioButtonSphere);
+            this.panelSpace.Location = new System.Drawing.Point(37, 644);
+            this.panelSpace.Name = "panelSpace";
+            this.panelSpace.Size = new System.Drawing.Size(77, 66);
+            this.panelSpace.TabIndex = 39;
+            // 
+            // radioButtonBox
+            // 
+            this.radioButtonBox.AutoSize = true;
+            this.radioButtonBox.Checked = true;
+            this.radioButtonBox.Location = new System.Drawing.Point(12, 12);
+            this.radioButtonBox.Name = "radioButtonBox";
+            this.radioButtonBox.Size = new System.Drawing.Size(43, 17);
+            this.radioButtonBox.TabIndex = 37;
+            this.radioButtonBox.TabStop = true;
+            this.radioButtonBox.Text = "Box";
+            this.radioButtonBox.UseVisualStyleBackColor = true;
+            this.radioButtonBox.CheckedChanged += new System.EventHandler(this.radioButtonBox_CheckedChanged);
+            // 
+            // radioButtonSphere
+            // 
+            this.radioButtonSphere.AutoSize = true;
+            this.radioButtonSphere.Location = new System.Drawing.Point(12, 36);
+            this.radioButtonSphere.Name = "radioButtonSphere";
+            this.radioButtonSphere.Size = new System.Drawing.Size(59, 17);
+            this.radioButtonSphere.TabIndex = 38;
+            this.radioButtonSphere.Text = "Sphere";
+            this.radioButtonSphere.UseVisualStyleBackColor = true;
+            this.radioButtonSphere.CheckedChanged += new System.EventHandler(this.radioButtonSphere_CheckedChanged);
+            // 
+            // checkBoxState
+            // 
+            this.checkBoxState.AutoSize = true;
+            this.checkBoxState.Checked = true;
+            this.checkBoxState.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxState.Location = new System.Drawing.Point(41, 621);
+            this.checkBoxState.Name = "checkBoxState";
+            this.checkBoxState.Size = new System.Drawing.Size(51, 17);
+            this.checkBoxState.TabIndex = 35;
+            this.checkBoxState.Text = "State";
+            this.checkBoxState.UseVisualStyleBackColor = true;
+            this.checkBoxState.CheckedChanged += new System.EventHandler(this.checkBoxState_CheckedChanged);
+            // 
             // buttonBalance
             // 
             this.buttonBalance.Location = new System.Drawing.Point(23, 719);
@@ -156,35 +205,9 @@
             this.buttonBalance.UseVisualStyleBackColor = true;
             this.buttonBalance.Click += new System.EventHandler(this.buttonBalance_Click);
             // 
-            // checkBoxScreenBalance
-            // 
-            this.checkBoxScreenBalance.AutoSize = true;
-            this.checkBoxScreenBalance.Checked = true;
-            this.checkBoxScreenBalance.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxScreenBalance.Location = new System.Drawing.Point(32, 680);
-            this.checkBoxScreenBalance.Name = "checkBoxScreenBalance";
-            this.checkBoxScreenBalance.Size = new System.Drawing.Size(99, 17);
-            this.checkBoxScreenBalance.TabIndex = 35;
-            this.checkBoxScreenBalance.Text = "ScreenBalance";
-            this.checkBoxScreenBalance.UseVisualStyleBackColor = true;
-            this.checkBoxScreenBalance.CheckedChanged += new System.EventHandler(this.checkBoxScreenBalance_CheckedChanged);
-            // 
-            // checkBoxAutoBalance
-            // 
-            this.checkBoxAutoBalance.AutoSize = true;
-            this.checkBoxAutoBalance.Checked = true;
-            this.checkBoxAutoBalance.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxAutoBalance.Location = new System.Drawing.Point(32, 648);
-            this.checkBoxAutoBalance.Name = "checkBoxAutoBalance";
-            this.checkBoxAutoBalance.Size = new System.Drawing.Size(87, 17);
-            this.checkBoxAutoBalance.TabIndex = 34;
-            this.checkBoxAutoBalance.Text = "AutoBalance";
-            this.checkBoxAutoBalance.UseVisualStyleBackColor = true;
-            this.checkBoxAutoBalance.CheckedChanged += new System.EventHandler(this.checkBoxAutoBalance_CheckedChanged);
-            // 
             // buttonLoad
             // 
-            this.buttonLoad.Location = new System.Drawing.Point(28, 600);
+            this.buttonLoad.Location = new System.Drawing.Point(28, 590);
             this.buttonLoad.Name = "buttonLoad";
             this.buttonLoad.Size = new System.Drawing.Size(100, 25);
             this.buttonLoad.TabIndex = 33;
@@ -410,6 +433,8 @@
             this.Resize += new System.EventHandler(this.resize);
             this.rightPanel.ResumeLayout(false);
             this.rightPanel.PerformLayout();
+            this.panelSpace.ResumeLayout(false);
+            this.panelSpace.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarDensity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarScale)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarLength)).EndInit();
@@ -449,8 +474,10 @@
         private System.Windows.Forms.SaveFileDialog saveFile;
         private Display display;
         private System.Windows.Forms.Button buttonBalance;
-        private System.Windows.Forms.CheckBox checkBoxScreenBalance;
-        private System.Windows.Forms.CheckBox checkBoxAutoBalance;
+        private System.Windows.Forms.CheckBox checkBoxState;
+        private System.Windows.Forms.RadioButton radioButtonSphere;
+        private System.Windows.Forms.RadioButton radioButtonBox;
+        private System.Windows.Forms.Panel panelSpace;
     }
 }
 

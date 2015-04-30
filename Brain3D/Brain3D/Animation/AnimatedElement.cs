@@ -18,7 +18,6 @@ namespace Brain3D
         protected Vector3 screen;
 
         protected float factor;
-        protected bool creation;
         protected bool visible;
 
         #endregion
@@ -37,11 +36,16 @@ namespace Brain3D
 
         public override void draw()
         {
-            //device.DepthStencilState = DepthStencilState.Default;
+            device.DepthStencilState = DepthStencilState.Default;
             effect.CurrentTechnique.Passes[0].Apply();
 
             foreach (DrawableElement drawable in drawables)
                 drawable.draw();
+        }
+
+        public virtual Vector3 pointVector(Vector2 angle)
+        {
+            return position;
         }
 
         public virtual void tick(double time) { }
@@ -100,18 +104,6 @@ namespace Brain3D
             get
             {
                 return screen;
-            }
-        }
-
-        public float Factor
-        {
-            get
-            {
-                return factor;
-            }
-            set
-            {
-                factor = value;
             }
         }
 

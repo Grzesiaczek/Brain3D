@@ -23,24 +23,27 @@ namespace Brain3D
         Creation creation;
         Sequence sequence;
 
-        List<AnimatedElement> elements;
+        Text2D state;
+        Text2D fps;
 
-        float viewArea = 1.4f;
+        List<AnimatedElement> elements;
+        List<DateTime> data = new List<DateTime>();
+
+        float viewArea = 1.5f;
         int margin;
 
         int count = 0;
         bool moved;
 
-        SpriteBatch batch;
-        SpriteFont font;
+        int frame;
+        int frames;
 
-        List<DateTime> data = new List<DateTime>();
+        TrackBar trackBar;
 
         protected override void Initialize()
         {
-            camera = new Camera(Constant.Size + 10);
+            camera = new Camera(Constant.Radius + 10);
             DrawableElement.Camera = camera;
-            BalancedElement.Camera = camera;
 
             elements = new List<AnimatedElement>();
             comparer = new Comparer();
@@ -48,8 +51,11 @@ namespace Brain3D
             DrawableElement.Content = new ContentManager(Services, "Content");
             Application.Idle += delegate { Invalidate(); };
 
-            batch = new SpriteBatch(Device);
-            font = new ContentManager(Services, "Content").Load<SpriteFont>("Sequence");
+            Text2D.Batch = new SpriteBatch(Device);
+            SpriteFont font = new ContentManager(Services, "Content").Load<SpriteFont>("Sequence");
+
+            state = new Text2D("", font, new Vector2(Width - 120, 20), Color.DarkBlue, 60);
+            fps = new Text2D("FPS: 0", font, new Vector2(Width - 100, 50), Color.DarkMagenta);
 
             effect = new BasicEffect(Device);
             effect.VertexColorEnabled = true;
@@ -91,6 +97,12 @@ namespace Brain3D
         {
             Width = Parent.Width - margin;
             Height = Parent.Height;
+
+            if (state == null)
+                return;
+
+            state.Location = new Vector2(Width - 100, 20);
+            fps.Location = new Vector2(Width - 100, 60);
         }
 
         public void clear()
@@ -102,6 +114,20 @@ namespace Brain3D
         public void move()
         {
             moved = true;
+        }
+
+        public void changeFrame(int frame)
+        {
+            this.frame = frame;
+            trackBar.Value = frame;
+            state.Text = frame.ToString() + "/" + frames;
+        }
+
+        public void changeState(int frame, int frames)
+        {
+            this.frames = frames;
+            trackBar.Maximum = frames;
+            changeFrame(frame);
         }
 
         public void refresh()
@@ -190,6 +216,11 @@ namespace Brain3D
             return animation.loadFrame(frame, index);
         }
 
+        public void loadTrackBar(TrackBar trackBar)
+        {
+            this.trackBar = trackBar;
+        }
+
         public void add(AnimatedElement element)
         {
             elements.Add(element);
@@ -229,12 +260,11 @@ namespace Brain3D
             {
                 TimeSpan time = data[count] - data[count - 100];
                 double span = time.TotalMilliseconds;
-                int frames = (int)(100000 / span);
-
-                batch.Begin();
-                batch.DrawString(font, frames.ToString(), new Vector2(760, 20), Color.DarkSlateBlue);
-                batch.End();
+                fps.Text = "FPS: " + (int)(100000 / span);
             }
+
+            state.draw();
+            fps.draw();
 
             count++;
         }

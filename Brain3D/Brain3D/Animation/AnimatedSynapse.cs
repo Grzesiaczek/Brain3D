@@ -13,16 +13,13 @@ namespace Brain3D
     {
         #region deklaracje
 
-        AnimatedElement pre;
-        AnimatedElement post;
+        AnimatedNeuron pre;
+        AnimatedNeuron post;
 
         AnimatedVector vector;
 
         AnimatedState synapse;
         AnimatedState duplex;
-
-        Vector3 begin;
-        Vector3 end;
 
         #endregion
 
@@ -38,20 +35,6 @@ namespace Brain3D
             synapse = new AnimatedState(syn, vector);
 
             pre.Output.Add(this);
-            post.Input.Add(this);
-        }
-
-        public AnimatedSynapse(AnimatedReceptor pre, AnimatedNeuron post, Synapse syn)
-        {
-            this.pre = pre;
-            this.post = post;
-            
-            duplex = null;
-
-            vector = new AnimatedVector(pre, post);
-            synapse = new AnimatedState(syn, vector);
-
-            pre.Output = this;
             post.Input.Add(this);
         }
 
@@ -91,13 +74,13 @@ namespace Brain3D
         {
             vector.refresh();
 
-            Vector3 diff = post.Position - pre.Position;
-            synapse.Position = 0.75f * diff + pre.Position;
+            Vector3 diff = vector.Vector;
+            synapse.Position = 0.8f * diff + vector.Start;
             synapse.refresh();
 
             if(duplex != null)
             {
-                duplex.Position = 0.25f * diff + pre.Position;
+                duplex.Position = 0.2f * diff + vector.Start;
                 duplex.refresh();
             }
         }
@@ -176,11 +159,12 @@ namespace Brain3D
 
             return synapse;
         }
+
         #endregion
 
         #region właściwości
 
-        public AnimatedElement Pre
+        public AnimatedNeuron Pre
         {
             get
             {
@@ -192,7 +176,7 @@ namespace Brain3D
             }
         }
 
-        public AnimatedElement Post
+        public AnimatedNeuron Post
         {
             get
             {
@@ -232,14 +216,24 @@ namespace Brain3D
             }
         }
 
+        public float Weight
+        {
+            get
+            {
+                float weight = synapse.Weight;
+
+                if (duplex != null)
+                    weight += duplex.Weight;
+
+                return weight;
+            }
+        }
+
         public override float Depth
         {
             get
             {
-                if (pre.Depth > post.Depth)
-                    return pre.Depth - 0.001f;
-
-                return post.Depth - 0.001f;
+                return (pre.Depth + post.Depth) / 2;
             }
         }
 
