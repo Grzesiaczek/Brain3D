@@ -70,6 +70,15 @@ namespace Brain3D
                 duplex.draw();
         }
 
+        public override void initialize()
+        {
+            vector.initialize();
+            synapse.initialize();
+
+            if (duplex != null)
+                duplex.initialize();
+        }
+
         public override void refresh()
         {
             vector.refresh();

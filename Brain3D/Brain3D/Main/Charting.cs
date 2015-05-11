@@ -16,12 +16,12 @@ namespace Brain3D
         List<ChartedNeuron> neurons;
         QuerySequence query;
 
-        public Charting(Display display) : base(display)
+        public Charting()
         {
             neurons = new List<ChartedNeuron>();
         }
 
-        public void loadBrain(Brain brain)
+        protected override void brainLoaded(object sender, EventArgs e)
         {
             foreach (Neuron neuron in brain.Neurons)
             {
@@ -30,13 +30,18 @@ namespace Brain3D
                 chn.hideNeuron += new EventHandler(hide);
 
                 neurons.Add(chn);
-                this.brain = brain;
             }
         }
 
         public void addQuery(QuerySequence query)
         {
             this.query = query;
+        }
+
+        public override void show()
+        {
+            foreach (ChartedNeuron neuron in neurons)
+                display.add(neuron);
         }
 
         void show(object sender, EventArgs e)

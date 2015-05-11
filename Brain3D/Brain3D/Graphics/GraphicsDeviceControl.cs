@@ -11,7 +11,6 @@ namespace Brain3D
     abstract public class GraphicsDeviceControl : Control
     {
         GraphicsDeviceService graphicsDeviceService;
-
         ServiceContainer services = new ServiceContainer();
 
         #region Initialization
@@ -21,7 +20,6 @@ namespace Brain3D
             if (!DesignMode)
             {
                 graphicsDeviceService = GraphicsDeviceService.AddRef(Handle, ClientSize.Width, ClientSize.Height);
-
                 services.AddService<IGraphicsDeviceService>(graphicsDeviceService);
 
                 Initialize();
@@ -95,9 +93,7 @@ namespace Brain3D
         {
             try
             {
-                Rectangle sourceRectangle = new Rectangle(0, 0, ClientSize.Width,
-                                                                ClientSize.Height);
-
+                Rectangle sourceRectangle = new Rectangle(0, 0, ClientSize.Width, ClientSize.Height);
                 Device.Present(sourceRectangle, null, this.Handle);
             }
             catch
@@ -160,7 +156,6 @@ namespace Brain3D
         protected override void OnPaintBackground(PaintEventArgs pevent)
         {
         }
-
 
         #endregion
 

@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class ChartedNeuron : CompositeElement
+    class ChartedNeuron : AnimatedElement
     {
         Neuron neuron;
         Chart chart;
@@ -26,6 +26,11 @@ namespace Brain3D
         {
             this.neuron = neuron;
             visible = false;
+            chart = new Chart(neuron, palette[index++]);
+            //display.add(chart);
+
+            if (index == 14)
+                index = 0;
         }
 
         void click(object sender, EventArgs e)

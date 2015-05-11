@@ -49,14 +49,21 @@ namespace Brain3D
             label = new Label3D(Name, position);
             number = new Text3D("0", position);
 
-            drawables.Add(disk);
-            drawables.Add(label);
-            drawables.Add(number);
+            display.add(disk);
+            display.add(label);
+            display.add(number);
         }
 
         #endregion
 
         #region logika
+
+        public override void refresh()
+        {
+            disk.refresh();
+            label.refresh();
+            number.refresh();
+        }
 
         void setData(NeuronData data)
         {

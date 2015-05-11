@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Timers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,7 +19,6 @@ namespace Brain3D
         List<BalancedNeuron> neurons;
         List<BalancedSynapse> synapses;
 
-        System.Windows.Forms.Timer timer;
         Dictionary<AnimatedNeuron, BalancedNeuron> map;
 
         float delta;
@@ -31,6 +32,7 @@ namespace Brain3D
         bool balance2d;
 
         static Balancing instance = new Balancing();
+        Stopwatch sw = new Stopwatch();
 
         public event EventHandler balanceEnded;
         public event EventHandler balanceState;
@@ -40,19 +42,15 @@ namespace Brain3D
 
         private Balancing()
         {
-            step = 0.02f;
-
-            timer = new System.Windows.Forms.Timer();
-            timer.Tick += new EventHandler(tick);
-            timer.Interval = 25;
-
+            step = 0.012f;
             Constant.spaceChanged += new EventHandler(spaceChanged);
         }
 
         public void animate()
         {
             interval = 0;
-            timer.Start();
+            sw.Start();
+            ThreadPool.QueueUserWorkItem(timer);
         }
 
         public void animate(List<AnimatedNeuron> neurons, List<AnimatedSynapse> synapses, int steps)
@@ -72,12 +70,22 @@ namespace Brain3D
                 return;
 
             initialize(neurons, synapses);
-            int count = 0;
 
-            while(true)
+            balancing();
+        }
+
+        void balancing()
+        {
+            int count = 0;
+            balanceUpdate(this, null);
+
+            while (true)
             {
                 calculate();
                 update();
+
+                if (!balance2d && Constant.Space == SpaceMode.Box && Math.Abs(delta) < 3)
+                    balance2d = true;
 
                 if (Math.Abs(delta) < treshold)
                     break;
@@ -87,6 +95,7 @@ namespace Brain3D
             }
 
             balanceEnded(true, null);
+            balanceUpdate(this, null);
             action = false;
         }
 
@@ -110,12 +119,18 @@ namespace Brain3D
                 this.synapses.Add(new BalancedSynapse(synapse, map));
         }
 
-        void tick(object sender, EventArgs e)
+        void timer(object state)
         {
-            /*Thread thread = new Thread(tick);
-            thread.Start();*/
+            while(action)
+            {
+                Thread.Sleep(2);
 
-            tick();
+                if(sw.Elapsed.TotalMilliseconds > 20)
+                {
+                    sw.Restart();
+                    tick();
+                }
+            }
         }
 
         void tick()
@@ -152,7 +167,6 @@ namespace Brain3D
             foreach (BalancedNeuron n1 in neurons)
             {
                 n1.repulse();
-                //n1.rotate();
 
                 foreach (BalancedNeuron n2 in neurons)
                     if(n1 != n2)
@@ -167,13 +181,6 @@ namespace Brain3D
                     foreach (BalancedNeuron neuron in neurons)
                         synapse.repulse(neuron);
             }
-
-            /*
-
-            foreach (BalancedSynapse bs in synapses)
-            {
-                bs.rotate();
-            }*/
         }
 
         void update()
@@ -186,7 +193,7 @@ namespace Brain3D
 
         void finish()
         {
-            timer.Stop();
+            sw.Stop();
             action = false;
             balanceEnded(false, null);
         }

@@ -10,11 +10,7 @@ namespace Brain3D
 {
     class Disk : DrawableElement
     {
-        Circle data;
-
-        VertexPositionColor center;
-        VertexPositionColor[] circle;
-        
+        Circle data;        
         int points;
 
         public Disk(Vector3 center, Circle circle, Color color)
@@ -23,36 +19,42 @@ namespace Brain3D
             data = circle;
 
             points = data.Points;
-            this.circle = new VertexPositionColor[points + 1];
-
             this.color = color;
-            refresh();
+
+            vertices = new VertexPositionColor[points + 1];
+            indices = new int[3 * points];
+        }
+
+        public override void initialize()
+        {
+            position = data.Position;
+            vertices[points] = new VertexPositionColor(position, color);
+
+            for (int i = 0; i < points; i++)
+                vertices[i] = new VertexPositionColor(data.Data[i], color);
+
+            indices[0] = points;
+            indices[1] = points - 1;
+            indices[2] = 0;
+
+            for (int i = 1; i < points; i++)
+            {
+                int index = 3 * i;
+                indices[index + 0] = points;
+                indices[index + 1] = i - 1;
+                indices[index + 2] = i;
+            }
+
+            offset = buffer.add(vertices, indices);
         }
 
         public override void refresh()
         {
             position = data.Position;
-            center = new VertexPositionColor(position, color);
+            buffer.Vertices[offset + points].Position = position;
 
-            for (int i = 0; i < points; i++)
-                circle[i] = new VertexPositionColor(data.Data[i], color);
-
-            circle[points] = circle[0];
-        }
-
-        public override void draw()
-        {
-            VertexPositionColor[] triangle = new VertexPositionColor[384];
-            
-            for (int i = 0; i < points; i++)
-            {
-                int k = 3 * i;
-                triangle[k] = center;
-                triangle[k + 1] = circle[i];
-                triangle[k + 2] = circle[i + 1];
-            }
-
-            device.DrawUserPrimitives(PrimitiveType.TriangleList, triangle, 0, 128); 
+            for (int i = 0, j = offset; i < points; i++)
+                buffer.Vertices[j++].Position = data.Data[i];
         }
     }
 }

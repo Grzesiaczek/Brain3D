@@ -43,44 +43,23 @@ namespace Brain3D
             initialize();
             prepareAnimation();
 
-            //create();
-            animate();
-        }
-
-        #region funkcje inicjalizacji dla poszczególnych trybów
-
-        void animate()
-        {
             presentation = animation;
-            mode = Mode.Query;
+            //presentation = charting;
         }
-
-        void create()
-        {
-            presentation = creation;
-            mode = Mode.Creation;
-        }
-
-        void chart()
-        {
-            presentation = charting;
-            mode = Mode.Chart;
-        }
-
-        #endregion
 
         #region inicjalizacja
 
         void initialize()
         {
+            Presentation.Display = display;
+            Controls.Add(display);
+
             brain = new Brain();
 
-            charting = new Charting(display);
-            animation = new Animation(display);
-            creation = new Creation(display);
+            animation = new Animation();
+            creation = new Creation();
+            charting = new Charting();
             stateBar = new StateBar();
-
-            Controls.Add(display);
 
             animation.setBar(stateBar);
 
@@ -113,10 +92,8 @@ namespace Brain3D
 
             creation.animationStop += new EventHandler(animationStop);
             creation.creationFinished += new EventHandler(creationFinished);
-            creation.brainCreated += new EventHandler(brainCreated);
 
             Presentation.factorChanged += new EventHandler(factorChanged);
-
             resize();
         }
 
@@ -420,13 +397,12 @@ namespace Brain3D
 
         private void Simulation_Load(object sender, EventArgs e)
         {
-
             List<CreationSequence> sequences = new List<CreationSequence>();
             /*
             sequences.Add(brain.addSentence("type new sequence"));
             sequences.Add(brain.addSentence("or load from file"));*/
 
-            sequences.Add(brain.addSentence("i have a monkey"));
+            /*sequences.Add(brain.addSentence("i have a monkey"));/*
             sequences.Add(brain.addSentence("my monkey is very small"));
             sequences.Add(brain.addSentence("it is very lovely"));
             sequences.Add(brain.addSentence("it likes to sit on my head"));
@@ -434,15 +410,19 @@ namespace Brain3D
             sequences.Add(brain.addSentence("it is also very clever"));
             sequences.Add(brain.addSentence("it learns quickly"));
             sequences.Add(brain.addSentence("my monkey is lovely"));
-            sequences.Add(brain.addSentence("i have also a small dog"));
-            
+            sequences.Add(brain.addSentence("i have also a small dog"));*/
+
+            sequences.Add(brain.addSentence("this is"));
+
+            simulate();
             creation.load(sequences);
-            animation.loadBrain(brain);
-            charting.loadBrain(brain);
+            Presentation.Brain = brain;
 
             //animation.create(creation);
-            animation.show();
-            simulate();
+            
+            presentation.show();
+            display.refresh();
+
             WindowState = FormWindowState.Maximized;
             
             //openData("Files\\data.xml");
@@ -477,13 +457,6 @@ namespace Brain3D
         private void creationFinished(object sender, EventArgs e)
         {
             buttonForth.Enabled = false;
-        }
-
-        private void brainCreated(object sender, EventArgs e)
-        {
-            brain = (Brain)sender;
-            animation.clear();
-            animation.loadBrain(brain);
         }
 
         #endregion
@@ -543,7 +516,7 @@ namespace Brain3D
             foreach (XmlNode xn in node.ChildNodes)
                 sequences.Add(brain.addSentence(xn.InnerText.ToLower()));
 
-            animation.loadBrain(brain);
+            //animation.loadBrain();
             creation.load(sequences);
             animation.create(creation);
         }

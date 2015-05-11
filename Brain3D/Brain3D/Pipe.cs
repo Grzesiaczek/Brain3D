@@ -12,9 +12,6 @@ namespace Brain3D
         Circle start;
         Circle end;
 
-        VertexPositionColor[] left;
-        VertexPositionColor[] right;
-
         Color[] palette;
         Vector3 direction;
 
@@ -50,10 +47,41 @@ namespace Brain3D
             for (int i = 16; i < 32; i++)
                 palette[i] = palette[i - 16];
 
-            left = new VertexPositionColor[points + 1];
-            right = new VertexPositionColor[points + 1];
+            vertices = new VertexPositionColor[2 * points];
+            indices = new int[6 * points];
+        }
 
-            refresh();
+        public override void initialize()
+        {
+            for (int i = 0, j = 0; i < points; i++)
+            {
+                vertices[j++] = new VertexPositionColor(start.Data[i], palette[i]);
+                vertices[j++] = new VertexPositionColor(end.Data[i], palette[i]);
+            }
+
+            int index = 6;
+            int vertex = 2 * points - 2;
+
+            indices[0] = 0;
+            indices[1] = vertex;
+            indices[2] = vertex + 1;
+            indices[3] = 0;
+            indices[4] = vertex + 1;
+            indices[5] = 1;
+
+            for (int i = 1; i < points; i++)
+            {
+                vertex = 2 * i;
+
+                indices[index++] = vertex;
+                indices[index++] = vertex - 2;
+                indices[index++] = vertex - 1;
+                indices[index++] = vertex;
+                indices[index++] = vertex - 1;
+                indices[index++] = vertex + 1;
+            }
+
+            offset = buffer.add(vertices, indices);
         }
 
         public override void refresh()
@@ -65,32 +93,11 @@ namespace Brain3D
             start.refresh();
             end.refresh();
 
-            for (int i = 0; i < points; i++)
+            for (int i = 0, j = offset; i < points; i++)
             {
-                left[i] = new VertexPositionColor(start.Data[i], palette[i]);
-                right[i] = new VertexPositionColor(end.Data[i], palette[i]);
+                buffer.Vertices[j++].Position = start.Data[i];
+                buffer.Vertices[j++].Position = end.Data[i];
             }
-
-            left[points] = left[0];
-            right[points] = right[0];
-        }
-
-        public override void draw()
-        {
-            effect.CurrentTechnique.Passes[0].Apply();
-
-            VertexPositionColor[] triangles = new VertexPositionColor[2 * points + 2];
-
-            for (int i = 0; i < points; i++)
-            {
-                triangles[2 * i] = left[i];
-                triangles[2 * i + 1] = right[i];
-            }
-
-            triangles[2 * points] = triangles[0];
-            triangles[2 * points + 1] = triangles[1];
-
-            device.DrawUserPrimitives(PrimitiveType.TriangleStrip, triangles, 0, 2 * points);
         }
 
         public Circle Start

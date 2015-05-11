@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class Signal : CompositeElement
+    class Signal : DrawableElement
     {
         Vector3 source;
         Vector3 target;
@@ -60,13 +60,18 @@ namespace Brain3D
                 pipe.draw();
         }
 
+        public override void initialize()
+        {
+            //base.initialize();
+        }
+
         public override void refresh()
         {
-            move();
+            /*move();
 
             pipe.Start.Position = source + vector * (float)factor;
             pipe.End.Position = pipe.Start.Position + bullet;
-            pipe.refresh();
+            pipe.refresh();*/
         }
 
         public bool Active

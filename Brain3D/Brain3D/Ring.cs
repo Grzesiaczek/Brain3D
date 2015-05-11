@@ -13,9 +13,6 @@ namespace Brain3D
         Circle innerCircle;
         Circle outerCircle;
 
-        VertexPositionColor[] inner;
-        VertexPositionColor[] outer;
-
         int points;
         int points2;
 
@@ -28,38 +25,50 @@ namespace Brain3D
             points = inner.Points;
             points2 = 2 * points;
 
-            this.inner = new VertexPositionColor[points + 1];
-            this.outer = new VertexPositionColor[points + 1];
+            vertices = new VertexPositionColor[2 * points];
+            indices = new int[6 * points];
+        }
 
-            refresh();
+        public override void initialize()
+        {
+            for (int i = 0, j = 0; i < points; i++)
+            {
+                vertices[j++] = new VertexPositionColor(innerCircle.Data[i], color);
+                vertices[j++] = new VertexPositionColor(outerCircle.Data[i], color);
+            }
+
+            int index = 6;
+            int vertex = 2 * points - 2;
+
+            indices[0] = 0;
+            indices[1] = vertex;
+            indices[2] = vertex + 1;
+            indices[3] = 0;
+            indices[4] = vertex + 1;
+            indices[5] = 1;
+
+            for (int i = 1; i < points; i++)
+            {
+                vertex = 2 * i;
+
+                indices[index++] = vertex;
+                indices[index++] = vertex - 2;
+                indices[index++] = vertex - 1;
+                indices[index++] = vertex;
+                indices[index++] = vertex - 1;
+                indices[index++] = vertex + 1;
+            }
+
+            offset = buffer.add(vertices, indices);
         }
 
         public override void refresh()
         {
-            for (int i = 0; i < points; i++)
+            for (int i = 0, j = offset; i < points; i++)
             {
-                this.inner[i] = new VertexPositionColor(innerCircle.Data[i], color);
-                this.outer[i] = new VertexPositionColor(outerCircle.Data[i], color);
+                buffer.Vertices[j++].Position = innerCircle.Data[i];
+                buffer.Vertices[j++].Position = outerCircle.Data[i];
             }
-
-            inner[points] = inner[0];
-            outer[points] = outer[0];
-        }
-
-        public override void draw()
-        {
-            VertexPositionColor[] triangles = new VertexPositionColor[points2 + 2];
-
-            for (int i = 0; i < points; i++)
-            {
-                triangles[2 * i] = inner[i];
-                triangles[2 * i + 1] = outer[i];
-            }
-
-            triangles[points2] = triangles[0];
-            triangles[points2 + 1] = triangles[1];
-
-            device.DrawUserPrimitives(PrimitiveType.TriangleStrip, triangles, 0, points2);
         }
     }
 }

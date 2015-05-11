@@ -40,12 +40,11 @@ namespace Brain3D
         bool invitation;
 
         public event EventHandler animationStop;
-        public event EventHandler brainCreated;
         public event EventHandler creationFinished;
 
         #endregion
 
-        public Creation(Display display) : base(display)
+        public Creation()
         {
             mapNeurons = new Dictionary<Neuron, CreatedNeuron>();
             mapSynapses = new Dictionary<Synapse, CreatedSynapse>();
@@ -83,8 +82,6 @@ namespace Brain3D
 
             length = 0;
             count = 0;
-
-            brain = new Brain();
         }
 
         public void load(List<CreationSequence> data)
@@ -101,10 +98,9 @@ namespace Brain3D
             }
         }
 
-        public void load(List<AnimatedNeuron> neurons, List<AnimatedSynapse> synapses, Brain brain)
+        public void load(List<AnimatedNeuron> neurons, List<AnimatedSynapse> synapses)
         {
             animated = neurons;
-            this.brain = brain;
 
             foreach (AnimatedNeuron an in neurons)
                 mapNeurons.Add(an.Neuron, new CreatedNeuron(an));
@@ -227,7 +223,6 @@ namespace Brain3D
                 addSequence();
 
                 brain = new Brain();
-                brainCreated(brain, null);
             }
 
             sequence.add(key);

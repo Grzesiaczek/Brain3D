@@ -43,15 +43,15 @@ namespace Brain3D
 
             disk = new StateDisk(position + shiftDisk, 0.5f);
             state = new BorderedDisk(position + shiftState, 0.5f);
-
+            /*
             if (duplex)
                 signal = new Signal(vector.Target, vector.Source);
             else
-                signal = new Signal(vector.Source, vector.Target);
+                signal = new Signal(vector.Source, vector.Target);*/
 
-            drawables.Add(state);
-            drawables.Add(disk);
-            drawables.Add(signal);
+            display.add(state);
+            display.add(disk);
+            //drawables.Add(signal);
         }
 
         #region sterowanie
@@ -111,7 +111,7 @@ namespace Brain3D
 
             disk.Position = position + shiftDisk;
             state.Position = position + shiftState;
-
+            /*
             if (duplex)
             {
                 signal.Source = vector.Target;
@@ -121,11 +121,11 @@ namespace Brain3D
             {
                 signal.Source = vector.Source;
                 signal.Target = vector.Target;
-            }
+            }*/
 
             disk.refresh();
             state.refresh();
-            signal.refresh(); 
+            //signal.refresh(); 
         }
 
         #endregion

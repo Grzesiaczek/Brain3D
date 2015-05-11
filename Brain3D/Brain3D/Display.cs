@@ -27,22 +27,28 @@ namespace Brain3D
         Text2D fps;
 
         List<AnimatedElement> elements;
-        List<DateTime> data = new List<DateTime>();
+        List<DateTime> times = new List<DateTime>();
 
         float viewArea = 1.5f;
         int margin;
 
         int count = 0;
         bool moved;
+        bool refreshed;
 
         int frame;
         int frames;
+        int offset;
 
         TrackBar trackBar;
+
+        GraphicsBuffer buffer;
+        GraphicsBuffer values;
 
         protected override void Initialize()
         {
             camera = new Camera(Constant.Radius + 10);
+            //camera = new Camera(new Vector3(2, 0, 2));
             DrawableElement.Camera = camera;
 
             elements = new List<AnimatedElement>();
@@ -71,11 +77,73 @@ namespace Brain3D
 
             DrawableElement.Device = Device;
             DrawableElement.Effect = effect;
-            AnimatedElement.Display = this;
+            DrawableElement.Display = this;
 
             Circle.initialize();
-            Text3D.initialize();
+            Text3D.load();
             SequenceElement.initialize();
+
+            buffer = new GraphicsBuffer(Device);
+            values = new GraphicsBuffer(Device);
+        }
+
+        protected override void Draw()
+        {
+            Device.DepthStencilState = DepthStencilState.Default;
+            Device.Clear(Color.CornflowerBlue);
+            Device.RasterizerState = RasterizerState.CullNone;
+
+            effect.World = Matrix.Identity;
+            effect.View = Matrix.CreateLookAt(camera.Position, camera.Target, camera.Up);
+            effect.Projection = Matrix.CreatePerspectiveFieldOfView(viewArea, Device.Viewport.AspectRatio, 1, 60);
+
+            if (moved)
+            {
+                refresh();
+                moved = false;
+            }
+
+            if (refreshed)
+            {
+                buffer.refresh();
+                values.refresh();
+                refreshed = false;
+            }
+
+            effect.CurrentTechnique.Passes[0].Apply();
+            buffer.draw();
+            values.draw();
+
+            if (sequence != null)
+                sequence.draw();
+
+            times.Add(DateTime.Now);
+
+            if (count > 100)
+            {
+                TimeSpan time = times[count] - times[count - 100];
+                double span = time.TotalMilliseconds;
+                fps.Text = "FPS: " + (int)(100000 / span);
+            }
+            else if (count != 0)
+            {
+                TimeSpan time = times[count] - times[0];
+                double span = time.TotalMilliseconds;
+                fps.Text = "FPS: " + (int)(1000 * count / span);
+            }
+
+            state.draw();
+            fps.draw();
+
+            count++;
+        }
+
+        public void add(DrawableElement element)
+        {
+            if (element is Text3D)
+                element.Buffer = values;
+            else
+                element.Buffer = buffer;
         }
 
         public void add(Animation animation)
@@ -91,6 +159,12 @@ namespace Brain3D
         public void show(Sequence sequence)
         {
             this.sequence = sequence;
+        }
+
+        public void initialize()
+        {
+            buffer.initialize();
+            values.initialize();
         }
 
         public void resize()
@@ -132,11 +206,10 @@ namespace Brain3D
 
         public void refresh()
         {
-            Thread thread = new Thread(refreshment);
-            thread.Start();
+            ThreadPool.QueueUserWorkItem(refreshment);
         }
 
-        void refreshment()
+        void refreshment(object state)
         {
             List<AnimatedElement> sorted = new List<AnimatedElement>();
 
@@ -147,7 +220,8 @@ namespace Brain3D
             }
 
             sorted.Sort(comparer);
-            elements = sorted;
+            //elements = sorted;
+            refreshed = true;
         }
 
         public void setMargin(int value)
@@ -229,44 +303,6 @@ namespace Brain3D
         public void remove(AnimatedElement element)
         {
             elements.Remove(element);
-        }
-
-        protected override void Draw()
-        {
-            Device.DepthStencilState = DepthStencilState.Default;
-            Device.Clear(Color.CornflowerBlue);
-
-            effect.World = Matrix.Identity;
-            effect.View = Matrix.CreateLookAt(camera.Position, camera.Target, camera.Up);
-            effect.Projection = Matrix.CreatePerspectiveFieldOfView(viewArea, Device.Viewport.AspectRatio, 1, 60);
-
-            Text3D.ViewProjection = effect.View * effect.Projection;
-
-            if(moved)
-            {
-                refresh();
-                moved = false;
-            }
-
-            foreach (AnimatedElement element in elements)
-                element.draw();
-
-            if (sequence != null)
-                sequence.draw();
-
-            data.Add(DateTime.Now);
-
-            if(count > 100)
-            {
-                TimeSpan time = data[count] - data[count - 100];
-                double span = time.TotalMilliseconds;
-                fps.Text = "FPS: " + (int)(100000 / span);
-            }
-
-            state.draw();
-            fps.draw();
-
-            count++;
         }
     }
 }

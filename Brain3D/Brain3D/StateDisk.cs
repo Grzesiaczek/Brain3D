@@ -15,6 +15,7 @@ namespace Brain3D
         Ring change;
         Ring outer;
 
+        bool initialized;
         float value;
 
         public StateDisk(Vector3 position, float radius)
@@ -37,7 +38,7 @@ namespace Brain3D
                 change = new Ring(innerCircle, changeCircle, Color.Green);
                 outer = new Ring(changeCircle, outerCircle, Color.LightGreen);
 
-                drawables.Add(change);
+                display.add(change);
                 elements.Add(changeCircle);
             }
 
@@ -45,9 +46,18 @@ namespace Brain3D
             elements.Add(outerCircle);
             elements.Add(borderCircle);
 
-            drawables.Add(disk);
-            drawables.Add(outer);
-            drawables.Add(border);
+            display.add(disk);
+            display.add(outer);
+            display.add(border);
+        }
+
+        public override void refresh()
+        {
+            base.refresh();
+            disk.refresh();
+            border.refresh();
+            //change.refresh();
+            outer.refresh();
         }
 
         public void setChange(CreationData data)
@@ -80,9 +90,12 @@ namespace Brain3D
             innerCircle.refresh();
             changeCircle.refresh();
 
-            disk.refresh();
-            change.refresh();
-            outer.refresh();
+            if (initialized)
+            {
+                disk.refresh();
+                change.refresh();
+                outer.refresh();
+            }
         }
 
         public void changeValue(float value)
@@ -126,6 +139,12 @@ namespace Brain3D
 
             disk.Color = new Color(red, green, blue);
             disk.refresh();
+        }
+
+        public override void initialize()
+        {
+            base.initialize();
+            initialized = true;
         }
     }
 }

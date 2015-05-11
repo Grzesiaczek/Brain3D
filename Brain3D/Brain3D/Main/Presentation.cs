@@ -14,10 +14,9 @@ namespace Brain3D
     {
         #region deklaracje
 
-        protected Display display;
-        protected ShiftedNeuron shift;
+        protected static Brain brain;
+        protected static Display display;
 
-        protected Brain brain;
         protected Timer timer;
 
         protected static int frames;
@@ -25,17 +24,19 @@ namespace Brain3D
 
         public static event EventHandler factorChanged;
         public static event EventHandler sizeChanged;
+        public static event EventHandler loadBrain;
 
         #endregion
 
-        public Presentation(Display display)
+        public Presentation()
         {
-            this.display = display;
-
             timer = new System.Windows.Forms.Timer();
             timer.Tick += new EventHandler(tick);
             timer.Interval = 25;
+            loadBrain += brainLoaded;
         }
+
+        protected virtual void brainLoaded(object sender, EventArgs e) { }
 
         protected virtual void tick(object sender, EventArgs e) { }
 
@@ -68,6 +69,25 @@ namespace Brain3D
 
         public virtual void delete() { }
 
+        public virtual void show() { }
+
         #endregion
+
+        public static Brain Brain
+        {
+            set
+            {
+                brain = value;
+                loadBrain(null, null);
+            }
+        }
+
+        public static Display Display
+        {
+            set
+            {
+                display = value;
+            }
+        }
     }
 }

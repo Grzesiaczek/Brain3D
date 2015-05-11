@@ -21,9 +21,7 @@ namespace Brain3D
             else
                 scale = 0.04f;
             
-            shift = new Vector3(-text.Width / 2, -0.7f / scale, 0);
-            constant = Matrix.CreateTranslation(shift) * Matrix.CreateScale(scale) * Matrix.CreateRotationY((float)Math.PI);
-            refresh();
+            shift = new Vector3(-text.Width * scale / 2, -0.7f, -0.01f);
         }
     }
 }

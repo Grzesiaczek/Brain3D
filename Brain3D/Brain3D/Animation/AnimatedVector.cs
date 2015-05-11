@@ -27,7 +27,7 @@ namespace Brain3D
             refreshAngle();
 
             pipe = new Pipe(new Circle(source.pointVector(-angle), 0.08f, 4), new Circle(target.pointVector(angle), 0.08f, 4));
-            drawables.Add(pipe);
+            display.add(pipe);
         }
 
         public override void refresh()

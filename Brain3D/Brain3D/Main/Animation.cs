@@ -42,7 +42,7 @@ namespace Brain3D
 
         #endregion
 
-        public Animation(Display display) : base(display)
+        public Animation()
         {
             balancing = Balancing.Instance;
             balancing.balanceEnded += balanceEnded;
@@ -84,10 +84,11 @@ namespace Brain3D
             display.clear();
         }
 
-        public void loadBrain(Brain brain)
+        protected override void brainLoaded(object sender, EventArgs e)
         {
+            clear();
+
             Random random = new Random();
-            this.brain = brain;
 
             foreach (Neuron neuron in brain.Neurons)
             {
@@ -177,14 +178,7 @@ namespace Brain3D
 
         public void create(Creation creation)
         {
-            creation.load(neurons, synapses, brain);
-            
-            Thread thread = new Thread(fastBalancing);
-            thread.Start();
-        }
-
-        void fastBalancing()
-        {
+            creation.load(neurons, synapses);
             stateBar.Phase = StateBarPhase.BalanceNormal;
             balancing.balance(neurons, synapses);
         }
@@ -274,6 +268,7 @@ namespace Brain3D
             stopBalance();
             stateBar.Phase = StateBarPhase.BalanceNormal;
             balancing.animate(neurons, synapses, 40);
+            //balancing.balance(neurons, synapses);
         }
 
         public void stopBalance()
@@ -379,12 +374,13 @@ namespace Brain3D
 
         #region interfejs drawable
 
-        public void show()
+        public override void show()
         {
             display.show(query);
             create();
             balance();
 
+            display.initialize();
             display.changeState(frame, length);
         }
 

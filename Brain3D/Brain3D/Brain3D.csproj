@@ -13,7 +13,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaProfile>Reach</XnaProfile>
+    <XnaProfile>HiDef</XnaProfile>
     <XnaCrossPlatformGroupID>77ab66a4-9849-4248-9569-27556bde2626</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Files\Game.ico</ApplicationIcon>
@@ -100,10 +100,10 @@
     <Compile Include="BorderedDisk.cs" />
     <Compile Include="Brain\BrainElement.cs" />
     <Compile Include="Brain\Brain.cs" />
-    <Compile Include="CompositeElement.cs" />
     <Compile Include="Creation\CreatedElement.cs" />
     <Compile Include="GraphicsElement.cs" />
     <Compile Include="Label3D.cs" />
+    <Compile Include="GraphicsBuffer.cs" />
     <Compile Include="Pipe.cs" />
     <Compile Include="Sequence\BuiltElement.cs" />
     <Compile Include="Camera.cs" />

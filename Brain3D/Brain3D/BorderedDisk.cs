@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class BorderedDisk : CompositeElement
+    class BorderedDisk : DrawableElement
     {
         protected Circle innerCircle;
         protected Circle borderCircle;
@@ -33,8 +33,8 @@ namespace Brain3D
             elements.Add(innerCircle);
             elements.Add(borderCircle);
 
-            drawables.Add(disk);
-            drawables.Add(border);
+            display.add(disk);
+            display.add(border);
         }
 
         public override Color Color

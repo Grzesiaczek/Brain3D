@@ -8,13 +8,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    abstract class AnimatedElement : CompositeElement
+    abstract class AnimatedElement : DrawableElement
     {
         #region deklaracje
 
         protected static bool animation;
-        protected static Display display;
 
+        protected Vector3 location;
         protected Vector3 screen;
 
         protected float factor;
@@ -34,13 +34,9 @@ namespace Brain3D
             screen = device.Viewport.Project(position, effect.Projection, effect.View, effect.World);
         }
 
-        public override void draw()
+        public void update()
         {
-            device.DepthStencilState = DepthStencilState.Default;
-            effect.CurrentTechnique.Passes[0].Apply();
-
-            foreach (DrawableElement drawable in drawables)
-                drawable.draw();
+            position = location;
         }
 
         public virtual Vector3 pointVector(Vector2 angle)
@@ -75,14 +71,6 @@ namespace Brain3D
 
         #region właściwości
 
-        public static Display Display
-        {
-            set
-            {
-                display = value;
-            }
-        }
-
         public static bool Animation
         {
             set
@@ -96,6 +84,18 @@ namespace Brain3D
             get
             {
                 return screen.Z;
+            }
+        }
+
+        public Vector3 Location
+        {
+            get
+            {
+                return location;
+            }
+            set
+            {
+                location = value;
             }
         }
 

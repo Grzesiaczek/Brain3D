@@ -24,9 +24,9 @@ namespace Brain3D
             parameters.DeviceWindowHandle = windowHandle;
             parameters.PresentationInterval = PresentInterval.Immediate;
             parameters.IsFullScreen = false;
-            parameters.MultiSampleCount = 8;
+            parameters.MultiSampleCount = 6;
 
-            graphicsDevice = new GraphicsDevice(GraphicsAdapter.DefaultAdapter, GraphicsProfile.Reach, parameters);
+            graphicsDevice = new GraphicsDevice(GraphicsAdapter.DefaultAdapter, GraphicsProfile.HiDef, parameters);
         }
 
         public static GraphicsDeviceService AddRef(IntPtr windowHandle, int width, int height)

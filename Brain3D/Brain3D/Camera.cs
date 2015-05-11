@@ -17,12 +17,24 @@ namespace Brain3D
         Spherical spherical;
         Matrix rotation;
 
+        public Camera(Vector3 position)
+        {
+            this.position = position;
+            target = new Vector3(position.X, 0, 0);
+            initialize();
+        }
+
         public Camera(float radius)
         {
             position = new Vector3(0, 0, radius);
             target = Vector3.Zero;
+            initialize();
+        }
+
+        void initialize()
+        {
             up = Vector3.Up;
-            
+
             spherical = new Spherical(position);
             rotation = Matrix.CreateFromYawPitchRoll(-spherical.Longitude - Constant.PI2, spherical.Latitude, 0);
 
@@ -102,7 +114,7 @@ namespace Brain3D
             }
             else
             {
-                spherical.Latitude += 0.025f;
+                spherical.Latitude -= 0.025f;
                 refresh();
             }
         }

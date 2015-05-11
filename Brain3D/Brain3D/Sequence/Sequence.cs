@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class Sequence : CompositeElement
+    class Sequence : DrawableElement
     {
         protected List<SequenceElement> sequence;
         protected BuiltElement builder;
