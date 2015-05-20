@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Brain3D
 {
-    class CreationData : Layer
+    class CreationData
     {
         #region deklaracje
 
@@ -32,47 +32,14 @@ namespace Brain3D
             this.start = start;
             this.finish = finish;
             change = finish - start;
-
+            /*
             Height = 35;
             Width = 160;
             initializeGraphics();
 
             MouseEnter += new EventHandler(mouseEnter);
-            MouseLeave += new EventHandler(mouseLeave);
+            MouseLeave += new EventHandler(mouseLeave);*/
             background = SystemColors.Control;
-        }
-
-        protected override void tick(object sender, EventArgs e)
-        {
-            /*Graphics g = buffer.Graphics;
-            g.Clear(background);
-
-            Pen pen = new Pen(Brushes.DarkSlateGray, 2);
-            float y = 14;
-
-            Circle left = new Circle(new PointF(64, y), 12);
-            Circle right = new Circle(new PointF(100, y), 12);
-
-            left.draw(g, start, finish - start, pen);
-            right.draw(g, finish, pen);
-
-            int change = (int)((finish - start) * 100);
-            Brush brush = Brushes.Red;
-            y += 2;
-
-            if (change > 0)
-                brush = Brushes.Green;
-            else
-                change = -change;
-
-            StringFormat format = new StringFormat();
-            format.Alignment = StringAlignment.Center;
-            format.LineAlignment = StringAlignment.Center;
-
-            g.DrawString(frame.Frame.ToString(), new Font("Calibri", 14, FontStyle.Bold), Brushes.SaddleBrown, 28, y, format);
-            g.DrawString(change.ToString(), new Font("Arial", 12, FontStyle.Bold), brush, 136, y, format);
-
-            buffer.Render(graphics);*/
         }
 
         private void mouseEnter(object sender, EventArgs e)

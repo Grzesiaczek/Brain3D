@@ -9,48 +9,83 @@ namespace Brain3D
 {
     class Chart : DrawableElement
     {
-        float[] activity;
+        static Vector2[] angles;
+        NeuronData[] activity;
+
+        int count;
+
+        float value;
+        float previous;
+        float next;
 
         public Chart(Neuron neuron, Color color)
         {
-            activity = new float[1000];
-            this.color = color;
+            activity = neuron.Activity;
+            count = activity.Length;
+            this.color = color;            
 
-            for (int i = 0; i < 1000; i++)
-                activity[i] = (float)neuron.Activity[i].Value;
+            vertices = new VertexPositionColor[2 * count];
+            indices = new int[6 * count - 6];
+        }
 
-            vertices = new VertexPositionColor[2000];
-            indices = new int[5994];
-            //refresh();
+        public static void initializeAngles()
+        {
+            double angle = Math.PI / 2 - 1.57;
+            angles = new Vector2[314];
+
+            for (int i = 0; i < 314; i++, angle += 0.01)
+                angles[i] = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
         }
 
         public override void initialize()
         {
-            base.initialize();
-        }
-
-        public override void refresh()
-        {
-            for(int i = 0; i < 1000; i++)
+            for (int i = 2; i < 1000; i++)
             {
-                vertices[2 * i] = new VertexPositionColor(new Vector3(0.01f * i, activity[i] - 0.01f, 0), color);
-                vertices[2 * i + 1] = new VertexPositionColor(new Vector3(0.01f * i, activity[i] + 0.01f, 0), color);
+                NeuronData data = activity[i];
+
+                if (data.Active)
+                    next = 1 - (float)data.Refraction / 15;
+                else
+                    next = (float)data.Value;
+
+                double a1 = Math.Atan((value - previous) * 100);
+                double a2 = Math.Atan((next - value) * 100);
+                double an = (a1 + a2) / 2;
+                double ad = an - a1;
+
+                double test = Math.Atan(-3);
+
+                if (ad < 0)
+                    ad = -ad;
+
+                int index = (int)(157 + an * 100);
+                float factor = (float)(0.01 / Math.Cos(ad));
+
+                Vector2 angle = angles[index] * factor;
+
+                vertices[2 * i] = new VertexPositionColor(new Vector3(0.01f * i - angle.X, value - angle.Y, 0), color);
+                vertices[2 * i + 1] = new VertexPositionColor(new Vector3(0.01f * i + angle.X, value + angle.Y, 0), color);
+
+                previous = value;
+                value = next;
             }
 
-            for(int i = 0; i < 999; i++)
+            vertices[0] = new VertexPositionColor(new Vector3(0, -0.01f, 0), color);
+            vertices[1] = new VertexPositionColor(new Vector3(0, 0.01f, 0), color);
+
+            for (int i = 0, j = 0; i < 999; i++)
             {
-                int index = 6 * i;
                 int vertex = 2 * i;
 
-                indices[index + 0] = vertex + 0;
-                indices[index + 1] = vertex + 3;
-                indices[index + 2] = vertex + 2;
-                indices[index + 3] = vertex + 0;
-                indices[index + 4] = vertex + 1;
-                indices[index + 5] = vertex + 3;
+                indices[j++] = vertex + 0;
+                indices[j++] = vertex + 3;
+                indices[j++] = vertex + 2;
+                indices[j++] = vertex + 0;
+                indices[j++] = vertex + 1;
+                indices[j++] = vertex + 3;
             }
 
-            buffer.add(vertices, indices);
+            offset = buffer.add(vertices, indices);
         }
     }
 }

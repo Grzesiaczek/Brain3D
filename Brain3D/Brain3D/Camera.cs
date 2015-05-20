@@ -121,33 +121,45 @@ namespace Brain3D
 
         public void farther()
         {
-            if (Constant.Space == SpaceMode.Box)
-            {
-                position.Z += 0.25f;
-
-                if (position.Z > 100)
-                    position.Z = 100;
-            }
-            else
+            if(Constant.Space == SpaceMode.Sphere)
             {
                 spherical.Radius += 0.25f;
                 refresh();
+            }
+            else
+            {
+                float border = 100;
+
+                if (Constant.Space == SpaceMode.Chart)
+                    border = 5;
+
+                position.Z += 0.25f;
+
+                if (position.Z > border)
+                    position.Z = border;
+
             }
         }
 
         public void closer()
         {
-            if (Constant.Space == SpaceMode.Box)
-            {
-                position.Z -= 0.25f;
-
-                if (position.Z < 10)
-                    position.Z = 10;
-            }
-            else
+            if (Constant.Space == SpaceMode.Sphere)
             {
                 spherical.Radius -= 0.25f;
                 refresh();
+            }
+            else
+            {
+                float border = 10;
+
+                if (Constant.Space == SpaceMode.Chart)
+                    border = 1;
+
+                position.Z -= 0.25f;
+
+                if (position.Z < border)
+                    position.Z = border;
+
             }
         }
 

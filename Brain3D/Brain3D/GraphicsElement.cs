@@ -12,13 +12,16 @@ namespace Brain3D
     abstract class GraphicsElement
     {
         protected static Camera camera;
-        public static ContentManager content;
+        protected static ContentManager content;
         protected static GraphicsDevice device;
         protected static BasicEffect effect;
 
+        protected Vector3[] framework;
         protected Vector3 position;
 
-        public abstract void refresh();
+        public virtual void move() { }
+
+        public virtual void rotate() { }
 
         public static Camera Camera
         {

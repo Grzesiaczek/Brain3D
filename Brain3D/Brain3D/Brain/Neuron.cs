@@ -10,7 +10,6 @@ namespace Brain3D
     {
         #region deklaracje
 
-        List<Receptor> sensin;
         List<Synapse> input;
         List<Synapse> output;
 
@@ -35,6 +34,8 @@ namespace Brain3D
         static double[] activation;
         static bool initialized;
 
+        public static event EventHandler activate;
+
         #endregion
 
         #region konstruktory
@@ -48,7 +49,6 @@ namespace Brain3D
             treshold = 1.0;
             target = treshold;
 
-            sensin = new List<Receptor>();
             input = new List<Synapse>();
             output = new List<Synapse>();
             activity = new NeuronData[size];
@@ -95,7 +95,8 @@ namespace Brain3D
 
                     if (value >= treshold)
                     {
-                        //signals.Clear();
+                        signals.Clear();
+                        activate(new Tuple<Neuron, int>(this, time), null);
                         value = treshold;
                         refraction = 1;
                         signum = 0;
@@ -167,6 +168,11 @@ namespace Brain3D
             signals.Add(new Tuple<double, int>(value, time));
         }
 
+        public void shot(int time)
+        {
+            impulse(5, time);
+        }
+
         #endregion
 
         #region właściwości
@@ -195,15 +201,11 @@ namespace Brain3D
             }
         }
 
-        public string Word
+        public String Word
         {
             get
             {
                 return word;
-            }
-            set
-            {
-                word = value;
             }
         }
 
@@ -216,14 +218,6 @@ namespace Brain3D
             set
             {
                 count = value;
-            }
-        }
-
-        public String Name
-        {
-            get
-            {
-                return word;
             }
         }
 

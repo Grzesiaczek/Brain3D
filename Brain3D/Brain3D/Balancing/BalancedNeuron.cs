@@ -10,23 +10,18 @@ namespace Brain3D
 {
     class BalancedNeuron
     {
+        static Dictionary<AnimatedSynapse, BalancedSynapse> map;
         AnimatedNeuron neuron;
 
         List<AnimatedVector> input;
         List<AnimatedVector> output;
-        List<AnimatedVector> vectors;
 
-        static float k1 = 8;
+        static float k1 = 20;
         static float k2 = k1 * k1;
         static float k3 = k2 * k1;
-        static float k0 = 800;
+        static float k0 = 1000;
 
-        float factor;
-
-        Vector3 border = Vector3.Zero;
-        Vector3 others = Vector3.Zero;
-        Vector3 synapses = Vector3.Zero;
-        Vector3 last;
+        int count;
 
         Vector3 shift;
         Vector3 position;
@@ -39,7 +34,6 @@ namespace Brain3D
 
             input = new List<AnimatedVector>();
             output = new List<AnimatedVector>();
-            vectors = new List<AnimatedVector>();
 
             foreach (AnimatedSynapse synapse in neuron.Input)
                 input.Add(synapse.Vector);
@@ -47,8 +41,8 @@ namespace Brain3D
             foreach (AnimatedSynapse synapse in neuron.Output)
                 output.Add(synapse.Vector);
 
-            factor = input.Count + output.Count;
-            factor = 1 + (factor - 1) * (factor - 1);
+            count = input.Count + output.Count;
+            count *= count;
         }
 
         public void repulse(Vector3 pos, bool connected)
@@ -59,9 +53,7 @@ namespace Brain3D
             if (distance < 1)
                 distance = 1;
 
-            others += (k2 * delta / distance);
-
-            if(connected)
+            if (connected)
                 shift += k3 * delta / (distance * delta.Length());
             else
                 shift += k2 * delta / distance;
@@ -73,15 +65,13 @@ namespace Brain3D
             {
                 shift.X += repulse(Constant.Box.X, position.X);
                 shift.Y += repulse(Constant.Box.Y, position.Y);
-                shift.Z += repulse(Constant.Box.Z, position.Z);
+                shift.Z += repulse(Constant.Box.Z, position.Z) / 2;
             }
             else
             {
                 float distance = Constant.Radius - position.Length();
                 shift -= k2 * position / (distance * distance);
             }
-
-            border = shift;
         }
 
         float repulse(float box, float position)
@@ -93,69 +83,72 @@ namespace Brain3D
 
         public void rotate()
         {
-            /*int count = input.Count + output.Count;
-
-            foreach (AnimatedVector v1 in input)
+            int count = input.Count + output.Count;
+            
+            foreach (AnimatedSynapse s1 in neuron.Input)
             {
-                float rotation = 0;
+                Vector3 shift = Vector3.Zero;
 
-                foreach (AnimatedVector v2 in input)
+                foreach (AnimatedSynapse s2 in neuron.Input)
                 {
-                    if (v1 == v2)
+                    if (s1 == s2)
                         continue;
 
-                    rotation += diff(v1.Angle, v2.Angle);
+                    shift += rotate(-s1.Vector.Direction, -s2.Vector.Direction);
                 }
 
-                foreach (AnimatedVector v2 in output)
-                {
-                    float angle = v2.Angle;
+                foreach (AnimatedSynapse s2 in neuron.Output)
+                    shift += rotate(-s1.Vector.Direction, s2.Vector.Direction);
 
-                    if (angle < Math.PI)
-                        angle += (float)Math.PI;
-                    else
-                        angle -= (float)Math.PI;
-
-                    rotation += diff(v1.Angle, angle);
-                }
-
-                v1.Rotation += rotation / count;
+                shift *= -10 / count;
+                map[s1].Pre.move(shift);
+                this.shift -= shift;
             }
 
-            foreach (AnimatedVector v1 in output)
+            foreach (AnimatedSynapse s1 in neuron.Output)
             {
-                float rotation = 0;
+                Vector3 shift = Vector3.Zero;
 
-                foreach (AnimatedVector v2 in output)
+                foreach (AnimatedSynapse s2 in neuron.Output)
                 {
-                    if (v1 == v2)
+                    if (s1 == s2)
                         continue;
 
-                    rotation += diff(v1.Angle, v2.Angle);
+                    shift += rotate(s1.Vector.Direction, s2.Vector.Direction);
                 }
 
-                foreach (AnimatedVector v2 in input)
-                {
-                    float angle = v2.Angle;
-                    test.Add(rotation);
+                foreach (AnimatedSynapse s2 in neuron.Input)
+                    shift += rotate(s1.Vector.Direction, -s2.Vector.Direction);
 
-                    if (angle < Math.PI)
-                        angle += (float)Math.PI;
-                    else
-                        angle -= (float)Math.PI;
-
-                    rotation += diff(v1.Angle, angle);
-                }
-
-                v1.Rotation += rotation / count;
-            }*/
+                shift *= -10 / count;
+                map[s1].Post.move(shift);
+                this.shift -= shift;
+            }
         }
+
+        Vector3 rotate(Vector3 source, Vector3 target)
+        {
+            Vector3 result = Vector3.Zero;
+            Vector3 vector = target - source;
+
+            float left = vector.X * source.X + vector.Y * source.Y + vector.Z * source.Z;
+            float right = source.X * source.X + source.Y * source.Y + source.Z * source.Z;
+            float t = - right / left;
+
+            result.X = vector.X * t + source.X;
+            result.Y = vector.Y * t + source.Y;
+            result.Z = vector.Z * t + source.Z;
+
+            Vector3 test = result * (float)Math.Pow(2 - vector.Length(), 2) / result.Length();
+
+            return result * (float)Math.Pow(2 - vector.Length(), 2) / result.Length();
+        }
+
 
         public float update(float factor)
         {
             float result = 0;
             String name = neuron.Name;
-            last = shift;
 
             if (shift.Length() > 1)
             {
@@ -175,14 +168,28 @@ namespace Brain3D
         public void move(Vector3 vector)
         {
             shift += vector;
-            synapses += vector;
         }
 
-        public void zero()
+        public static Dictionary<AnimatedSynapse, BalancedSynapse> Map
         {
-            border = Vector3.Zero;
-            others = Vector3.Zero;
-            synapses = Vector3.Zero;
+            get
+            {
+                return map;
+            }
+            set
+            {
+                map = value;
+            }
+        }
+
+        public static float K
+        {
+            set
+            {
+                k1 = value;
+                k2 = k1 * k1;
+                k3 = k2 * k1;
+            }
         }
 
         public Vector3 Position
@@ -201,19 +208,11 @@ namespace Brain3D
             }
         }
 
-        public float Factor
+        public int Count
         {
             get
             {
-                return factor;
-            }
-        }
-
-        public float Radius
-        {
-            get
-            {
-                return neuron.Radius;
+                return count;
             }
         }
     }

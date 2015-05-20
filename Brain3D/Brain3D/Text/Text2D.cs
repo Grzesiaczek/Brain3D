@@ -7,10 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class Text2D : DrawableElement
+    class Text2D : SpriteElement
     {
-        static SpriteBatch batch;
-
         SpriteFont font;
         String text;
 
@@ -32,9 +30,7 @@ namespace Brain3D
 
         public override void draw()
         {
-            batch.Begin();
             batch.DrawString(font, text, corner, color);
-            batch.End();
         }
 
         public String Text
@@ -57,14 +53,6 @@ namespace Brain3D
             {
                 corner += value - location;
                 location = value;
-            }
-        }
-
-        public static SpriteBatch Batch
-        {
-            set
-            {
-                batch = value;
             }
         }
     }

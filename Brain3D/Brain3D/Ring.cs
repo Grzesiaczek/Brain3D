@@ -10,19 +10,21 @@ namespace Brain3D
 {
     class Ring : DrawableElement
     {
-        Circle innerCircle;
-        Circle outerCircle;
+        Circle framework;
 
         int points;
         int points2;
 
-        public Ring(Circle inner, Circle outer, Color color)
+        float r1;
+        float r2;
+
+        public Ring(Vector3 position, Circle framework, Color color)
         {
-            innerCircle = inner;
-            outerCircle = outer;
+            this.position = position;
+            this.framework = framework;
 
             this.color = color;
-            points = inner.Points;
+            points = framework.Points;
             points2 = 2 * points;
 
             vertices = new VertexPositionColor[2 * points];
@@ -33,8 +35,8 @@ namespace Brain3D
         {
             for (int i = 0, j = 0; i < points; i++)
             {
-                vertices[j++] = new VertexPositionColor(innerCircle.Data[i], color);
-                vertices[j++] = new VertexPositionColor(outerCircle.Data[i], color);
+                vertices[j++] = new VertexPositionColor(framework.Data[i] * r1 + position, color);
+                vertices[j++] = new VertexPositionColor(framework.Data[i] * r2 + position, color);
             }
 
             int index = 6;
@@ -62,12 +64,37 @@ namespace Brain3D
             offset = buffer.add(vertices, indices);
         }
 
-        public override void refresh()
+        public override void move()
         {
             for (int i = 0, j = offset; i < points; i++)
             {
-                buffer.Vertices[j++].Position = innerCircle.Data[i];
-                buffer.Vertices[j++].Position = outerCircle.Data[i];
+                buffer.Vertices[j++].Position = framework.Data[i] * r1 + position;
+                buffer.Vertices[j++].Position = framework.Data[i] * r2 + position;
+            }
+        }
+
+        public override void repaint()
+        {
+            for (int i = 0, j = offset; i < points; i++)
+            {
+                buffer.Vertices[j++].Color = color;
+                buffer.Vertices[j++].Color = color;
+            }
+        }
+
+        public float R1
+        {
+            set
+            {
+                r1 = value;
+            }
+        }
+
+        public float R2
+        {
+            set
+            {
+                r2 = value;
             }
         }
     }

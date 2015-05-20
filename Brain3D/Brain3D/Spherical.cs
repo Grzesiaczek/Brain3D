@@ -27,8 +27,10 @@ namespace Brain3D
 
             if (vector.Z != 0)
                 longitude = (float)Math.Acos(vector.X / Math.Sqrt(vector.X * vector.X + vector.Z * vector.Z)) * (vector.Z < 0 ? -1 : 1);
-            else
+            else if (vector.X > 0)
                 longitude = 0;
+            else
+                longitude = (float)Math.PI;
         }
 
         public Vector3 getVector()
@@ -42,9 +44,8 @@ namespace Brain3D
 
         public Matrix getRotation()
         {
-            return Matrix.CreateFromYawPitchRoll(-longitude + Constant.PI2, -latitude, 0);
+            return Matrix.CreateFromYawPitchRoll(-longitude - Constant.PI2, latitude, 0);
         }
-
 
         public float Radius
         {

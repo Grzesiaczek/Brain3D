@@ -54,7 +54,7 @@ namespace Brain3D
             pi2 = (float)Math.PI / 2;
             pi4 = (float)Math.PI / 4;
 
-            box = new Vector3(48, 30, 4);
+            box = new Vector3(48, 30, 20);
             radius = 25;
 
             space = SpaceMode.Box;
@@ -132,6 +132,10 @@ namespace Brain3D
             get
             {
                 return box;
+            }
+            set
+            {
+                box = value;
             }
         }
 

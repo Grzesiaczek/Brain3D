@@ -10,7 +10,7 @@ namespace Brain3D
     {
         #region deklaracje
 
-        SequenceNeuron neuron;
+        NeuronTile neuron;
 
         List<Synapse> created;
         List<CreationData> data;
@@ -30,7 +30,7 @@ namespace Brain3D
 
         public CreationFrame(Neuron neuron, int frame)
         {
-            this.neuron = new SequenceNeuron(neuron);
+            this.neuron = new NeuronTile(neuron);
             created = new List<Synapse>();
             data = new List<CreationData>();
 
@@ -59,7 +59,7 @@ namespace Brain3D
         public void undo()
         {
             CreatedNeuron cn = neurons[neuron.Neuron];
-            neuron.changeType(SequenceElementType.Normal);
+            neuron.idle();
 
             if(cn.Frame == frame)
                 cn.hide();
@@ -73,7 +73,7 @@ namespace Brain3D
 
         public void execute()
         {
-            neuron.changeType(SequenceElementType.Normal);
+            neuron.idle();
 
             foreach (CreationData cd in data)
                 synapses[cd.Synapse].Synapse.setWeight(cd);
@@ -81,7 +81,7 @@ namespace Brain3D
 
         public void change()
         {
-            neuron.changeType(SequenceElementType.Active);
+            neuron.activate();
 
             foreach (CreationData cd in data)
                 synapses[cd.Synapse].Synapse.change(cd);
@@ -173,7 +173,7 @@ namespace Brain3D
 
         #region właściwości
 
-        public SequenceNeuron Neuron
+        public NeuronTile Neuron
         {
             get
             {

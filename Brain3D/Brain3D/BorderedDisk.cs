@@ -7,10 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class BorderedDisk : DrawableElement
+    class BorderedDisk : CompositeElement
     {
-        protected Circle innerCircle;
-        protected Circle borderCircle;
+        protected static Circle framework;
 
         protected Disk disk;
         protected Ring border;
@@ -19,22 +18,22 @@ namespace Brain3D
 
         public BorderedDisk() { }
 
-        public BorderedDisk(Vector3 position, float radius)
+        public BorderedDisk(Vector3 position, Color color, float radius)
         {
             this.position = position;
             this.radius = radius;
 
-            innerCircle = new Circle(position, radius, 1);
-            borderCircle = new Circle(position, radius * 1.1f, 1);
+            disk = new Disk(position, framework, color, radius);
+            border = new Ring(position, framework, Color.Purple);
 
-            disk = new Disk(position, innerCircle, Color.LightYellow);
-            border = new Ring(innerCircle, borderCircle, Color.Purple);
+            drawables.Add(disk);
+            drawables.Add(border);
+        }
 
-            elements.Add(innerCircle);
-            elements.Add(borderCircle);
-
-            display.add(disk);
-            display.add(border);
+        public static void initializeCircle()
+        {
+            framework = new Circle(Vector3.Zero, 1);
+            framework.rotate();
         }
 
         public override Color Color
@@ -42,22 +41,7 @@ namespace Brain3D
             set
             {
                 disk.Color = value;
-                disk.refresh();
-            }
-        }
-
-        public override Vector3 Position
-        {
-            get
-            {
-                return position;
-            }
-            set
-            {
-                position = value;
-
-                foreach (GraphicsElement element in elements)
-                    element.Position = position;
+                disk.repaint();
             }
         }
     }

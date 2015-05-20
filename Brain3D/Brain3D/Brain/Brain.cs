@@ -13,9 +13,9 @@ namespace Brain3D
 
         List<Neuron> neurons;  
         List<Synapse> synapses;
-        List<Receptor> receptors;
 
         List<CreationFrame> frames;
+        List<CreationSequence> sequences;
         List<Single> floats;
 
         double tr;
@@ -35,9 +35,9 @@ namespace Brain3D
         {
             neurons = new List<Neuron>();
             synapses = new List<Synapse>();
-            receptors = new List<Receptor>();
 
             frames = new List<CreationFrame>();
+            sequences = new List<CreationSequence>();
             frames.Add(null);
 
             tr = 3;
@@ -72,44 +72,28 @@ namespace Brain3D
         {
             length *= 10 + 1;
             Neuron neuron = neurons.Find(k => k.Word.Equals("monkey"));
-            Neuron lovely = neurons.Find(k => k.Word.Equals("small"));
             //Neuron neuron = neurons.Find(k => k.Word.Equals("jupiter"));
 
-            if (neuron != null)
-            {
-                neuron.impulse(5, 50);
-                neuron.impulse(5, 200);
-            }
-
             for (int i = 0; i < length; i++)
-                tick(0);
+            {
+                if (i == 40)
+                    neuron.shot(50);
+
+                if (i == 190)
+                    neuron.shot(200);
+
+                tick();
+            }
         }
 
-        void tick(double time)
+        void tick()
         {
             foreach (Neuron neuron in neurons)
                 neuron.tick();
-        }
-
-        public void tick()
-        {
-            foreach (Receptor receptor in receptors)
-                receptor.tick(false);
-
-            foreach (Neuron neuron in neurons)
-                neuron.tick();
-
-            foreach (Synapse synapse in synapses)
-                synapse.tick();
-
-            length++;
         }
 
         public void undo()
         {
-            foreach (Receptor receptor in receptors)
-                receptor.undo();
-
             foreach (Neuron neuron in neurons)
                 neuron.undo();
 
@@ -127,24 +111,21 @@ namespace Brain3D
             foreach (Synapse synapse in synapses)
                 synapse.clear(manual);
 
-            foreach (Receptor receptor in receptors)
-                receptor.erase();
-
             length = 0;
         }
 
         public void clear()
         {
             neurons.Clear();
-            receptors.Clear();
             synapses.Clear();
+            sequences.Clear();
         }
 
         #endregion
 
         #region uczenie
 
-        public CreationSequence addSentence(String sentence)
+        public void addSentence(String sentence)
         {
             List<CreationFrame> frames = new List<CreationFrame>();
             List<Neuron> sequence = new List<Neuron>();
@@ -210,7 +191,7 @@ namespace Brain3D
                 index++;
             }
 
-            return new CreationSequence(frames);
+            sequences.Add(new CreationSequence(frames));
         }
 
         CreationFrame create(String word, int frame)
@@ -221,20 +202,13 @@ namespace Brain3D
             {
                 neuron = new Neuron(word);
                 neurons.Add(neuron);
-
-                Receptor receptor = new Receptor();
-                Synapse synapse = new Synapse(receptor, neuron);
-
-                synapses.Add(synapse);
-                receptors.Add(receptor);
-                receptor.Output = synapse;
             }
 
             neuron.Count++;
             return new CreationFrame(neuron, frame);
         }
 
-        public CreationFrame add(CreationSequence sequence, BuiltElement element, int frame)
+        public CreationFrame add(CreationSequence sequence, BuiltTile element, int frame)
         {
             CreationFrame result = create(element.Name, frame);
             Neuron neuron = result.Neuron.Neuron;
@@ -336,19 +310,11 @@ namespace Brain3D
             }
         }
 
-        public List<Receptor> Receptors
+        public List<CreationSequence> Sequences
         {
             get
             {
-                return receptors;
-            }
-        }
-
-        public int Length
-        {
-            get
-            {
-                return length;
+                return sequences;
             }
         }
 

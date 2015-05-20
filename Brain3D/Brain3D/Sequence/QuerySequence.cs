@@ -9,9 +9,9 @@ namespace Brain3D
     class QuerySequence : Sequence
     {
         public void tick(int frame)
-        {
+        {/*
             foreach (SequenceElement element in sequence)
-                ((SequenceReceptor)element).tick(frame);
+                ((SequenceReceptor)element).tick(frame);*/
         }
     }
 }

@@ -6,22 +6,26 @@ using System.Threading.Tasks;
 
 namespace Brain3D
 {
-    class BuiltElement : SequenceElement
+    class BuiltTile : Tile
     {
         StringBuilder builder;
 
         #region konstruktory
 
-        public BuiltElement(String name) : base(name)
+        public BuiltTile(String name) : base(name)
         {
-            changeType(SequenceElementType.Built);
             builder = new StringBuilder(name);
         }
 
-        public BuiltElement(SequenceElement element) : base(element.Name)
+        public BuiltTile(Tile element) : base(element.Name)
         {
-            changeType(SequenceElementType.Built);
             builder = new StringBuilder(name);
+        }
+
+        public override void initialize()
+        {
+            active = texturesBuilt;
+            normal = texturesBuilt;
         }
 
         #endregion

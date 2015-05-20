@@ -10,16 +10,19 @@ namespace Brain3D
 {
     class Disk : DrawableElement
     {
-        Circle data;        
+        Circle framework;
+
+        float radius;
         int points;
 
-        public Disk(Vector3 center, Circle circle, Color color)
+        public Disk(Vector3 position, Circle framework, Color color, float radius)
         {
-            position = center;
-            data = circle;
-
-            points = data.Points;
+            this.position = position;
+            this.framework = framework;
             this.color = color;
+            this.radius = radius;
+
+            points = framework.Points;
 
             vertices = new VertexPositionColor[points + 1];
             indices = new int[3 * points];
@@ -27,11 +30,10 @@ namespace Brain3D
 
         public override void initialize()
         {
-            position = data.Position;
             vertices[points] = new VertexPositionColor(position, color);
 
             for (int i = 0; i < points; i++)
-                vertices[i] = new VertexPositionColor(data.Data[i], color);
+                vertices[i] = new VertexPositionColor(framework.Data[i] * radius + position, color);
 
             indices[0] = points;
             indices[1] = points - 1;
@@ -48,13 +50,29 @@ namespace Brain3D
             offset = buffer.add(vertices, indices);
         }
 
-        public override void refresh()
+        public override void move()
         {
-            position = data.Position;
             buffer.Vertices[offset + points].Position = position;
 
             for (int i = 0, j = offset; i < points; i++)
-                buffer.Vertices[j++].Position = data.Data[i];
+                buffer.Vertices[j++].Position = framework.Data[i] * radius + position;
+        }
+
+        public override void repaint()
+        {
+            buffer.Vertices[offset + points].Color = color;
+
+            for (int i = 0, j = offset; i < points; i++)
+                buffer.Vertices[j++].Color = color;
+        }
+
+        public float Radius
+        {
+            set
+            {
+                radius = value;
+                move();
+            }
         }
     }
 }

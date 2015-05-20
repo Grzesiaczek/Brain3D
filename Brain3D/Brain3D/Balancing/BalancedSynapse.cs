@@ -10,34 +10,36 @@ namespace Brain3D
 {
     class BalancedSynapse
     {
+        static Dictionary<AnimatedNeuron, BalancedNeuron> map;
         AnimatedSynapse synapse;
 
         BalancedNeuron pre;
         BalancedNeuron post;
 
-        static float k = 10;
+        static float k = 50;
         float factor;
 
-        public BalancedSynapse(AnimatedSynapse synapse, Dictionary<AnimatedNeuron, BalancedNeuron> map)
+        public BalancedSynapse(AnimatedSynapse synapse)
         {
             this.synapse = synapse;
             pre = map[synapse.Pre];
             post = map[synapse.Post];
 
-            factor = k / (1 + synapse.Weight);
+            factor = (1f / pre.Count + 1f / post.Count);
+            factor = k / (factor * (1 + synapse.Weight));
         }
 
         public void attract()
         {
             Vector3 delta = post.Position - pre.Position;
-            Vector3 shift = delta / factor;
-
+            Vector3 shift = delta * delta * delta / factor;
+            /*
             shift.X *= Math.Abs(delta.X);
             shift.Y *= Math.Abs(delta.Y);
-            shift.Z *= Math.Abs(delta.Z);
-
-            pre.move(shift / pre.Factor);
-            post.move(-shift / post.Factor);
+            shift.Z *= Math.Abs(delta.Z);*/
+            
+            pre.move(shift);
+            post.move(-shift);
 
             pre.repulse(post.Position, true);
             post.repulse(pre.Position, true);
@@ -91,9 +93,9 @@ namespace Brain3D
             if (distance == 0)
                 return;
 
-            force = 20 * (1.56f - (float)Math.Atan(distance - 2));
+            force = 100 * (1.56f - (float)Math.Atan(distance - 2));
 
-            shift = new Vector3(force * (pos.X - x) / distance, force * (pos.Y - y) / distance, 0);
+            shift = new Vector3(force * (pos.X - x) / distance, force * (pos.Y - y) / distance, 0) * 0.8f;
             neuron.move(shift);
             
             eq = - eq;
@@ -103,23 +105,32 @@ namespace Brain3D
             pre.move(shift * eq);
         }
 
-        public void rotate()
+        public static Dictionary<AnimatedNeuron, BalancedNeuron> Map
         {
-            /*if (pre is BalancedReceptor)
-                return;
-            
-            if (Math.Abs(synapse.Vector.Rotation) < 0.001)
+            get
             {
-                synapse.Vector.Rotation = 0;
-                return;
+                return map;
             }
+            set
+            {
+                map = value;
+            }
+        }
 
-            float shift = synapse.Vector.Rotation * synapse.Vector.Length / 50;
-            float x = (float)(shift * Math.Sin(synapse.Vector.Angle));
-            float y = (float)(shift * Math.Cos(synapse.Vector.Angle));
+        public BalancedNeuron Pre
+        {
+            get
+            {
+                return pre;
+            }
+        }
 
-            post.move(x, y);
-            pre.move(-x, -y);*/
+        public BalancedNeuron Post
+        {
+            get
+            {
+                return post;
+            }
         }
     }
 }

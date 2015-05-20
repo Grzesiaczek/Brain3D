@@ -35,24 +35,24 @@
             this.labelPace = new System.Windows.Forms.Label();
             this.changeFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.rightPanel = new System.Windows.Forms.GroupBox();
+            this.radioButtonTree = new System.Windows.Forms.RadioButton();
+            this.checkBoxAuto = new System.Windows.Forms.CheckBox();
             this.panelSpace = new System.Windows.Forms.Panel();
+            this.radioButtonSquare = new System.Windows.Forms.RadioButton();
             this.radioButtonBox = new System.Windows.Forms.RadioButton();
             this.radioButtonSphere = new System.Windows.Forms.RadioButton();
             this.checkBoxState = new System.Windows.Forms.CheckBox();
             this.buttonBalance = new System.Windows.Forms.Button();
             this.buttonLoad = new System.Windows.Forms.Button();
             this.trackBarDensity = new System.Windows.Forms.TrackBar();
-            this.trackBarScale = new System.Windows.Forms.TrackBar();
             this.radioButtonCreation = new System.Windows.Forms.RadioButton();
             this.trackBarLength = new System.Windows.Forms.TrackBar();
-            this.buttonQuery = new System.Windows.Forms.Button();
             this.trackBarPace = new System.Windows.Forms.TrackBar();
             this.buttonLengthUp = new System.Windows.Forms.Button();
             this.radioButtonChart = new System.Windows.Forms.RadioButton();
             this.buttonLengthDown = new System.Windows.Forms.Button();
             this.radioButtonSimulation = new System.Windows.Forms.RadioButton();
             this.labelLength = new System.Windows.Forms.Label();
-            this.radioButtonQuery = new System.Windows.Forms.RadioButton();
             this.openFile = new System.Windows.Forms.OpenFileDialog();
             this.saveFile = new System.Windows.Forms.SaveFileDialog();
             this.display = new Brain3D.Display();
@@ -62,7 +62,6 @@
             this.rightPanel.SuspendLayout();
             this.panelSpace.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarDensity)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarPace)).BeginInit();
             this.display.SuspendLayout();
@@ -71,7 +70,7 @@
             // 
             // buttonPlay
             // 
-            this.buttonPlay.Location = new System.Drawing.Point(28, 408);
+            this.buttonPlay.Location = new System.Drawing.Point(23, 287);
             this.buttonPlay.Name = "buttonPlay";
             this.buttonPlay.Size = new System.Drawing.Size(100, 25);
             this.buttonPlay.TabIndex = 10;
@@ -81,7 +80,7 @@
             // 
             // buttonPaceDown
             // 
-            this.buttonPaceDown.Location = new System.Drawing.Point(23, 323);
+            this.buttonPaceDown.Location = new System.Drawing.Point(23, 197);
             this.buttonPaceDown.Name = "buttonPaceDown";
             this.buttonPaceDown.Size = new System.Drawing.Size(25, 25);
             this.buttonPaceDown.TabIndex = 2;
@@ -91,7 +90,7 @@
             // 
             // buttonPaceUp
             // 
-            this.buttonPaceUp.Location = new System.Drawing.Point(110, 323);
+            this.buttonPaceUp.Location = new System.Drawing.Point(107, 198);
             this.buttonPaceUp.Name = "buttonPaceUp";
             this.buttonPaceUp.Size = new System.Drawing.Size(25, 25);
             this.buttonPaceUp.TabIndex = 3;
@@ -101,7 +100,7 @@
             // 
             // buttonSimulate
             // 
-            this.buttonSimulate.Location = new System.Drawing.Point(28, 549);
+            this.buttonSimulate.Location = new System.Drawing.Point(25, 446);
             this.buttonSimulate.Name = "buttonSimulate";
             this.buttonSimulate.Size = new System.Drawing.Size(100, 25);
             this.buttonSimulate.TabIndex = 5;
@@ -112,7 +111,7 @@
             // labelPace
             // 
             this.labelPace.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.labelPace.Location = new System.Drawing.Point(54, 323);
+            this.labelPace.Location = new System.Drawing.Point(53, 198);
             this.labelPace.Name = "labelPace";
             this.labelPace.Size = new System.Drawing.Size(50, 25);
             this.labelPace.TabIndex = 6;
@@ -121,22 +120,21 @@
             // 
             // rightPanel
             // 
+            this.rightPanel.Controls.Add(this.radioButtonTree);
+            this.rightPanel.Controls.Add(this.checkBoxAuto);
             this.rightPanel.Controls.Add(this.panelSpace);
             this.rightPanel.Controls.Add(this.checkBoxState);
             this.rightPanel.Controls.Add(this.buttonBalance);
             this.rightPanel.Controls.Add(this.buttonLoad);
             this.rightPanel.Controls.Add(this.trackBarDensity);
-            this.rightPanel.Controls.Add(this.trackBarScale);
             this.rightPanel.Controls.Add(this.radioButtonCreation);
             this.rightPanel.Controls.Add(this.trackBarLength);
-            this.rightPanel.Controls.Add(this.buttonQuery);
             this.rightPanel.Controls.Add(this.trackBarPace);
             this.rightPanel.Controls.Add(this.buttonLengthUp);
             this.rightPanel.Controls.Add(this.radioButtonChart);
             this.rightPanel.Controls.Add(this.buttonLengthDown);
             this.rightPanel.Controls.Add(this.radioButtonSimulation);
             this.rightPanel.Controls.Add(this.labelLength);
-            this.rightPanel.Controls.Add(this.radioButtonQuery);
             this.rightPanel.Controls.Add(this.buttonSimulate);
             this.rightPanel.Controls.Add(this.buttonPlay);
             this.rightPanel.Controls.Add(this.buttonPaceDown);
@@ -149,14 +147,49 @@
             this.rightPanel.TabIndex = 19;
             this.rightPanel.TabStop = false;
             // 
+            // radioButtonTree
+            // 
+            this.radioButtonTree.AutoSize = true;
+            this.radioButtonTree.Location = new System.Drawing.Point(40, 110);
+            this.radioButtonTree.Name = "radioButtonTree";
+            this.radioButtonTree.Size = new System.Drawing.Size(47, 17);
+            this.radioButtonTree.TabIndex = 41;
+            this.radioButtonTree.Text = "Tree";
+            this.radioButtonTree.UseVisualStyleBackColor = true;
+            this.radioButtonTree.CheckedChanged += new System.EventHandler(this.radioButtonTree_CheckedChanged);
+            // 
+            // checkBoxAuto
+            // 
+            this.checkBoxAuto.AutoSize = true;
+            this.checkBoxAuto.Checked = true;
+            this.checkBoxAuto.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxAuto.Location = new System.Drawing.Point(27, 732);
+            this.checkBoxAuto.Name = "checkBoxAuto";
+            this.checkBoxAuto.Size = new System.Drawing.Size(87, 17);
+            this.checkBoxAuto.TabIndex = 40;
+            this.checkBoxAuto.Text = "AutoBalance";
+            this.checkBoxAuto.UseVisualStyleBackColor = true;
+            // 
             // panelSpace
             // 
+            this.panelSpace.Controls.Add(this.radioButtonSquare);
             this.panelSpace.Controls.Add(this.radioButtonBox);
             this.panelSpace.Controls.Add(this.radioButtonSphere);
-            this.panelSpace.Location = new System.Drawing.Point(37, 644);
+            this.panelSpace.Location = new System.Drawing.Point(37, 581);
             this.panelSpace.Name = "panelSpace";
-            this.panelSpace.Size = new System.Drawing.Size(77, 66);
+            this.panelSpace.Size = new System.Drawing.Size(77, 87);
             this.panelSpace.TabIndex = 39;
+            // 
+            // radioButtonSquare
+            // 
+            this.radioButtonSquare.AutoSize = true;
+            this.radioButtonSquare.Location = new System.Drawing.Point(12, 60);
+            this.radioButtonSquare.Name = "radioButtonSquare";
+            this.radioButtonSquare.Size = new System.Drawing.Size(59, 17);
+            this.radioButtonSquare.TabIndex = 39;
+            this.radioButtonSquare.Text = "Square";
+            this.radioButtonSquare.UseVisualStyleBackColor = true;
+            this.radioButtonSquare.CheckedChanged += new System.EventHandler(this.radioButtonSquare_CheckedChanged);
             // 
             // radioButtonBox
             // 
@@ -187,7 +220,7 @@
             this.checkBoxState.AutoSize = true;
             this.checkBoxState.Checked = true;
             this.checkBoxState.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxState.Location = new System.Drawing.Point(41, 621);
+            this.checkBoxState.Location = new System.Drawing.Point(49, 542);
             this.checkBoxState.Name = "checkBoxState";
             this.checkBoxState.Size = new System.Drawing.Size(51, 17);
             this.checkBoxState.TabIndex = 35;
@@ -197,7 +230,7 @@
             // 
             // buttonBalance
             // 
-            this.buttonBalance.Location = new System.Drawing.Point(23, 719);
+            this.buttonBalance.Location = new System.Drawing.Point(25, 691);
             this.buttonBalance.Name = "buttonBalance";
             this.buttonBalance.Size = new System.Drawing.Size(100, 25);
             this.buttonBalance.TabIndex = 36;
@@ -207,7 +240,7 @@
             // 
             // buttonLoad
             // 
-            this.buttonLoad.Location = new System.Drawing.Point(28, 590);
+            this.buttonLoad.Location = new System.Drawing.Point(25, 487);
             this.buttonLoad.Name = "buttonLoad";
             this.buttonLoad.Size = new System.Drawing.Size(100, 25);
             this.buttonLoad.TabIndex = 33;
@@ -217,37 +250,23 @@
             // 
             // trackBarDensity
             // 
+            this.trackBarDensity.AutoSize = false;
             this.trackBarDensity.LargeChange = 2;
-            this.trackBarDensity.Location = new System.Drawing.Point(86, 173);
+            this.trackBarDensity.Location = new System.Drawing.Point(10, 150);
             this.trackBarDensity.Maximum = 9;
             this.trackBarDensity.Minimum = 1;
             this.trackBarDensity.Name = "trackBarDensity";
-            this.trackBarDensity.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.trackBarDensity.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.trackBarDensity.Size = new System.Drawing.Size(45, 133);
+            this.trackBarDensity.Size = new System.Drawing.Size(119, 33);
             this.trackBarDensity.TabIndex = 32;
             this.trackBarDensity.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarDensity.Value = 4;
             this.trackBarDensity.Scroll += new System.EventHandler(this.trackBarDensity_Scroll);
             // 
-            // trackBarScale
-            // 
-            this.trackBarScale.Location = new System.Drawing.Point(30, 173);
-            this.trackBarScale.Maximum = 100;
-            this.trackBarScale.Minimum = 25;
-            this.trackBarScale.Name = "trackBarScale";
-            this.trackBarScale.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.trackBarScale.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.trackBarScale.Size = new System.Drawing.Size(45, 133);
-            this.trackBarScale.TabIndex = 30;
-            this.trackBarScale.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBarScale.Value = 25;
-            this.trackBarScale.Scroll += new System.EventHandler(this.trackBarScale_Scroll);
-            // 
             // radioButtonCreation
             // 
             this.radioButtonCreation.AutoSize = true;
-            this.radioButtonCreation.Location = new System.Drawing.Point(42, 19);
+            this.radioButtonCreation.Location = new System.Drawing.Point(40, 20);
             this.radioButtonCreation.Name = "radioButtonCreation";
             this.radioButtonCreation.Size = new System.Drawing.Size(64, 17);
             this.radioButtonCreation.TabIndex = 26;
@@ -258,7 +277,7 @@
             // trackBarLength
             // 
             this.trackBarLength.AutoSize = false;
-            this.trackBarLength.Location = new System.Drawing.Point(16, 508);
+            this.trackBarLength.Location = new System.Drawing.Point(13, 393);
             this.trackBarLength.Maximum = 50;
             this.trackBarLength.Minimum = 5;
             this.trackBarLength.Name = "trackBarLength";
@@ -270,21 +289,10 @@
             this.trackBarLength.Value = 25;
             this.trackBarLength.Scroll += new System.EventHandler(this.trackBarLength_Scroll);
             // 
-            // buttonQuery
-            // 
-            this.buttonQuery.Enabled = false;
-            this.buttonQuery.Location = new System.Drawing.Point(25, 142);
-            this.buttonQuery.Name = "buttonQuery";
-            this.buttonQuery.Size = new System.Drawing.Size(100, 25);
-            this.buttonQuery.TabIndex = 25;
-            this.buttonQuery.Text = "Query";
-            this.buttonQuery.UseVisualStyleBackColor = true;
-            this.buttonQuery.Click += new System.EventHandler(this.buttonQuery_Click);
-            // 
             // trackBarPace
             // 
             this.trackBarPace.AutoSize = false;
-            this.trackBarPace.Location = new System.Drawing.Point(16, 364);
+            this.trackBarPace.Location = new System.Drawing.Point(13, 238);
             this.trackBarPace.Maximum = 20;
             this.trackBarPace.Minimum = 2;
             this.trackBarPace.Name = "trackBarPace";
@@ -299,7 +307,7 @@
             // 
             // buttonLengthUp
             // 
-            this.buttonLengthUp.Location = new System.Drawing.Point(110, 468);
+            this.buttonLengthUp.Location = new System.Drawing.Point(104, 353);
             this.buttonLengthUp.Name = "buttonLengthUp";
             this.buttonLengthUp.Size = new System.Drawing.Size(25, 25);
             this.buttonLengthUp.TabIndex = 24;
@@ -310,7 +318,7 @@
             // radioButtonChart
             // 
             this.radioButtonChart.AutoSize = true;
-            this.radioButtonChart.Location = new System.Drawing.Point(42, 87);
+            this.radioButtonChart.Location = new System.Drawing.Point(40, 80);
             this.radioButtonChart.Name = "radioButtonChart";
             this.radioButtonChart.Size = new System.Drawing.Size(50, 17);
             this.radioButtonChart.TabIndex = 19;
@@ -320,7 +328,7 @@
             // 
             // buttonLengthDown
             // 
-            this.buttonLengthDown.Location = new System.Drawing.Point(23, 468);
+            this.buttonLengthDown.Location = new System.Drawing.Point(20, 353);
             this.buttonLengthDown.Name = "buttonLengthDown";
             this.buttonLengthDown.Size = new System.Drawing.Size(25, 25);
             this.buttonLengthDown.TabIndex = 23;
@@ -332,36 +340,25 @@
             // 
             this.radioButtonSimulation.AutoSize = true;
             this.radioButtonSimulation.Checked = true;
-            this.radioButtonSimulation.Location = new System.Drawing.Point(41, 42);
+            this.radioButtonSimulation.Location = new System.Drawing.Point(40, 50);
             this.radioButtonSimulation.Name = "radioButtonSimulation";
             this.radioButtonSimulation.Size = new System.Drawing.Size(73, 17);
             this.radioButtonSimulation.TabIndex = 20;
             this.radioButtonSimulation.TabStop = true;
             this.radioButtonSimulation.Text = "Simulation";
             this.radioButtonSimulation.UseVisualStyleBackColor = true;
-            this.radioButtonSimulation.CheckedChanged += new System.EventHandler(this.radioButtonManual_CheckedChanged);
+            this.radioButtonSimulation.CheckedChanged += new System.EventHandler(this.radioButtonSimulation_CheckedChanged);
             // 
             // labelLength
             // 
             this.labelLength.BackColor = System.Drawing.SystemColors.Control;
             this.labelLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.labelLength.Location = new System.Drawing.Point(54, 468);
+            this.labelLength.Location = new System.Drawing.Point(50, 353);
             this.labelLength.Name = "labelLength";
             this.labelLength.Size = new System.Drawing.Size(50, 25);
             this.labelLength.TabIndex = 22;
             this.labelLength.Text = "250";
             this.labelLength.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // radioButtonQuery
-            // 
-            this.radioButtonQuery.AutoSize = true;
-            this.radioButtonQuery.Location = new System.Drawing.Point(42, 110);
-            this.radioButtonQuery.Name = "radioButtonQuery";
-            this.radioButtonQuery.Size = new System.Drawing.Size(53, 17);
-            this.radioButtonQuery.TabIndex = 21;
-            this.radioButtonQuery.Text = "Query";
-            this.radioButtonQuery.UseVisualStyleBackColor = true;
-            this.radioButtonQuery.CheckedChanged += new System.EventHandler(this.radioButtonQuery_CheckedChanged);
             // 
             // openFile
             // 
@@ -436,7 +433,6 @@
             this.panelSpace.ResumeLayout(false);
             this.panelSpace.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarDensity)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarScale)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarPace)).EndInit();
             this.display.ResumeLayout(false);
@@ -458,16 +454,13 @@
         private System.Windows.Forms.GroupBox rightPanel;
         private System.Windows.Forms.RadioButton radioButtonSimulation;
         private System.Windows.Forms.RadioButton radioButtonChart;
-        private System.Windows.Forms.RadioButton radioButtonQuery;
         private System.Windows.Forms.Button buttonLengthUp;
         private System.Windows.Forms.Button buttonLengthDown;
         private System.Windows.Forms.Label labelLength;
-        private System.Windows.Forms.Button buttonQuery;
         private System.Windows.Forms.TrackBar trackBarPace;
         private System.Windows.Forms.TrackBar trackBarLength;
         private System.Windows.Forms.RadioButton radioButtonCreation;
         private System.Windows.Forms.TrackBar trackBarFrame;
-        private System.Windows.Forms.TrackBar trackBarScale;
         private System.Windows.Forms.TrackBar trackBarDensity;
         private System.Windows.Forms.Button buttonLoad;
         private System.Windows.Forms.OpenFileDialog openFile;
@@ -478,6 +471,9 @@
         private System.Windows.Forms.RadioButton radioButtonSphere;
         private System.Windows.Forms.RadioButton radioButtonBox;
         private System.Windows.Forms.Panel panelSpace;
+        private System.Windows.Forms.CheckBox checkBoxAuto;
+        private System.Windows.Forms.RadioButton radioButtonSquare;
+        private System.Windows.Forms.RadioButton radioButtonTree;
     }
 }
 

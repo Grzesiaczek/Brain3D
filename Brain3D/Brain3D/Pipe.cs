@@ -9,54 +9,89 @@ namespace Brain3D
 {
     class Pipe : DrawableElement
     {
-        Circle start;
-        Circle end;
+        Circle framework;
 
-        Color[] palette;
+        Vector3 source;
+        Vector3 target;
+
         Vector3 direction;
+        Color[] palette;
+
+        static List<Color[]> palettes;
+        static bool initialized;
 
         int points;
+        float r1, r2;
 
-        public Pipe(Circle start, Circle end)
+        public Pipe(Vector3 source, Vector3 target, float r1, float r2, int mode)
         {
-            this.start = start;
-            this.end = end;
+            if (!initialized)
+                throw new Exception("Pipe class not initialized!");
 
-            points = start.Points;
-            palette = new Color[points];
+            this.source = source;
+            this.target = target;
 
-            palette[0] = Color.Purple;
-            palette[8] = Color.Brown;
+            this.r1 = r1;
+            this.r2 = r2;
 
-            int r = palette[8].R - palette[0].R;
-            int g = palette[8].G - palette[0].G;
-            int b = palette[8].B - palette[0].B;
+            framework = new Circle(Vector3.Zero, 4);
+            points = framework.Points;
 
-            for (int i = 1; i < 8; i++)
+            palette = palettes[mode];
+            vertices = new VertexPositionColor[2 * points];
+            indices = new int[6 * points];
+        }
+
+        public static void initializePalettes()
+        {
+            palettes = new List<Color[]>();
+
+            palettes.Add(addPalette(Color.Indigo, Color.IndianRed));
+            palettes.Add(addPalette(Color.Wheat, Color.ForestGreen));
+
+            initialized = true;
+        }
+
+        public static Color[] addPalette(Color start, Color end)
+        {
+            int interval = 4;
+            Color[] palette = new Color[32];
+
+            palette[0] = start;
+            palette[interval] = end;
+
+            int r = palette[interval].R - palette[0].R;
+            int g = palette[interval].G - palette[0].G;
+            int b = palette[interval].B - palette[0].B;
+
+            for (int i = 1; i < interval; i++)
             {
-                int red = palette[0].R + i * r / 8;
-                int green = palette[0].G + i * g / 8;
-                int blue = palette[0].B + i * b / 8;
+                int red = palette[0].R + i * r / interval;
+                int green = palette[0].G + i * g / interval;
+                int blue = palette[0].B + i * b / interval;
 
                 palette[i] = new Color(red, green, blue);
             }
 
-            for (int i = 9; i < 16; i++)
-                palette[i] = palette[16 - i];
+            for (int i = 4; i < 8; i++)
+                palette[i] = palette[8 - i];
 
-            for (int i = 16; i < 32; i++)
-                palette[i] = palette[i - 16];
+            for (int i = 0; i < 8; i++)
+            {
+                palette[i + 8] = palette[i];
+                palette[i + 16] = palette[i];
+                palette[i + 24] = palette[i];
+            }
 
-            vertices = new VertexPositionColor[2 * points];
-            indices = new int[6 * points];
+            return palette;
         }
 
         public override void initialize()
         {
             for (int i = 0, j = 0; i < points; i++)
             {
-                vertices[j++] = new VertexPositionColor(start.Data[i], palette[i]);
-                vertices[j++] = new VertexPositionColor(end.Data[i], palette[i]);
+                vertices[j++] = new VertexPositionColor(framework.Data[i] * r1 + source, palette[i]);
+                vertices[j++] = new VertexPositionColor(framework.Data[i] * r2 + target, palette[i]);
             }
 
             int index = 6;
@@ -84,35 +119,44 @@ namespace Brain3D
             offset = buffer.add(vertices, indices);
         }
 
-        public override void refresh()
+        public override void move()
         {
-            direction = end.Position - start.Position;
-            start.Direction = direction;
-            end.Direction = direction;
-
-            start.refresh();
-            end.refresh();
+            rotate();
 
             for (int i = 0, j = offset; i < points; i++)
             {
-                buffer.Vertices[j++].Position = start.Data[i];
-                buffer.Vertices[j++].Position = end.Data[i];
+                buffer.Vertices[j++].Position = framework.Data[i] * r1 + source;
+                buffer.Vertices[j++].Position = framework.Data[i] * r2 + target;
             }
         }
 
-        public Circle Start
+        public override void rotate()
+        {
+            framework.Direction = target - source;
+            framework.rotate();
+        }
+
+        public Vector3 Source
         {
             get
             {
-                return start;
+                return source;
+            }
+            set
+            {
+                source = value;
             }
         }
 
-        public Circle End
+        public Vector3 Target
         {
             get
             {
-                return end;
+                return target;
+            }
+            set
+            {
+                target = value;
             }
         }
     }

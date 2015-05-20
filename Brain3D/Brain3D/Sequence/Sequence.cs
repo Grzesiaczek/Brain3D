@@ -9,20 +9,20 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class Sequence : DrawableElement
+    class Sequence : SpriteElement
     {
-        protected List<SequenceElement> sequence;
-        protected BuiltElement builder;
+        protected List<Tile> sequence;
+        protected BuiltTile builder;
         protected int position = 10;
 
         public Sequence()
         {
-            sequence = new List<SequenceElement>();
+            sequence = new List<Tile>();
         }
 
         #region logika
 
-        public void add(SequenceElement element)
+        public void add(Tile element)
         {
             sequence.Add(element);
         }
@@ -34,7 +34,7 @@ namespace Brain3D
 
         public override void draw()
         {
-            foreach (SequenceElement element in sequence)
+            foreach (Tile element in sequence)
                 element.draw();
 
             if(builder != null)
@@ -45,7 +45,7 @@ namespace Brain3D
         {
             int position = 10;
 
-            foreach(SequenceElement element in sequence)
+            foreach(Tile element in sequence)
             {
                 element.Top = 8;
                 element.Left = position;
@@ -61,7 +61,7 @@ namespace Brain3D
         {
             if (builder == null)
             {
-                builder = new BuiltElement("");
+                builder = new BuiltTile("");
                 builder.Left = position;
                 builder.Top = 8;
             }
@@ -77,8 +77,8 @@ namespace Brain3D
             if (sequence.Count == 0)
                 return true;
 
-            SequenceElement last = sequence.Last<SequenceElement>();
-            builder = new BuiltElement(last);
+            Tile last = sequence.Last<Tile>();
+            builder = new BuiltTile(last);
             sequence.Remove(last);
 
             return false;

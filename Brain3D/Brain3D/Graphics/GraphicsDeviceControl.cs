@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -13,6 +15,8 @@ namespace Brain3D
         GraphicsDeviceService graphicsDeviceService;
         ServiceContainer services = new ServiceContainer();
 
+        Stopwatch limiter;
+
         #region Initialization
 
         protected override void OnCreateControl()
@@ -24,6 +28,9 @@ namespace Brain3D
 
                 Initialize();
             }
+
+            limiter = new Stopwatch();
+            limiter.Start();
 
             base.OnCreateControl();
         }
@@ -50,6 +57,10 @@ namespace Brain3D
 
             if (string.IsNullOrEmpty(beginDrawError))
             {
+                while (limiter.ElapsedMilliseconds < 10)
+                    Thread.Sleep(1);
+
+                limiter.Restart();
                 Draw();
                 EndDraw();
             }

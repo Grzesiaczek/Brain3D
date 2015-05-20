@@ -9,124 +9,116 @@ namespace Brain3D
 {
     class StateDisk : BorderedDisk
     {
-        Circle outerCircle;
-        Circle changeCircle;
-
         Ring change;
         Ring outer;
 
         bool initialized;
-        float value;
 
-        public StateDisk(Vector3 position, float radius)
+        public StateDisk(Vector3 position, Color color, float radius)
         {
             this.position = position;
+            this.color = color;
             this.radius = radius;
-            value = 0;
 
-            innerCircle = new Circle(position, radius, 1);
-            outerCircle = new Circle(position, radius, 1);
-            borderCircle = new Circle(position, radius * 1.1f, 1);
-
-            disk = new Disk(position, innerCircle, Color.LightYellow);
-            outer = new Ring(innerCircle, outerCircle, Color.LightGreen);
-            border = new Ring(outerCircle, borderCircle, Color.Purple);
+            disk = new Disk(position, framework, color, radius);
+            outer = new Ring(position, framework, Color.LightGreen);
+            border = new Ring(position, framework, Color.Purple);
 
             if(radius < 0.8f)
             {
-                changeCircle = new Circle(position, radius, 1);
-                change = new Ring(innerCircle, changeCircle, Color.Green);
-                outer = new Ring(changeCircle, outerCircle, Color.LightGreen);
+                change = new Ring(position, framework, Color.Green);
+                outer = new Ring(position, framework, Color.LightGreen);
 
-                display.add(change);
-                elements.Add(changeCircle);
+                drawables.Add(change);
             }
 
-            elements.Add(innerCircle);
-            elements.Add(outerCircle);
-            elements.Add(borderCircle);
+            border.R1 = radius;
+            border.R2 = radius * 1.1f;
 
-            display.add(disk);
-            display.add(outer);
-            display.add(border);
-        }
+            outer.R1 = radius;
+            outer.R2 = radius;
 
-        public override void refresh()
-        {
-            base.refresh();
-            disk.refresh();
-            border.refresh();
-            //change.refresh();
-            outer.refresh();
+            drawables.Add(disk);
+            drawables.Add(outer);
+            drawables.Add(border);
         }
 
         public void setChange(CreationData data)
         {
+            float r1 = 0;
+            float r2 = 0;
+
             if(data.Change < 0)
             {
                 change.Color = Color.IndianRed;
-                changeCircle.Radius = radius - radius * data.Start;
+                r1 = radius - radius * data.Weight;
+                r2 = radius - radius * data.Start;
             }
             else
             {
                 change.Color = Color.Green;
-                innerCircle.Radius = radius - radius * data.Weight;
+                r1 = radius - radius * data.Start;
+                r2 = radius - radius * data.Weight;
             }
+
+            setChange(r1, r2);
+        }
+
+        void setChange(float r1, float r2)
+        {
+            disk.Radius = r1;
+            change.R1 = r1;
+
+            change.R2 = r2;
+            outer.R1 = r2;
 
             changeRefresh();
         }
 
         public void setValue(float value)
         {
-            innerCircle.Radius = radius * (1 - value);
-            changeCircle.Radius = innerCircle.Radius;
+            value = radius * (1 - value);
+            //setChange(value, value);
 
-            this.value = value;
-            changeRefresh();
+            disk.Radius = value;
+            outer.R1 = value;
         }
 
         void changeRefresh()
         {
-            innerCircle.refresh();
-            changeCircle.refresh();
-
             if (initialized)
             {
-                disk.refresh();
-                change.refresh();
-                outer.refresh();
+                disk.move();
+                change.move();
+                outer.move();
             }
         }
 
         public void changeValue(float value)
         {
-            this.value = value;
-
             if (value < 0)
             {
-                innerCircle.Radius = -value * radius;
+                setValue(value + 1);
                 disk.Color = Color.LightBlue;
-                outer.Color = Color.LightYellow;
+                outer.Color = color;
             }
             else if (value < 1)
             {
-                innerCircle.Radius = radius * (1 - value);
-                disk.Color = Color.LightYellow;
+                setValue(value);
+                disk.Color = color;
                 outer.Color = Color.LightGreen;
             }
 
-            innerCircle.refresh();
             disk.refresh();
             outer.refresh();
         }
 
         public void refract()
         {
-            innerCircle.Radius = radius;
+            setValue(0);
             disk.Color = Color.IndianRed;
-            outer.Color = Color.LightYellow;
+            outer.Color = color;
 
-            innerCircle.refresh();
             disk.refresh();
             outer.refresh();
         }
@@ -138,7 +130,7 @@ namespace Brain3D
             int blue = 92 + (int)(factor * 138);
 
             disk.Color = new Color(red, green, blue);
-            disk.refresh();
+            disk.repaint();
         }
 
         public override void initialize()

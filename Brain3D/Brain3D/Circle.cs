@@ -19,15 +19,12 @@ namespace Brain3D
 
         static int total = 128;
 
-        float radius;
-
-        int points;
         int factor;
+        int points;
 
-        public Circle(Vector3 position, float radius, int factor)
+        public Circle(Vector3 position, int factor)
         {
             this.position = position;
-            this.radius = radius;
             this.factor = factor;
 
             direction = Vector3.Zero;
@@ -35,11 +32,12 @@ namespace Brain3D
 
             circle = new Vector3[points];
             data = new Vector3[points];
+            framework = new Vector3[points];
 
             for (int i = 0, j = 0; i < points; i++, j += factor)
                 circle[i] = new Vector3(cos[j], sin[j], 0);
 
-            refresh();
+            rotate();
         }
 
         public static void initialize()
@@ -56,26 +54,27 @@ namespace Brain3D
             }
         }
 
-        public override void refresh()
+        public override void move()
         {
-            if (direction.Length() == 0)
-            {
-                for (int i = 0; i < points; i++)
-                    data[i] = Vector3.Transform(circle[i] * radius, camera.Rotation) + position;
-
-                return;
-            }
-
             for (int i = 0; i < points; i++)
-                data[i] = Vector3.Transform(circle[i] * radius, new Spherical(direction).getRotation()) + position;
+                data[i] = framework[i] + position;
         }
 
-        public int Points
+        public override void rotate()
         {
-            get
+            if (direction.Length() == 0)
+                for (int i = 0; i < points; i++)
+                    framework[i] = Vector3.Transform(circle[i], camera.Rotation);
+            else
             {
-                return points;
+                Matrix rotation = new Spherical(direction).getRotation();
+                //rotation = new Spherical(new Vector3(0, 0, 1)).getRotation();
+
+                for (int i = 0; i < points; i++)
+                    framework[i] = Vector3.Transform(circle[i], rotation);
             }
+
+            move();
         }
 
         public Vector3 Direction
@@ -86,15 +85,11 @@ namespace Brain3D
             }
         }
 
-        public float Radius
+        public int Points
         {
             get
             {
-                return radius;
-            }
-            set
-            {
-                radius = value;
+                return points;
             }
         }
 

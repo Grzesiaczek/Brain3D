@@ -11,29 +11,42 @@ namespace Brain3D
     abstract class DrawableElement : GraphicsElement
     {
         protected static Display display;
-        protected GraphicsBuffer buffer;
 
-        protected List<GraphicsElement> elements;
+        protected GraphicsBuffer buffer;
         protected Color color;
 
         protected VertexPositionColor[] vertices;
         protected int[] indices;
         protected int offset;
 
-        public DrawableElement()
-        {
-            elements = new List<GraphicsElement>();
-        }
-
         public virtual void initialize() { }
 
-        public override void refresh()
+        public virtual void repaint() { }
+
+        public override void move()
         {
-            foreach (GraphicsElement element in elements)
-                element.refresh();
+            for (int i = 0, j = offset; i < vertices.Length; i++, j++)
+                buffer.Vertices[j].Position = framework[i] + position;
         }
 
-        public virtual void draw() { }
+        public void refresh()
+        {
+            move();
+            repaint();
+        }
+
+        public virtual void show()
+        {
+            if (buffer == null)
+                display.add(this);
+            else
+                buffer.show(indices);
+        }
+
+        public virtual void hide()
+        {
+            buffer.hide(indices);
+        }
 
         public static Display Display
         {
@@ -43,7 +56,7 @@ namespace Brain3D
             }
         }
 
-        public GraphicsBuffer Buffer
+        public virtual GraphicsBuffer Buffer
         {
             set
             {
@@ -54,13 +67,10 @@ namespace Brain3D
 
         public virtual Color Color
         {
-            get
-            {
-                return color;
-            }
             set
             {
                 color = value;
+                repaint();
             }
         }
     }    

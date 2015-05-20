@@ -36,11 +36,11 @@ namespace Brain3D
                 return null;
 
             CreationFrame frame = brain.add(this, builder, index);
-            SequenceNeuron neuron = frame.Neuron;
+            NeuronTile neuron = frame.Neuron;
 
             neuron.Top = 8;
             neuron.Left = builder.Left;
-            neuron.changeType(SequenceElementType.Normal);
+            neuron.idle();
             position = neuron.Right + 10;
 
             builder = null;
@@ -57,7 +57,7 @@ namespace Brain3D
             }
         }
 
-        public BuiltElement Builder
+        public BuiltTile Builder
         {
             get
             {

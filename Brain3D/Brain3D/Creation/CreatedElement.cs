@@ -9,7 +9,7 @@ namespace Brain3D
     {
         protected AnimatedElement element;
 
-        public void show()
+        public virtual void show()
         {
             element.show();
         }

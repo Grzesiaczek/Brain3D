@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -13,6 +15,8 @@ using Nuclex.Graphics;
 
 namespace Brain3D
 {
+    using Color = Microsoft.Xna.Framework.Color;
+
     class Display : GraphicsDeviceControl
     {
         BasicEffect effect;
@@ -20,48 +24,40 @@ namespace Brain3D
         Comparer comparer;
 
         Animation animation;
-        Creation creation;
         Sequence sequence;
-
-        Text2D state;
-        Text2D fps;
+        Controller controller;
 
         List<AnimatedElement> elements;
-        List<DateTime> times = new List<DateTime>();
+        List<SpriteElement> sprites;
+
+        GraphicsBuffer buffer;
+        GraphicsBuffer numbers;
+        SpriteBatch batch;
 
         float viewArea = 1.5f;
         int margin;
 
-        int count = 0;
+        bool initialized;
+        bool locked;
         bool moved;
-        bool refreshed;
+        bool refresh;
 
-        int frame;
-        int frames;
-        int offset;
-
-        TrackBar trackBar;
-
-        GraphicsBuffer buffer;
-        GraphicsBuffer values;
+        //public Display
 
         protected override void Initialize()
         {
             camera = new Camera(Constant.Radius + 10);
-            //camera = new Camera(new Vector3(2, 0, 2));
             DrawableElement.Camera = camera;
 
             elements = new List<AnimatedElement>();
+            sprites = new List<SpriteElement>();
             comparer = new Comparer();
 
             DrawableElement.Content = new ContentManager(Services, "Content");
             Application.Idle += delegate { Invalidate(); };
 
-            Text2D.Batch = new SpriteBatch(Device);
-            SpriteFont font = new ContentManager(Services, "Content").Load<SpriteFont>("Sequence");
-
-            state = new Text2D("", font, new Vector2(Width - 120, 20), Color.DarkBlue, 60);
-            fps = new Text2D("FPS: 0", font, new Vector2(Width - 100, 50), Color.DarkMagenta);
+            controller = new Controller(this);
+            batch = new SpriteBatch(Device);
 
             effect = new BasicEffect(Device);
             effect.VertexColorEnabled = true;
@@ -78,13 +74,24 @@ namespace Brain3D
             DrawableElement.Device = Device;
             DrawableElement.Effect = effect;
             DrawableElement.Display = this;
+            SpriteElement.Batch = batch;
+
+            Number3D.initializePatterns();
+            Pipe.initializePalettes();
+            Chart.initializeAngles();
 
             Circle.initialize();
-            Text3D.load();
-            SequenceElement.initialize();
+            BorderedDisk.initializeCircle();
+            
+            Tile.initializeTextures();
+            Branch.initializeTexture();
 
             buffer = new GraphicsBuffer(Device);
-            values = new GraphicsBuffer(Device);
+            numbers = new GraphicsBuffer(Device);
+            /*
+            Pipe pipe = new Pipe(new Circle(Vector3.Zero, 2, 4), new Circle(new Vector3(16, 16, -16), 2, 4), 1);
+            pipe.rotate();
+            pipe.Buffer = buffer;*/
         }
 
         protected override void Draw()
@@ -97,131 +104,144 @@ namespace Brain3D
             effect.View = Matrix.CreateLookAt(camera.Position, camera.Target, camera.Up);
             effect.Projection = Matrix.CreatePerspectiveFieldOfView(viewArea, Device.Viewport.AspectRatio, 1, 60);
 
-            if (moved)
+            if(Number3D.Change)
             {
-                refresh();
-                moved = false;
+                numbers.clear(false);
+                numbers.initialize();
             }
 
-            if (refreshed)
-            {
-                buffer.refresh();
-                values.refresh();
-                refreshed = false;
-            }
+            buffer.refreshVertices();
+            numbers.refreshVertices();
 
+            draw();
+        }
+
+        void screen(object state)
+        {
+            String title = "";
+
+            if (state is Animation)
+                title = "simulation";
+
+            if (state is Creation)
+                title = "creation";
+
+            if (state is Charting)
+                title = "chart";
+
+            if (state is Tree)
+                title = "tree";
+
+            RenderTarget2D target = new RenderTarget2D(Device, Width, Height, false, Device.DisplayMode.Format, DepthFormat.Depth24, 4, RenderTargetUsage.PlatformContents);
+
+            Device.SetRenderTarget(target);
+            Device.Clear(Color.CornflowerBlue);
+            Device.RasterizerState = RasterizerState.CullNone;
+
+            Device.SetRenderTarget(null);
+            FileStream stream = new FileStream(Path.Combine(Constant.Path, title), FileMode.Create, FileAccess.Write);
+
+            title += "-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".png";
+            target.SaveAsPng(stream, Width, Height);
+            stream.Close();
+        }
+
+        void draw()
+        {
             effect.CurrentTechnique.Passes[0].Apply();
             buffer.draw();
-            values.draw();
+            numbers.draw();
 
-            if (sequence != null)
-                sequence.draw();
+            batch.Begin();
 
-            times.Add(DateTime.Now);
+            foreach (SpriteElement sprite in sprites)
+                sprite.draw();
 
-            if (count > 100)
-            {
-                TimeSpan time = times[count] - times[count - 100];
-                double span = time.TotalMilliseconds;
-                fps.Text = "FPS: " + (int)(100000 / span);
-            }
-            else if (count != 0)
-            {
-                TimeSpan time = times[count] - times[0];
-                double span = time.TotalMilliseconds;
-                fps.Text = "FPS: " + (int)(1000 * count / span);
-            }
-
-            state.draw();
-            fps.draw();
-
-            count++;
+            batch.End();
         }
 
-        public void add(DrawableElement element)
+        public void print(Presentation presentation)
         {
-            if (element is Text3D)
-                element.Buffer = values;
-            else
-                element.Buffer = buffer;
+            ThreadPool.QueueUserWorkItem(screen, presentation);
         }
 
-        public void add(Animation animation)
+        public void show()
         {
-            this.animation = animation;
+            buffer.show();
+            numbers.show();
         }
 
-        public void add(Creation creation)
+        public void hide()
         {
-            this.creation = creation;
-        }
-
-        public void show(Sequence sequence)
-        {
-            this.sequence = sequence;
+            buffer.hide();
+            numbers.hide();
         }
 
         public void initialize()
         {
             buffer.initialize();
-            values.initialize();
+            numbers.initialize();
+
+            initialized = true;
         }
 
         public void resize()
         {
             Width = Parent.Width - margin;
             Height = Parent.Height;
-
-            if (state == null)
-                return;
-
-            state.Location = new Vector2(Width - 100, 20);
-            fps.Location = new Vector2(Width - 100, 60);
+            
+            if(controller != null)
+                controller.Location = new Vector2(Width - 100, 60);
         }
 
         public void clear()
         {
             if(elements != null)
                 elements.Clear();
+
+            if (sprites != null)
+                sprites.Clear();
+
+            buffer.clear();
+            numbers.clear();
+
+            initialized = false;
         }
 
         public void move()
         {
+            if (locked || !initialized)
+                return;
+
+            locked = true;
+            ThreadPool.QueueUserWorkItem(moving);
+        }
+
+        void moving(object state)
+        {
+            foreach (AnimatedElement element in elements)
+                element.move();
+
+            locked = false;
             moved = true;
         }
 
-        public void changeFrame(int frame)
+        public void repaint()
         {
-            this.frame = frame;
-            trackBar.Value = frame;
-            state.Text = frame.ToString() + "/" + frames;
+            refresh = true;
         }
 
-        public void changeState(int frame, int frames)
+        public void rotate()
         {
-            this.frames = frames;
-            trackBar.Maximum = frames;
-            changeFrame(frame);
+            ThreadPool.QueueUserWorkItem(rotation);
         }
 
-        public void refresh()
+        void rotation(object state)
         {
-            ThreadPool.QueueUserWorkItem(refreshment);
-        }
-
-        void refreshment(object state)
-        {
-            List<AnimatedElement> sorted = new List<AnimatedElement>();
-
             foreach (AnimatedElement element in elements)
-            {
-                element.refresh();
-                sorted.Add(element);
-            }
+                element.rotate();
 
-            sorted.Sort(comparer);
-            //elements = sorted;
-            refreshed = true;
+            refresh = true;
         }
 
         public void setMargin(int value)
@@ -229,42 +249,52 @@ namespace Brain3D
             margin = value;
         }
 
-        #region sterowanie widokiem
+        #region sterowanie kamerą
+
+        public void change(bool charting)
+        {
+            if (charting)
+                camera = new Camera(new Vector3(2, 0, 2));
+            else
+                camera = new Camera(Constant.Radius + 10);
+
+            DrawableElement.Camera = camera;
+        }
 
         public void left()
         {
             camera.moveLeft();
-            refresh();
+            rotate();
         }
 
         public void right()
         {
             camera.moveRight();
-            refresh();
+            rotate();
         }
 
         public void up()
         {
             camera.moveUp();
-            refresh();
+            rotate();
         }
 
         public void down()
         {
             camera.moveDown();
-            refresh();
+            rotate();
         }
 
         public void closer()
         {
             camera.closer();
-            refresh();
+            rotate();
         }
 
         public void farther()
         {
             camera.farther();
-            refresh();
+            rotate();
         }
 
         public void broaden()
@@ -290,9 +320,27 @@ namespace Brain3D
             return animation.loadFrame(frame, index);
         }
 
-        public void loadTrackBar(TrackBar trackBar)
+        public void add(DrawableElement element)
         {
-            this.trackBar = trackBar;
+            if (element is Number3D)
+                element.Buffer = numbers;
+            else
+                element.Buffer = buffer;
+        }
+
+        public void add(SpriteElement element)
+        {
+            sprites.Add(element);
+        }
+
+        public void add(Animation animation)
+        {
+            this.animation = animation;
+        }
+
+        public void show(Sequence sequence)
+        {
+            this.sequence = sequence;
         }
 
         public void add(AnimatedElement element)

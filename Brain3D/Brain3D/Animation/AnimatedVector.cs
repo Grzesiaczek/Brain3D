@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class AnimatedVector : AnimatedElement
+    class AnimatedVector : CompositeElement
     {
         #region deklaracje
 
@@ -18,26 +18,35 @@ namespace Brain3D
         Pipe pipe;
         Vector2 angle;
 
+        Vector3 direction;
+        Vector3 vector;
+
         #endregion
 
         public AnimatedVector(AnimatedElement source, AnimatedElement target)
         {
             this.source = source;
             this.target = target;
-            refreshAngle();
 
-            pipe = new Pipe(new Circle(source.pointVector(-angle), 0.08f, 4), new Circle(target.pointVector(angle), 0.08f, 4));
-            display.add(pipe);
+            pipe = new Pipe(source.pointVector(-angle), target.pointVector(angle), 0.1f, 0.1f, 0);
+            drawables.Add(pipe);
+
+            refreshAngle();
         }
 
-        public override void refresh()
+        public override void move()
         {
-            base.refresh();
             refreshAngle();
+            pipe.Source = source.pointVector(-angle);
+            pipe.Target = target.pointVector(angle);
+            pipe.rotate();
+            pipe.move();
+        }
 
-            pipe.Start.Position = source.pointVector(-angle);
-            pipe.End.Position = target.pointVector(angle);
-            pipe.refresh();
+        public override void rotate()
+        {
+            base.rotate();
+            move();
         }
 
         void refreshAngle()
@@ -47,6 +56,10 @@ namespace Brain3D
 
             angle = new Vector2(v2.X - v1.X, v2.Y - v1.Y);
             angle.Normalize();
+
+            vector = pipe.Target - pipe.Source;
+            direction = target.Position - source.Position;
+            direction.Normalize();
         }
 
         #region właściwości
@@ -56,6 +69,14 @@ namespace Brain3D
             get
             {
                 return angle;
+            }
+        }
+
+        public Vector3 Direction
+        {
+            get
+            {
+                return direction;
             }
         }
 
@@ -79,7 +100,7 @@ namespace Brain3D
         {
             get
             {
-                return End - Start;
+                return vector;
             }
         }
 
@@ -87,15 +108,7 @@ namespace Brain3D
         {
             get
             {
-                return pipe.Start.Position;
-            }
-        }
-
-        public Vector3 End
-        {
-            get
-            {
-                return pipe.End.Position;
+                return pipe.Source;
             }
         }
 

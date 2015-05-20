@@ -20,8 +20,8 @@ namespace Brain3D
         List<AnimatedSynapse> input;
         List<AnimatedSynapse> output;
 
-        Text3D number;
         Label3D label;
+        Number3D number;
 
         StateDisk disk;
 
@@ -44,25 +44,39 @@ namespace Brain3D
             output = new List<AnimatedSynapse>();
 
             radius = 1.2f;
+            color = Color.LightYellow;
 
-            disk = new StateDisk(position, radius);
+            float factor = (float)(neuron.Count - 1) / 4;
+            color.R -= (byte)(12 * factor);
+            color.G -= (byte)(48 * factor);
+            color.B -= (byte)(60 * factor);
+
+            disk = new StateDisk(position, color, radius);
             label = new Label3D(Name, position);
-            number = new Text3D("0", position);
+            number = new Number3D(position);
 
-            display.add(disk);
-            display.add(label);
-            display.add(number);
+            drawables.Add(disk);
+            drawables.Add(label);
+            drawables.Add(number);
         }
 
         #endregion
 
         #region logika
 
-        public override void refresh()
+        public override void move()
         {
-            disk.refresh();
-            label.refresh();
-            number.refresh();
+            foreach (DrawableElement drawable in drawables)
+                drawable.Position = position;
+
+            screen = device.Viewport.Project(position, effect.Projection, effect.View, effect.World);
+            base.move();
+        }
+
+        public override void rotate()
+        {
+            base.rotate();
+            screen = device.Viewport.Project(position, effect.Projection, effect.View, effect.World);
         }
 
         void setData(NeuronData data)
@@ -74,7 +88,7 @@ namespace Brain3D
                 if (!refraction)
                 {
                     refraction = true;
-                    number.Text = "R";
+                    number.Value = 100;
                     disk.refract();
                 }
                 else
@@ -86,7 +100,7 @@ namespace Brain3D
                     refraction = false;
 
                 disk.changeValue((float)value);
-                number.Text = ((int)(Math.Abs(value) * 100)).ToString();
+                number.Value = (int)(Math.Abs(value) * 100);
             } 
         }
 
@@ -181,25 +195,6 @@ namespace Brain3D
             set
             {
                 position = value;
-                disk.Position = position;
-                number.Position = position;
-                label.Position = position;
-            }
-        }
-
-        public float Radius
-        {
-            get
-            {
-                return radius;
-            }
-        }
-
-        public bool State
-        {
-            set
-            {
-                number.Suppress = !value;
             }
         }
 

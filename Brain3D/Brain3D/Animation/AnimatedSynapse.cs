@@ -34,6 +34,9 @@ namespace Brain3D
             vector = new AnimatedVector(pre, post);
             synapse = new AnimatedState(syn, vector);
 
+            drawables.Add(vector);
+            drawables.Add(synapse);
+
             pre.Output.Add(this);
             post.Input.Add(this);
         }
@@ -47,56 +50,45 @@ namespace Brain3D
             int frame = (int)time;
             double rest = time - frame;
 
-            if (synapse.Activity[frame].Item1 && synapse.Activity[frame + 1].Item1)
-                synapse.setSignal(synapse.Activity[frame].Item2 + rest / 20);
-            else
-                synapse.Active = false;
+            synapse.tick(frame, rest);
 
             if (duplex != null)
-            {
-                if (duplex.Activity[frame].Item1 && duplex.Activity[frame + 1].Item1)
-                    duplex.setSignal(duplex.Activity[frame].Item2 + rest / 20);
-                else
-                    duplex.Active = false;
-            }
+                duplex.tick(frame, rest);
         }
 
-        public override void draw()
+        public override void move()
         {
-            vector.draw();
-            synapse.draw();
-
-            if (duplex != null)
-                duplex.draw();
+            rotate();
+            base.move();
         }
 
-        public override void initialize()
+        public override void rotate()
         {
-            vector.initialize();
-            synapse.initialize();
-
-            if (duplex != null)
-                duplex.initialize();
-        }
-
-        public override void refresh()
-        {
-            vector.refresh();
+            vector.rotate();
 
             Vector3 diff = vector.Vector;
-            synapse.Position = 0.8f * diff + vector.Start;
-            synapse.refresh();
+            Vector3 constant = diff;
+
+            constant.Normalize();
+            constant *= 0.2f;
+
+            synapse.Position = 0.9f * diff + vector.Start - constant;
+            synapse.rotate();
 
             if(duplex != null)
             {
-                duplex.Position = 0.2f * diff + vector.Start;
-                duplex.refresh();
+                duplex.Position = 0.1f * diff + vector.Start + constant;
+                duplex.rotate();
             }
         }
 
         public override void setFrame(int frame)
         {
+            frame *= 10;
+            synapse.tick(frame, 0);
 
+            if (duplex != null)
+                duplex.tick(frame, 0);
         }
 
         #endregion
@@ -151,6 +143,7 @@ namespace Brain3D
         public void setDuplex(Synapse synapse)
         {
             duplex = new AnimatedState(synapse, vector, true);
+            drawables.Add(duplex);
         }
 
         public bool isDuplex()
@@ -179,10 +172,6 @@ namespace Brain3D
             {
                 return pre;
             }
-            set
-            {
-                pre = value;
-            }
         }
 
         public AnimatedNeuron Post
@@ -191,10 +180,6 @@ namespace Brain3D
             {
                 return post;
             }
-            set
-            {
-                post = value;
-            }
         }
 
         public AnimatedVector Vector
@@ -202,10 +187,6 @@ namespace Brain3D
             get
             {
                 return vector;
-            }
-            set
-            {
-                vector = value;
             }
         } 
 

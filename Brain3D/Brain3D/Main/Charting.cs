@@ -41,7 +41,9 @@ namespace Brain3D
         public override void show()
         {
             foreach (ChartedNeuron neuron in neurons)
-                display.add(neuron);
+                neuron.show();
+
+            display.change(true);
         }
 
         void show(object sender, EventArgs e)

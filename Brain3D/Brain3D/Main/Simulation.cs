@@ -23,15 +23,13 @@ namespace Brain3D
         Animation animation;
         Creation creation;
         Charting charting;
+        Tree tree;
 
         Presentation presentation;
-        StateBar stateBar;
 
-        int frames;
         int length;
         int pace;
 
-        Mode mode;
         FormWindowState state;
 
         #endregion
@@ -44,7 +42,6 @@ namespace Brain3D
             prepareAnimation();
 
             presentation = animation;
-            //presentation = charting;
         }
 
         #region inicjalizacja
@@ -59,14 +56,11 @@ namespace Brain3D
             animation = new Animation();
             creation = new Creation();
             charting = new Charting();
-            stateBar = new StateBar();
-
-            animation.setBar(stateBar);
+            tree = new Tree();
 
             BrainElement.initialize(250);
             Neuron.initialize();
 
-            display.loadTrackBar(trackBarFrame);
             display.setMargin(rightPanel.Width + 20);
             display.resize();
 
@@ -77,10 +71,6 @@ namespace Brain3D
             trackBarFrame.KeyDown += keySuppress;
             trackBarLength.KeyDown += keySuppress;
             trackBarPace.KeyDown += keySuppress;
-            trackBarScale.KeyDown += keySuppress;
-
-            rightPanel.Controls.Add(stateBar);
-            stateBar.show();
 
             length = trackBarLength.Value * 10;
             pace = trackBarPace.Value * 100;
@@ -93,7 +83,6 @@ namespace Brain3D
             creation.animationStop += new EventHandler(animationStop);
             creation.creationFinished += new EventHandler(creationFinished);
 
-            Presentation.factorChanged += new EventHandler(factorChanged);
             resize();
         }
 
@@ -140,9 +129,6 @@ namespace Brain3D
 
         private void buttonQuery_Click(object sender, EventArgs e)
         {
-            if (!radioButtonQuery.Checked)
-                return;
-
             presentation.stop();
             animation.newQuery();
         }
@@ -177,17 +163,11 @@ namespace Brain3D
 
         private void buttonBack_Click(object sender, EventArgs e)
         {
-            if (mode == Mode.Manual)
-                brain.undo();
-
             presentation.back();
         }
 
         private void buttonForth_Click(object sender, EventArgs e)
         {
-            if (mode == Mode.Manual)
-                brain.tick();
-
             presentation.forth();
         }
 
@@ -218,6 +198,7 @@ namespace Brain3D
             switch (keyData)
             {
                 case Keys.F1:
+                    display.print(presentation);
                     break;
                 case Keys.F4:
 
@@ -335,14 +316,8 @@ namespace Brain3D
             if (!radioButtonCreation.Checked)
                 return;
 
-            mode = Mode.Creation;
-            presentation = creation;
-
-            display.clear();
             animation.create(creation);
-
-            buttonPlay.Enabled = true;
-            buttonQuery.Enabled = false;
+            show(creation);
         }
 
         private void radioButtonChart_CheckedChanged(object sender, EventArgs e)
@@ -350,45 +325,39 @@ namespace Brain3D
             if (!radioButtonChart.Checked)
                 return;
 
-            mode = Mode.Chart;
-            //change(charting);
-
-            buttonPlay.Enabled = true;
-            buttonQuery.Enabled = false;
+             show(charting);
         }
 
-        private void radioButtonManual_CheckedChanged(object sender, EventArgs e)
+        private void radioButtonSimulation_CheckedChanged(object sender, EventArgs e)
         {
             if (!radioButtonSimulation.Checked)
                 return;
 
-            presentation = animation;
+            if (presentation != creation)
+                display.clear();
 
-            mode = Mode.Manual;
-            animation.setMode(Mode.Manual);
-
-            buttonPlay.Enabled = false;
-            buttonQuery.Enabled = false;
-            /*
-            if (MessageBox.Show("Reset all data?", "Data Reset", MessageBoxButtons.YesNo) == DialogResult.No)
-                return;*/
-
-            animation.unload();
-            brain.erase(true);
+            show(animation);
         }
 
-        private void radioButtonQuery_CheckedChanged(object sender, EventArgs e)
+        private void radioButtonTree_CheckedChanged(object sender, EventArgs e)
         {
-            if (!radioButtonQuery.Checked)
+            if (!radioButtonTree.Checked)
                 return;
 
-            presentation = animation;
+            display.clear();
+            show(tree);
+        }
 
-            mode = Mode.Query;
-            animation.setMode(Mode.Query);
+        void show(Presentation presentation)
+        {
+            this.presentation.hide();
+            this.presentation = presentation;
 
-            buttonPlay.Enabled = true;
-            buttonQuery.Enabled = true;
+            presentation.show();
+            display.initialize();
+
+            if(presentation != creation)
+                display.show();
         }
 
         #endregion
@@ -397,31 +366,31 @@ namespace Brain3D
 
         private void Simulation_Load(object sender, EventArgs e)
         {
-            List<CreationSequence> sequences = new List<CreationSequence>();
             /*
-            sequences.Add(brain.addSentence("type new sequence"));
-            sequences.Add(brain.addSentence("or load from file"));*/
+            brain.addSentence("type new sequence"));
+            sbrain.addSentence("or load from file"));*/
+            
+            brain.addSentence("i have a monkey");
+            brain.addSentence("my monkey is very small");
+            brain.addSentence("it is very lovely");
+            brain.addSentence("it likes to sit on my head");
+            brain.addSentence("it can jump very quickly");
+            brain.addSentence("it is also very clever");
+            brain.addSentence("it learns quickly");
+            brain.addSentence("my monkey is lovely");
+            brain.addSentence("i have also a small dog");
 
-            /*sequences.Add(brain.addSentence("i have a monkey"));/*
-            sequences.Add(brain.addSentence("my monkey is very small"));
-            sequences.Add(brain.addSentence("it is very lovely"));
-            sequences.Add(brain.addSentence("it likes to sit on my head"));
-            sequences.Add(brain.addSentence("it can jump very quickly"));
-            sequences.Add(brain.addSentence("it is also very clever"));
-            sequences.Add(brain.addSentence("it learns quickly"));
-            sequences.Add(brain.addSentence("my monkey is lovely"));
-            sequences.Add(brain.addSentence("i have also a small dog"));*/
+            //sequences.Add(brain.addSentence("this is"));
 
-            sequences.Add(brain.addSentence("this is"));
+            Presentation.Brain = brain;
+            Presentation.Controller.add(trackBarFrame);
 
             simulate();
-            creation.load(sequences);
-            Presentation.Brain = brain;
+            creation.load();
+            radioButtonChart.Checked = true;
 
-            //animation.create(creation);
-            
-            presentation.show();
-            display.refresh();
+            display.rotate();
+            display.change(true);
 
             WindowState = FormWindowState.Maximized;
             
@@ -436,16 +405,7 @@ namespace Brain3D
 
         private void balanceFinished(object sender, EventArgs e)
         {
-            if (mode != Mode.Manual)
-                buttonPlay.Enabled = true;
-        }
-
-        private void factorChanged(object sender, EventArgs e)
-        {
-            trackBarScale.Minimum = (int)sender;
-            trackBarScale.Value = (int)sender;
-
-            //AnimatedElement.Factor = (float)(int)sender / 100;
+            buttonPlay.Enabled = true;
         }
 
         private void queryAccepted(object sender, EventArgs e)
@@ -479,14 +439,8 @@ namespace Brain3D
         private void trackBarFrame_Scroll(object sender, EventArgs e)
         {
             presentation.changeFrame(trackBarFrame.Value);
-            //labelFrame.Text = trackBarFrame.Value.ToString() + "/" + frames.ToString();
         }
 
-        private void trackBarScale_Scroll(object sender, EventArgs e)
-        {
-            float factor = (float)trackBarScale.Value / 100;
-            //AnimatedElement.Factor = factor;
-        }
 
         private void trackBarDensity_Scroll(object sender, EventArgs e)
         {
@@ -511,14 +465,14 @@ namespace Brain3D
 
             XmlNode node = xml.ChildNodes.Item(1).FirstChild;
             //Dictionary<Neuron, SequenceNeuron> map = new Dictionary<Neuron, SequenceNeuron>();
-            List<CreationSequence> sequences = new List<CreationSequence>();
 
             foreach (XmlNode xn in node.ChildNodes)
-                sequences.Add(brain.addSentence(xn.InnerText.ToLower()));
+                brain.addSentence(xn.InnerText.ToLower());
 
-            //animation.loadBrain();
-            creation.load(sequences);
-            animation.create(creation);
+            animation.reload();
+            creation.load();
+            presentation.show();
+            //animation.create(creation);
         }
 
         void saveData(String path)
@@ -535,7 +489,7 @@ namespace Brain3D
         {
             openFile.DefaultExt = ".xml";
             openFile.InitialDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Files");
-            openFile.ShowDialog();
+            DialogResult test = openFile.ShowDialog();
         }
 
         private void buttonBalance_Click(object sender, EventArgs e)
@@ -545,7 +499,7 @@ namespace Brain3D
 
         private void checkBoxState_CheckedChanged(object sender, EventArgs e)
         {
-            animation.stateChanged(checkBoxState.Checked);
+            Number3D.Visible = checkBoxState.Checked;
         }
 
         private void radioButtonBox_CheckedChanged(object sender, EventArgs e)
@@ -562,6 +516,11 @@ namespace Brain3D
                 return;
 
             Constant.Space = SpaceMode.Sphere;
+        }
+
+        private void radioButtonSquare_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

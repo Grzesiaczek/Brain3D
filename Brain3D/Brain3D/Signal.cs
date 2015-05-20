@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class Signal : DrawableElement
+    class Signal : CompositeElement
     {
         Vector3 source;
         Vector3 target;
@@ -25,61 +25,57 @@ namespace Brain3D
             this.source = source;
             this.target = target;
 
-            pipe = new Pipe(new Circle(source, 0.25f, 4), new Circle(source, 0.05f, 4));
+            pipe = new Pipe(source, source, 0.4f, 0.1f, 1);
             pipe.Color = Color.Khaki;
 
-            move();
+            shift();
         }
 
         public void setSignal(double factor)
         {
-            if (!active)
+            if(factor == -1)
             {
-                move();
-                active = true;
+                hide();
+                return;
             }
 
-            pipe.Start.Position = source + vector * (float)factor;
-            pipe.End.Position = pipe.Start.Position + bullet;
-            pipe.refresh();
+            if (!active)
+                show();
 
             this.factor = factor;
+            rotate();
+            pipe.move();
         }
 
-        void move()
+        void shift()
         {
             vector = target - source;
             bullet = vector;
             bullet.Normalize();
+            bullet *= 1.6f;
             vector -= bullet;
         }
 
-        public override void draw()
+        public override void rotate()
         {
-            if (active)
-                pipe.draw();
+            shift();
+
+            pipe.Source = source + vector * (float)factor;
+            pipe.Target = pipe.Source + bullet;
+            pipe.rotate();
         }
 
-        public override void initialize()
+        public override void show()
         {
-            //base.initialize();
+            pipe.show();
+            active = true;
         }
 
-        public override void refresh()
+        public override void hide()
         {
-            /*move();
-
-            pipe.Start.Position = source + vector * (float)factor;
-            pipe.End.Position = pipe.Start.Position + bullet;
-            pipe.refresh();*/
-        }
-
-        public bool Active
-        {
-            set
-            {
-                active = value;
-            }
+            pipe.hide();
+            active = false;
+            pipe.move();
         }
 
         public Vector3 Source

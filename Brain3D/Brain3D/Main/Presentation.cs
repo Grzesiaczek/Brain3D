@@ -15,25 +15,26 @@ namespace Brain3D
         #region deklaracje
 
         protected static Brain brain;
+        protected static Controller controller;
         protected static Display display;
 
+        protected Balancing balancing;
         protected Timer timer;
 
-        protected static int frames;
         protected bool animation;
+        protected bool visible;
 
-        public static event EventHandler factorChanged;
-        public static event EventHandler sizeChanged;
         public static event EventHandler loadBrain;
 
         #endregion
 
         public Presentation()
         {
-            timer = new System.Windows.Forms.Timer();
+            timer = new Timer();
             timer.Tick += new EventHandler(tick);
             timer.Interval = 25;
             loadBrain += brainLoaded;
+            balancing = Balancing.Instance;
         }
 
         protected virtual void brainLoaded(object sender, EventArgs e) { }
@@ -71,6 +72,12 @@ namespace Brain3D
 
         public virtual void show() { }
 
+        public virtual void hide()
+        {
+            visible = false;
+            display.clear();
+        }
+
         #endregion
 
         public static Brain Brain
@@ -79,6 +86,18 @@ namespace Brain3D
             {
                 brain = value;
                 loadBrain(null, null);
+            }
+        }
+
+        public static Controller Controller
+        {
+            get
+            {
+                return controller;
+            }
+            set
+            {
+                controller = value;
             }
         }
 

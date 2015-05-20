@@ -7,9 +7,6 @@ namespace Brain3D
 {
     abstract class BrainElement
     {
-        public String Name;
-        public bool Active;
-
         protected static double tmax;
         protected static double omega;
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Brain3D
 {
-    class SequenceNeuron : SequenceElement
+    class NeuronTile : Tile
     {
         Neuron neuron;
 
@@ -17,26 +17,12 @@ namespace Brain3D
         int frame = 1;
         int interval = 20;
 
-        public SequenceNeuron(Neuron neuron) : base(neuron.Word)
+        public NeuronTile(Neuron neuron) : base(neuron.Word)
         {
             this.neuron = neuron;
             activity = new List<bool>();
-            changeType(SequenceElementType.Normal);
+            idle();
         }
-
-        /*protected override void tick(object sender, EventArgs e)
-        {
-            if (fade)
-                changeType(SequenceElementType.Activated);
-
-            if (fade && frame++ == interval)
-            {
-                fade = false;
-                changeType(SequenceElementType.Normal);
-            }
-
-            base.tick(sender, e);
-        }*/
 
         public void disappear(int value)
         {

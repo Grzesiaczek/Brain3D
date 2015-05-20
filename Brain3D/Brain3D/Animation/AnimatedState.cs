@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class AnimatedState : AnimatedElement
+    class AnimatedState : CompositeElement
     {
         #region deklaracje
 
@@ -40,18 +40,23 @@ namespace Brain3D
             this.duplex = duplex;
 
             history = new List<CreationData>();
+            color = Color.LightYellow;
 
-            disk = new StateDisk(position + shiftDisk, 0.5f);
-            state = new BorderedDisk(position + shiftState, 0.5f);
-            /*
+            color.R -= (byte)(10 * synapse.Factor);
+            color.G -= (byte)(33 * synapse.Factor);
+            color.B -= (byte)(45 * synapse.Factor);
+
+            disk = new StateDisk(position + shiftDisk, color, 0.5f);
+            state = new BorderedDisk(position + shiftState, color, 0.5f);
+            
             if (duplex)
                 signal = new Signal(vector.Target, vector.Source);
             else
-                signal = new Signal(vector.Source, vector.Target);*/
+                signal = new Signal(vector.Source, vector.Target);
 
-            display.add(state);
-            display.add(disk);
-            //drawables.Add(signal);
+            drawables.Add(state);
+            drawables.Add(disk);
+            drawables.Add(signal);
         }
 
         #region sterowanie
@@ -86,14 +91,25 @@ namespace Brain3D
             disk.setChange(data);
         }
 
-        public void setSignal(double factor)
+        public void tick(int frame, double rest)
         {
-            signal.setSignal(factor);
-
-            if(!active)
+            if (synapse.Activity[frame].Item1 && synapse.Activity[frame + 1].Item1)
             {
-                active = true;
-                state.Color = Color.IndianRed;
+                signal.setSignal(synapse.Activity[frame].Item2 + rest / 20);
+
+                if (!active)
+                {
+                    active = true;
+                    state.Color = Color.IndianRed;
+                    state.repaint();
+                }
+            }
+            else if (active)
+            {
+                active = false;
+                signal.setSignal(-1);
+                state.Color = color;
+                state.repaint();
             }
         }
 
@@ -102,16 +118,14 @@ namespace Brain3D
             disk.setValue(weight);
         }
 
-        public override void refresh()
+        public override void rotate()
         {
-            base.refresh();
-
-            shiftDisk = Vector3.Transform(new Vector3(0.5f * vector.Angle.X, 0.5f * vector.Angle.Y, -0.083f), camera.Rotation);
-            shiftState = Vector3.Transform(new Vector3(0.8f * vector.Angle.X, 0.8f * vector.Angle.Y, -0.081f), camera.Rotation);
+            shiftDisk = Vector3.Transform(new Vector3(0.5f * vector.Angle.X, 0.5f * vector.Angle.Y, -0.104f), camera.Rotation);
+            shiftState = Vector3.Transform(new Vector3(0.8f * vector.Angle.X, 0.8f * vector.Angle.Y, -0.102f), camera.Rotation);
 
             disk.Position = position + shiftDisk;
             state.Position = position + shiftState;
-            /*
+            
             if (duplex)
             {
                 signal.Source = vector.Target;
@@ -121,11 +135,7 @@ namespace Brain3D
             {
                 signal.Source = vector.Source;
                 signal.Target = vector.Target;
-            }*/
-
-            disk.refresh();
-            state.refresh();
-            //signal.refresh(); 
+            }
         }
 
         #endregion
@@ -161,18 +171,6 @@ namespace Brain3D
             set
             {
                 history = value;
-            }
-        }
-
-        public bool Active
-        {
-            set
-            {
-                if (active && !value)
-                    state.Color = Color.LightYellow;
-
-                signal.Active = value;
-                active = value;
             }
         }
 

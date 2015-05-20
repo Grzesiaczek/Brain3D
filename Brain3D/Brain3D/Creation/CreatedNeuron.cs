@@ -37,10 +37,6 @@ namespace Brain3D
             {
                 return created;
             }
-            set
-            {
-                created = value;
-            }
         }
 
         public int Frame

@@ -11,7 +11,7 @@ namespace Brain3D
     {
         #region deklaracje
 
-        BrainElement pre;
+        Neuron pre;
         Neuron post;
 
         float change;
@@ -26,13 +26,6 @@ namespace Brain3D
         #region konstruktory
 
         public Synapse(Neuron pre, Neuron post)
-        {
-            this.pre = pre;
-            this.post = post;
-            initialize();
-        }
-
-        public Synapse(Receptor pre, Neuron post)
         {
             this.pre = pre;
             this.post = post;
@@ -87,7 +80,7 @@ namespace Brain3D
 
         #region właściwości
 
-        public BrainElement Pre
+        public Neuron Pre
         {
             get
             {

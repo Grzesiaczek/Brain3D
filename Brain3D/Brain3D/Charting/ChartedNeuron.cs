@@ -9,13 +9,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class ChartedNeuron : AnimatedElement
+    class ChartedNeuron : CompositeElement
     {
         Neuron neuron;
+        ChartedTile tile;
         Chart chart;
-
-        Color background;
-        Color light;
 
         static Color[] palette = { Color.Red, Color.Purple, Color.Orchid, Color.BlueViolet, Color.Goldenrod, Color.DarkGreen, Color.Maroon, Color.Navy,
                                      Color.HotPink, Color.Firebrick, Color.Crimson, Color.Indigo, Color.Khaki, Color.Lavender};
@@ -27,10 +25,15 @@ namespace Brain3D
             this.neuron = neuron;
             visible = false;
             chart = new Chart(neuron, palette[index++]);
-            //display.add(chart);
 
             if (index == 14)
                 index = 0;
+        }
+
+        public override void show()
+        {
+            display.add(this);
+            display.add(chart);
         }
 
         void click(object sender, EventArgs e)

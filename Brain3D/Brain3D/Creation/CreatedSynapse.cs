@@ -25,6 +25,12 @@ namespace Brain3D
                 synapse.getState(true).Change += cd.Step;
         }
 
+        public override void show()
+        {
+            synapse.show();
+            synapse.create();
+        }
+
         //public override 
 
         #region właściwości
