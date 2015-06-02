@@ -13,6 +13,12 @@ namespace Brain3D
         protected static int length;
         protected static int size;
 
+        public static void initialize(double omega, double tmax)
+        {
+            BrainElement.tmax = tmax * 10;
+            BrainElement.omega = omega * 10;
+        }
+
         public static void initialize(int value)
         {
             length = value;

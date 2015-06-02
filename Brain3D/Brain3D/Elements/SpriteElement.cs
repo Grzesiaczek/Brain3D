@@ -12,8 +12,19 @@ namespace Brain3D
         protected static SpriteBatch batch;
 
         protected Color color;
+        protected Point position;
 
         public virtual void draw() { }
+
+        public virtual void show()
+        {
+            display.add(this);
+        }
+
+        public virtual void hide()
+        {
+            display.remove(this);
+        }
 
         public static SpriteBatch Batch
         {

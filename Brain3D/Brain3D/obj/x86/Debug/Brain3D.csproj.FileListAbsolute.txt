@@ -14,3 +14,4 @@ C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\obj\x86\Debug\Brain3D.exe
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\obj\x86\Debug\Brain3D.pdb
 C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\Sequence.xnb
+C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\History.xnb

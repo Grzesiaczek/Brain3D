@@ -28,7 +28,6 @@ namespace Brain3D
         Presentation presentation;
 
         int length;
-        int pace;
 
         FormWindowState state;
 
@@ -39,7 +38,6 @@ namespace Brain3D
             InitializeComponent();
             Constant.load();
             initialize();
-            prepareAnimation();
 
             presentation = animation;
         }
@@ -52,14 +50,12 @@ namespace Brain3D
             Controls.Add(display);
 
             brain = new Brain();
+            Neuron.initializeArrays();
 
             animation = new Animation();
             creation = new Creation();
             charting = new Charting();
             tree = new Tree();
-
-            BrainElement.initialize(250);
-            Neuron.initialize();
 
             display.setMargin(rightPanel.Width + 20);
             display.resize();
@@ -73,30 +69,24 @@ namespace Brain3D
             trackBarPace.KeyDown += keySuppress;
 
             length = trackBarLength.Value * 10;
-            pace = trackBarPace.Value * 100;
 
-            animation.changePace(pace);
-            animation.animationStop += new EventHandler(animationStop);
+            animation.changePace(trackBarPace.Value);
+
             animation.balanceFinished += new EventHandler(balanceFinished);
             animation.queryAccepted += new EventHandler(queryAccepted);
 
+            animation.animationStop += new EventHandler(animationStop);
             creation.animationStop += new EventHandler(animationStop);
-            creation.creationFinished += new EventHandler(creationFinished);
 
             resize();
         }
 
         void simulate()
         {
-            brain.simulate(length);
-            animation.load(length);
-        }
-
-        void prepareAnimation()
-        {
-            buttonPlay.Enabled = true;
-            buttonBack.Enabled = true;
-            buttonForth.Enabled = true;
+            tree.clear();
+            animation.simulate(length);
+            charting.load();
+            buttonSimulate.Enabled = false;
         }
 
         #endregion
@@ -105,20 +95,19 @@ namespace Brain3D
 
         private void buttonPlay_Click(object sender, EventArgs e)
         {
-            if (presentation.started())
+            if (presentation.Started)
             {
-                prepareAnimation();
                 presentation.stop();
                 return;
             }
 
-            buttonSimulate.Enabled = true;
-
+            buttonSimulate.Enabled = false;
             buttonBack.Enabled = false;
             buttonForth.Enabled = false;
+
             buttonPlay.Text = "Stop";
 
-            presentation.changePace(pace);
+            presentation.changePace(trackBarPace.Value);
             presentation.start();
         }
 
@@ -127,38 +116,20 @@ namespace Brain3D
             simulate();
         }
 
-        private void buttonQuery_Click(object sender, EventArgs e)
-        {
-            presentation.stop();
-            animation.newQuery();
-        }
-
         #endregion
 
         #region obsługa przycisków sterujących
 
         private void buttonPaceUp_Click(object sender, EventArgs e)
         {
-            if (pace < 2000)
-            {
-                pace += 100;
-                presentation.changePace(pace);
-            }
-
-            labelPace.Text = pace.ToString();
-            trackBarPace.Value = pace / 100;
+            if (trackBarPace.Value != trackBarPace.Maximum)
+                trackBarPace.Value++;
         }
 
         private void buttonPaceDown_Click(object sender, EventArgs e)
         {
-            if (pace > 200)
-            {
-                pace -= 100;
-                presentation.changePace(pace);
-            }
-
-            labelPace.Text = pace.ToString();
-            trackBarPace.Value = pace / 100;
+            if (trackBarPace.Value != trackBarPace.Minimum)
+                trackBarPace.Value--;
         }
 
         private void buttonBack_Click(object sender, EventArgs e)
@@ -206,19 +177,21 @@ namespace Brain3D
                 case Keys.F11:
                     animation.stopBalance();
                     break;
+                case Keys.Insert:
+                    presentation.changeInsertion();
+                    break;
                 case Keys.Left:
                     presentation.back();
                     break;
                 case Keys.Right:
                     presentation.forth();
                     break;
-                case Keys.Add:
-                    //if (e.Modifiers == Keys.Control)
-
+                case Keys.Up:
+                    presentation.higher();
                     break;
-                case Keys.Subtract:
+                case Keys.Down:
+                    presentation.lower();
                     break;
-
                 case Keys.Space:
                     presentation.space();
                     break;
@@ -229,30 +202,31 @@ namespace Brain3D
                     presentation.enter();
                     break;
                 case Keys.NumPad2:
-                    display.down();
+                    presentation.down();
                     break;
                 case Keys.NumPad4:
-                    display.left();
+                    presentation.left();
                     break;
                 case Keys.NumPad6:
-                    display.right();
+                    presentation.right();
                     break;
                 case Keys.NumPad8:
-                    display.up();
+                    presentation.up();
                     break;
                 case Keys.NumPad1:
-                    display.tighten();
+                    presentation.tighten();
                     break;
                 case Keys.NumPad3:
-                    display.broaden();
+                    presentation.broaden();
                     break;
                 case Keys.NumPad7:
-                    display.closer();
+                    presentation.closer();
                     break;
                 case Keys.NumPad9:
-                    display.farther();
+                    presentation.farther();
                     break;
                 default:
+
                     int code = msg.WParam.ToInt32();
 
                     if (code > 64 && code < 91)
@@ -264,6 +238,7 @@ namespace Brain3D
                     }
                     break;
             }
+            
             return false;
         }
 
@@ -295,10 +270,13 @@ namespace Brain3D
             rightPanel.Left = px;
             rightPanel.Height = py + 40;
 
-            trackBarFrame.Width = px - 120;
+            trackBarFrame.Left = 140;
+            trackBarFrame.Width = px - 200;
             trackBarFrame.Top = py;
 
             buttonBack.Top = py;
+            buttonBack.Left = 100;
+
             buttonForth.Top = py;
             buttonForth.Left = px - 50;
         }
@@ -307,6 +285,7 @@ namespace Brain3D
         {
             display.resize();
         }
+
         #endregion
 
         #region obsługa zmiany trybu pracy
@@ -316,7 +295,6 @@ namespace Brain3D
             if (!radioButtonCreation.Checked)
                 return;
 
-            animation.create(creation);
             show(creation);
         }
 
@@ -333,9 +311,6 @@ namespace Brain3D
             if (!radioButtonSimulation.Checked)
                 return;
 
-            if (presentation != creation)
-                display.clear();
-
             show(animation);
         }
 
@@ -344,7 +319,6 @@ namespace Brain3D
             if (!radioButtonTree.Checked)
                 return;
 
-            display.clear();
             show(tree);
         }
 
@@ -352,12 +326,8 @@ namespace Brain3D
         {
             this.presentation.hide();
             this.presentation = presentation;
-
             presentation.show();
-            display.initialize();
-
-            if(presentation != creation)
-                display.show();
+            display.Focus();
         }
 
         #endregion
@@ -386,15 +356,17 @@ namespace Brain3D
             Presentation.Controller.add(trackBarFrame);
 
             simulate();
-            creation.load();
-            radioButtonChart.Checked = true;
-
-            display.rotate();
-            display.change(true);
+            show(presentation);
+            //radioButtonCreation.Checked = true;
 
             WindowState = FormWindowState.Maximized;
             
             //openData("Files\\data.xml");
+        }
+
+        private void Simulation_Close(object sender, EventArgs e)
+        {
+            presentation.hide();
         }
 
         private void animationStop(object sender, EventArgs e)
@@ -405,18 +377,16 @@ namespace Brain3D
 
         private void balanceFinished(object sender, EventArgs e)
         {
-            buttonPlay.Enabled = true;
+            buttonPlay.Invoke(new ThreadStart(delegate()
+            {
+                buttonPlay.Enabled = true;
+            }));
         }
 
         private void queryAccepted(object sender, EventArgs e)
         {
+            tree.clear();
             simulate();
-            charting.addQuery((QuerySequence)sender);
-        }
-
-        private void creationFinished(object sender, EventArgs e)
-        {
-            buttonForth.Enabled = false;
         }
 
         #endregion
@@ -425,9 +395,8 @@ namespace Brain3D
 
         private void trackBarPace_Scroll(object sender, EventArgs e)
         {
-            pace = trackBarPace.Value * 100;
-            presentation.changePace(pace);
-            labelPace.Text = pace.ToString();
+            presentation.changePace(trackBarPace.Value);
+            labelPace.Text = trackBarPace.Value.ToString();
         }
 
         private void trackBarLength_Scroll(object sender, EventArgs e)
@@ -440,7 +409,6 @@ namespace Brain3D
         {
             presentation.changeFrame(trackBarFrame.Value);
         }
-
 
         private void trackBarDensity_Scroll(object sender, EventArgs e)
         {
@@ -469,8 +437,6 @@ namespace Brain3D
             foreach (XmlNode xn in node.ChildNodes)
                 brain.addSentence(xn.InnerText.ToLower());
 
-            animation.reload();
-            creation.load();
             presentation.show();
             //animation.create(creation);
         }
@@ -495,6 +461,7 @@ namespace Brain3D
         private void buttonBalance_Click(object sender, EventArgs e)
         {
             animation.balance();
+            buttonPlay.Enabled = false;
         }
 
         private void checkBoxState_CheckedChanged(object sender, EventArgs e)
@@ -521,6 +488,20 @@ namespace Brain3D
         private void radioButtonSquare_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void checkBoxWhite_CheckedChanged(object sender, EventArgs e)
+        {
+            if(checkBoxWhite.Checked)
+            {
+                display.Background = Microsoft.Xna.Framework.Color.WhiteSmoke;
+                trackBarFrame.BackColor = Color.WhiteSmoke;
+            }
+            else
+            {
+                display.Background = Microsoft.Xna.Framework.Color.CornflowerBlue;
+                trackBarFrame.BackColor = Color.CornflowerBlue;
+            }
         }
     }
 }

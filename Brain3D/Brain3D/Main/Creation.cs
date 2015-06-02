@@ -10,56 +10,41 @@ using System.Xml;
 
 namespace Brain3D
 {
-    class Creation : Presentation
+    class Creation : Graph
     {
         #region deklaracje
 
-        Dictionary<Neuron, CreatedNeuron> mapNeurons;
-        Dictionary<Synapse, CreatedSynapse> mapSynapses;
-        Dictionary<AnimatedState, CreationHistory> mapHistory;
-
         List<CreationSequence> sequences;
+        List<CreationFrame> frames;
         List<Synapse> duplex;
 
         List<CreatedNeuron> neurons;
         List<CreatedSynapse> synapses;
-        List<Tuple<int, int>> tracking;
-
-        AnimatedState active;
+        List<CreatedState> states;
+      
         CreationFrame frame;
         CreationSequence sequence;
-
-        Tuple<int, int> tuple;
+        CreationHistory history;
 
         int count;
-        int time;
-        int length;
 
-        bool built;
+        double time = 0;
+        double interval = 0.4;
+
         bool invitation;
-
-        public event EventHandler animationStop;
-        public event EventHandler creationFinished;
 
         #endregion
 
         public Creation()
         {
-            mapNeurons = new Dictionary<Neuron, CreatedNeuron>();
-            mapSynapses = new Dictionary<Synapse, CreatedSynapse>();
-            mapHistory = new Dictionary<AnimatedState, CreationHistory>();
-
             neurons = new List<CreatedNeuron>();
             synapses = new List<CreatedSynapse>();
+            states = new List<CreatedState>();
 
-            CreationFrame.setDictionary(mapNeurons, mapSynapses);
+            frames = new List<CreationFrame>();
             duplex = new List<Synapse>();
 
-            tracking = new List<Tuple<int, int>>();
-            tuple = new Tuple<int, int>(-1, -1);
-            tracking.Add(tuple);
-
-            invitation = true;
+            invitation = false;
             count = 0;
         }
 
@@ -69,112 +54,72 @@ namespace Brain3D
         {
             neurons.Clear();
             synapses.Clear();
+            states.Clear();
 
-            mapNeurons.Clear();
-            mapSynapses.Clear();
-            mapHistory.Clear();
-
-            tracking.Clear();
-            tracking.Add(new Tuple<int, int>(-1, -1));
-
-            length = 0;
+            mouses.Clear();
+            frames.Clear();
             count = 0;
         }
 
-        public void load()
+        protected override void brainLoaded(object sender, EventArgs e)
         {
+            clear();
+
+            foreach (Tuple<AnimatedNeuron, CreatedNeuron> tuple in brain.Neurons.Values)
+                neurons.Add(tuple.Item2);
+
+            foreach (Tuple<AnimatedSynapse, CreatedSynapse> tuple in brain.Synapses.Values)
+                synapses.Add(tuple.Item2);
+
+            foreach (Tuple<AnimatedState, CreatedState> tuple in brain.States.Values)
+                states.Add(tuple.Item2);
+
+            mouses.AddRange(neurons);
+            mouses.AddRange(states);
+
             sequences = brain.Sequences;
-
-            for (int i = 0; i < sequences.Count; i++)
-            {
-                int size = sequences[i].Frames.Count;
-                length += size;
-
-                for (int j = 0; j < size; j++)
-                    tracking.Add(new Tuple<int, int>(i, j));
-            }
-        }
-
-        public void load(List<AnimatedNeuron> neurons, List<AnimatedSynapse> synapses)
-        {
-            foreach (AnimatedNeuron neuron in neurons)
-            {
-                CreatedNeuron created = new CreatedNeuron(neuron);
-                mapNeurons.Add(neuron.Neuron, created);
-                this.neurons.Add(created);
-            }
-
-            foreach (AnimatedSynapse synapse in synapses)
-            {
-                CreatedSynapse cSynapse = new CreatedSynapse(synapse);
-                mapSynapses.Add(synapse.Synapse, cSynapse);
-                this.synapses.Add(cSynapse);
-
-                if (synapse.isDuplex())
-                    mapSynapses.Add(synapse.Duplex, cSynapse);
-            }
-
-            int index = 1;
 
             foreach (CreationSequence sequence in sequences)
                 foreach (CreationFrame frame in sequence.Frames)
                 {
-                    frame.finish += new EventHandler(finish);
-                    CreatedNeuron neuron = mapNeurons[frame.Neuron.Neuron];
+                    CreatedNeuron neuron = frame.Neuron;
+                    frames.Add(frame);
 
                     if (neuron.Frame == 0)
-                        neuron.Frame = index;
-
-                    index++;
+                        neuron.Frame = frames.Count;
                 }
-        }
-        
-        protected override void tick(object sender, EventArgs e)
-        {
-            if (active != null && ++time == 12)
-            {
-                if (mapHistory.ContainsKey(active))
-                    mapHistory[active].show();
-                else
-                {
-                    CreationHistory history = new CreationHistory(active);
-                    mapHistory.Add(active, history);
-                    history.show();
-                }
-            }
-        }
-
-        void finish(object sender, EventArgs e)
-        {
-            if (sender is CreatedNeuron)
-                neurons.Add((CreatedNeuron)sender);
-            else if (sender is List<Synapse>)
-                foreach (Synapse s in (List<Synapse>)sender)
-                    synapses.Add(mapSynapses[s]);
-            else
-                nextFrame();
         }
 
         public override void show()
         {
-            load();
-
             foreach (CreatedNeuron neuron in neurons)
                 neuron.show();
 
             foreach (CreatedSynapse synapse in synapses)
                 synapse.show();
 
-            display.add(controller);
-            display.change(false);
+            display.show(this);
             display.hide();
 
             balancing.stop();
             balancing.balance(neurons, synapses);
 
-            controller.idle();
-            controller.changeState(count, length);
+            controller.changeState(count, frames.Count);
+            controller.show();
+
+            insertion = false;
             visible = true;
+        }
+        
+        protected override void tick()
+        {
+            time += interval;
+
+            if (frame != null && frame.tick(interval))
+            {
+                if (count < frames.Count)
+                    setFrame(count + 1);
+            }
         }
 
         #endregion
@@ -183,29 +128,28 @@ namespace Brain3D
 
         public override void start()
         {
-            if (animation)
+            if (Started)
                 return;
 
-            animation = true;
-            setFrame(count);
-        }
+            if (count < frames.Count - 1)
+            {
+                frame = frames[count++];
+                controller.changeFrame(count);
 
-        public override void stop()
-        {
-            if (!animation)
-                return;
+                if(sequence == null)
+                {
+                    sequence = frame.Sequence;
+                    display.show(sequence);
+                }
+            }
 
-            animation = false;
-            animationStop(this, new EventArgs());
+            base.start();
         }
 
         public override void back()
         {
             if (count == 0)
-            {
-                creationFinished(false, null);
                 return;
-            }
 
             setFrame(count - 1);
             controller.changeFrame(count);
@@ -216,34 +160,30 @@ namespace Brain3D
             if(frame != null)
                 frame.create();
 
-            nextFrame();
+            if(count < frames.Count)
+                setFrame(++count);
         }
 
         public override void changeFrame(int frame)
         {
-            if (count >= tracking.Count)
-                return;
-
             setFrame(frame);
         }
 
         public override void changePace(int pace)
         {
-            if (frame != null)
-                frame.setInterval(pace / 25);
-            else
-                CreationFrame.Interval = pace / 25;
+            interval = (8 - Math.Log(116 - pace, 2)) / 8;
         }
 
         public override void add(char key)
         {
+            if (!insertion)
+                return;
+
             if (invitation)
             {
                 clear();
                 invitation = false;
                 addSequence();
-
-                brain = new Brain();
             }
 
             sequence.add(key);
@@ -256,56 +196,60 @@ namespace Brain3D
 
         public override void space()
         {
-            addFrame();
-            controller.changeState(++count, ++length);
+            sequence.space();
         }
 
         public override void enter()
         {
+            if (!insertion)
+                return;
+
             if (sequence.Frames.Count == 0)
                 return;
 
-            if(built)
-            {
-                addFrame(true);
-                built = false;
-                //return;
-            }
-
+            addFrame(true);
             addSequence();
         }
 
         public override void delete()
         {
-            controller.changeState(--count, --length);
+            controller.changeState(--count, frames.Count);
+        }
+
+        public override void changeInsertion()
+        {
+            base.changeInsertion();
+
+            if(insertion)
+            {
+                setFrame(frames.Count);
+                addSequence();
+            }
         }
 
         #endregion
 
-        #region zmiany klatek
+        #region insertion mode
 
+        // do zrobienia
         void addFrame(bool enter = false)
         {
             if (sequence == null)
                 return;
 
             Dictionary<object, object> map;
-            changeFrame(sequence.add(brain, count));
 
             if (frame != null)
             {
-                map = display.loadFrame(frame, count);
+               // map = display.loadFrame(frame, count);
 
                 if (enter)
-                    frame.Neuron.activate();
+                    frame.activate();
             }
             else
                 return;
 
-            tuple = new Tuple<int, int>(tuple.Item1, tuple.Item2 + 1);
-            tracking.Insert(count, tuple);
-
-            addMap(map);
+            //addMap(map);
             frame.change();
         }
 
@@ -313,18 +257,18 @@ namespace Brain3D
         {
             foreach (object key in map.Keys)
                 if (map[key] is bool)
-                {
+                {/*
                     CreatedNeuron neuron = mapNeurons[(Neuron)key];
                     neurons.Add(neuron);
                     neuron.show();
 
                     if(count < neuron.Frame)
-                        neuron.Frame = count;
+                        neuron.Frame = count;*/
                 }
                 else if (key is Neuron)
                 {
                     CreatedNeuron neuron = (CreatedNeuron)(map[key]);
-                    mapNeurons.Add((Neuron)key, neuron);
+                    //mapNeurons.Add((Neuron)key, neuron);
                     neurons.Add(neuron);
 
                     neuron.show();
@@ -333,7 +277,7 @@ namespace Brain3D
                 else
                 {
                     CreatedSynapse synapse = (CreatedSynapse)(map[key]);
-                    mapSynapses.Add((Synapse)key, synapse);
+                    //mapSynapses.Add((Synapse)key, synapse);
                     synapses.Add(synapse);
                     synapse.show();
                 }
@@ -341,34 +285,16 @@ namespace Brain3D
 
         void addSequence()
         {
-            int index = tuple.Item1 + 1;
-
             sequence = new CreationSequence();
-            sequences.Insert(index, sequence);
+            sequences.Add(sequence);
 
-            while (++count < length && tracking[count].Item1 != index) ;
-
-            for (int i = count; i < tracking.Count; i++)
-                tracking[i] = new Tuple<int, int>(tracking[i].Item1 + 1, tracking[i].Item2);
-
-            if (count == length || tuple.Item1 == -1)
-                tuple = new Tuple<int, int>(0, -1);
-
-            controller.changeState(count, ++length);
+            controller.changeState(count, frames.Count);
             display.show(sequence);
-            built = true;
         }
 
-        void changeFrame(CreationFrame frame, bool change = false)
-        {
-            this.frame = frame;
+        #endregion
 
-            if (change)
-                frame.change();
-
-            if (animation)
-                frame.step();
-        }
+        #region zmiany klatek
 
         void setFrame(int index)
         {
@@ -380,48 +306,50 @@ namespace Brain3D
 
             if (forward)
             {
-                for (int i = count + 1; i <= index; i++)
-                    sequences[tracking[i].Item1].Frames[tracking[i].Item2].create();
+                for (int i = count + 1; i < index; i++)
+                    frames[i - 1].create();
             }
             else
             {
                 for (int i = count; i > index; i--)
-                    sequences[tracking[i].Item1].Frames[tracking[i].Item2].undo();
+                    frames[i - 1].undo();
             }
-
-            count = index;
 
             if (index == 0)
             {
-                display.clear();
-                tuple = tracking[0];
-                frame.Neuron.idle();
+                if(frame != null)
+                    frame.idle();
+
+                if (sequence != null)
+                    sequence.hide();
+
+                sequence = null;
+                frame = null;
+                count = 0;
                 return;
             }
 
-            Tuple<int, int> tup = tracking[count];
-
-            if (tup.Item1 != tuple.Item1)
+            if (frame != null)
             {
-                sequence = sequences[tup.Item1];
+                frame.idle();
+
+                if (Started)
+                    frame.execute();
+            }
+
+            frame = frames[index - 1];
+            frame.activate();
+
+            count = index;
+
+            if (sequence != frame.Sequence)
+            {
+                sequence = frame.Sequence;
                 display.show(sequence);
             }
 
-            if(forward && frame != null)
-                frame.execute();
-
-            changeFrame(sequence.get(tup.Item2), true);
-        }
-
-        void nextFrame()
-        {
-            if (count == length)
-            {
-                creationFinished(true, null);
-                return;
-            }
-
-            setFrame(count + 1);
+            if(!Started && frame != null)
+                frame.create();
         }
 
         #endregion

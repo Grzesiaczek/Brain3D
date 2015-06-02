@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class Signal : CompositeElement
+    class Signal : DrawableComposite
     {
         Vector3 source;
         Vector3 target;
@@ -40,7 +40,7 @@ namespace Brain3D
             }
 
             if (!active)
-                show();
+                activate();
 
             this.factor = factor;
             rotate();
@@ -56,6 +56,13 @@ namespace Brain3D
             vector -= bullet;
         }
 
+        void activate()
+        {
+            pipe.Scale = 1;
+            pipe.show();
+            active = true;
+        }
+
         public override void rotate()
         {
             shift();
@@ -67,15 +74,14 @@ namespace Brain3D
 
         public override void show()
         {
-            pipe.show();
-            active = true;
+            pipe.add();
         }
 
         public override void hide()
         {
             pipe.hide();
-            active = false;
             pipe.move();
+            active = false;
         }
 
         public Vector3 Source

@@ -25,9 +25,9 @@ namespace Brain3D
 
         StateDisk disk;
 
-        bool refraction;
-        float radius;
+        bool refraction; 
         double value;
+        float radius;
 
         #endregion
 
@@ -44,15 +44,9 @@ namespace Brain3D
             output = new List<AnimatedSynapse>();
 
             radius = 1.2f;
-            color = Color.LightYellow;
 
-            float factor = (float)(neuron.Count - 1) / 4;
-            color.R -= (byte)(12 * factor);
-            color.G -= (byte)(48 * factor);
-            color.B -= (byte)(60 * factor);
-
-            disk = new StateDisk(position, color, radius);
-            label = new Label3D(Name, position);
+            disk = new StateDisk(position);
+            label = new Label3D(Word, position);
             number = new Number3D(position);
 
             drawables.Add(disk);
@@ -113,6 +107,9 @@ namespace Brain3D
             double value = data.Value + factor * (next.Value - data.Value);
             double refraction = data.Refraction + factor * (next.Refraction - data.Refraction);
 
+            if (data.Refraction == 30)
+                refraction = 30;
+
             setData(new NeuronData(data.Active, value, refraction));
         }
 
@@ -122,24 +119,53 @@ namespace Brain3D
             setData(data);
         }
 
-        public override Vector3 pointVector(Vector2 angle2)
+        public Vector3 pointVector(Vector2 direction)
         {
-            double angle = Math.Acos(angle2.X);
-            float rad = radius * 1.05f;
+            double angle = Math.Acos(direction.X);
+            float rad = radius * 1.1f;
 
-            if (angle2.Y < 0)
+            if (direction.Y < 0)
                 angle = 2 * Math.PI - angle;
 
-            return Vector3.Transform(new Vector3((float)Math.Cos(angle) * rad,(float)Math.Sin(angle) * rad, 0.1f), camera.Rotation) + position;
+            return Vector3.Transform(new Vector3((float)Math.Cos(angle) * rad,(float)Math.Sin(angle) * rad, 0), camera.Rotation) + position;
         }
 
-        public void checkCollision(List<AnimatedNeuron> neurons)
+        public override void move(int x, int y)
         {
+            position = device.Viewport.Unproject(new Vector3(shift.X + x, shift.Y + y, screen.Z), effect.Projection, effect.View, effect.World);
+            move();
 
+            foreach (AnimatedSynapse synapse in input)
+                synapse.move();
+
+            foreach (AnimatedSynapse synapse in output)
+                synapse.move();
         }
 
-        public void activate(bool shifted)
+        public override bool cursor(int x, int y)
         {
+            return disk.cursor(x, y);
+        }
+
+        public override void activate()
+        {
+            disk.activate();
+        }
+
+        public override void idle()
+        {
+            disk.idle();
+        }
+
+        public override void hover()
+        {
+            disk.hover();
+        }
+
+        public override void show()
+        {
+            base.show();
+            disk.setFactor((float)(neuron.Count - 1) / 4);
         }
 
         #endregion
@@ -154,7 +180,7 @@ namespace Brain3D
             }
         }
 
-        public String Name
+        public String Word
         {
             get
             {
@@ -168,10 +194,6 @@ namespace Brain3D
             {
                 return input;
             }
-            set
-            {
-                input = value;
-            }
         }
 
         public List<AnimatedSynapse> Output
@@ -180,21 +202,23 @@ namespace Brain3D
             {
                 return output;
             }
-            set
-            {
-                output = value;
-            }
         }
 
-        public override Vector3 Position
+        public float Radius
         {
             get
             {
-                return position;
+                return radius;
             }
             set
             {
-                position = value;
+                radius = value;
+                disk.Radius = value;
+
+                label.Scale = scale * value / 1.2f;
+                number.Scale = scale * value / 1.2f;
+
+                rescale();
             }
         }
 

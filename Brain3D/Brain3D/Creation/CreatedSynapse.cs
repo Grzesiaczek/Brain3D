@@ -11,27 +11,38 @@ namespace Brain3D
     {
         AnimatedSynapse synapse;
 
+        CreatedState state;
+        CreatedState duplex;
+
         public CreatedSynapse(AnimatedSynapse synapse)
         {
             this.synapse = synapse;
             element = synapse;
+
+            state = new CreatedState(synapse.State);
         }
 
-        public void tick(CreationData cd)
+        public void setDuplex(Synapse synapse)
         {
-            if (synapse.Synapse == cd.Synapse)
-                synapse.getState(false).Change += cd.Step;
-            else
-                synapse.getState(true).Change += cd.Step;
+            this.synapse.setDuplex(synapse);
+            duplex = new CreatedState(this.synapse.Duplex);
         }
 
         public override void show()
         {
+            Scale = 0;
             synapse.show();
-            synapse.create();
         }
 
-        //public override 
+        public void init()
+        {
+            synapse.init();
+        }
+
+        public void create()
+        {
+            synapse.create();
+        }
 
         #region właściwości
 
@@ -40,6 +51,30 @@ namespace Brain3D
             get
             {
                 return synapse;
+            }
+        }
+
+        public CreatedState State
+        {
+            get
+            {
+                return state;
+            }
+        }
+
+        public CreatedState Duplex
+        {
+            get
+            {
+                return state;
+            }
+        }
+
+        public float Scale
+        {
+            set
+            {
+                synapse.Scale = value;
             }
         }
 

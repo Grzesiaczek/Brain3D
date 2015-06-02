@@ -18,7 +18,7 @@ namespace Brain3D
         float factor;
         float weight;
 
-        List<CreationData> changes;
+        List<CreationData> history;
         Tuple<bool, double>[] activity;
 
         #endregion
@@ -29,54 +29,28 @@ namespace Brain3D
         {
             this.pre = pre;
             this.post = post;
+
+            change = 0;
             initialize();
         }
 
-        void initialize()
-        {
-            activity = new Tuple<bool, double>[size];
-            changes = new List<CreationData>();
-            change = 0;
-
-            for (int i = 0; i < size; i++)
-                activity[i] = new Tuple<bool, double>(false, 0);
-        }
-
         #endregion
-
-        #region logika
-
-        public void tick()
-        {
-
-        }
 
         public void impulse(int time)
         {
             post.impulse(weight, time + 20);
 
-            for (int i = 0, j = time; i < 20; i++, j++)
+            for (int i = 0, j = time; i < 20 && j < activity.Length; i++, j++)
                 activity[j] = new Tuple<bool, double>(true, (double)i / 20);
         }
 
-        public void undo()
-        {/*
-            if (activity.Count > 1)
-                activity.RemoveAt(activity.Count - 1);
+        public void initialize()
+        {
+            activity = new Tuple<bool, double>[size];
 
-            if(activity[activity.Count - 1])
-                ((Neuron)post).receiveSignal(weight);*/
+            for (int i = 0; i < size; i++)
+                activity[i] = new Tuple<bool, double>(false, 0);
         }
-
-        public void clear(bool init)
-        {/*
-            activity.Clear();
-
-            if (init)
-                activity.Add(false);*/
-        }
-
-        #endregion
 
         #region właściwości
 
@@ -86,10 +60,6 @@ namespace Brain3D
             {
                 return pre;
             }
-            set
-            {
-                pre = value;
-            }
         }
 
         public Neuron Post
@@ -98,10 +68,6 @@ namespace Brain3D
             {
                 return post;
             }
-            set
-            {
-                post = value;
-            }
         }
         
         public Tuple<bool, double>[] Activity
@@ -109,18 +75,6 @@ namespace Brain3D
             get
             {
                 return activity;
-            }
-            set
-            {
-                activity = value;
-            }
-        }
-
-        public List<CreationData> Changes
-        {
-            get
-            {
-                return changes;
             }
         }
 

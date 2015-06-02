@@ -21,36 +21,44 @@ namespace Brain3D
         protected Texture2D texBackground;
         protected Texture2D texBorder;
 
-        protected String name;
+        protected String word;
         protected Vector2 text;
-
-        protected int width;
-        protected int height;
 
         protected Tuple<Texture2D, Texture2D> active;
         protected Tuple<Texture2D, Texture2D> normal;
 
+        protected int width;
+        protected int height;
+
         protected static Tuple<Texture2D, Texture2D> texturesActive;
         protected static Tuple<Texture2D, Texture2D> texturesBuilt;
+        protected static Tuple<Texture2D, Texture2D> texturesNeuron;
         protected static Tuple<Texture2D, Texture2D> texturesNormal;
+        protected static Tuple<Texture2D, Texture2D> texturesRefract;
 
         #endregion
 
+        public Tile() { }
+
         public Tile(String name)
         {
-            this.name = name;
+            this.word = name;
+            prepare();            
+        }
 
-            Vector2 size = font.MeasureString(name);
+        protected void prepare()
+        {
+            Vector2 size = font.MeasureString(word);
 
-            width = 16 + (int)size.X;
-            height = 8 + (int)size.Y;
-            text = new Vector2(8, 8);
+            width = 20 + (int)size.X;
+            height = 12 + (int)size.Y;
+            text = new Vector2(10, 11);
 
-            if (name.Length == 0)
+            if (word.Length == 0)
                 height += (int)font.MeasureString("0").Y;
 
             recBorder = new Rectangle(0, 0, width, height);
-            recBackground = new Rectangle(0, 0, width - 8, height - 8);
+            recBackground = new Rectangle(0, 0, width - 6, height - 6);
 
             initialize();
             idle();
@@ -60,28 +68,14 @@ namespace Brain3D
         {
             font = content.Load<SpriteFont>("Sequence");
 
-            texturesActive = getTextures(Color.LightSkyBlue, Color.IndianRed);
+            texturesActive = getTextures(Color.RosyBrown, Color.IndianRed);
             texturesBuilt = getTextures(Color.GreenYellow, Color.Purple);
+            texturesNeuron = getTextures(Color.LightGreen, Color.Thistle);
             texturesNormal = getTextures(Color.LightYellow, Color.Thistle);
-            /*
-            color[0] = Color.LightCyan;
-            backgroundReceptor = new Texture2D(device, 1, 1);
-            backgroundReceptor.SetData<Color>(color);
-
-            color[0] = Color.Purple;
-            borderReceptor = new Texture2D(device, 1, 1);
-            borderReceptor.SetData<Color>(color);
-
-            color[0] = Color.PaleVioletRed;
-            backgroundActiveReceptor = new Texture2D(device, 1, 1);
-            backgroundActiveReceptor.SetData<Color>(color);
-
-            color[0] = Color.IndianRed;
-            borderActiveReceptor = new Texture2D(device, 1, 1);
-            borderActiveReceptor.SetData<Color>(color);*/
+            texturesRefract = getTextures(Color.IndianRed, Color.LawnGreen);
         }
 
-        static Tuple<Texture2D, Texture2D> getTextures(Color backgroundColor, Color borderColor)
+        protected static Tuple<Texture2D, Texture2D> getTextures(Color backgroundColor, Color borderColor)
         {
             Color[] color = new Color[1];
             Texture2D background;
@@ -97,8 +91,6 @@ namespace Brain3D
 
             return new Tuple<Texture2D, Texture2D>(background, border);
         }
-
-        #region grafika
 
         public void activate()
         {
@@ -118,22 +110,37 @@ namespace Brain3D
             normal = texturesNormal;
         }
 
+        public override bool cursor(int x, int y)
+        {
+            if (x < Left)
+                return false;
+
+            if (x > Right)
+                return false;
+
+            if (y < Top)
+                return false;
+
+            if (y > Bottom)
+                return false;
+
+            return true;
+        }
+
         public override void draw()
         {
             batch.Draw(texBorder, recBorder, Color.White);
             batch.Draw(texBackground, recBackground, Color.White);
-            batch.DrawString(font, name, text, Color.DarkSlateBlue);
+            batch.DrawString(font, word, text, Color.Black);
         }
-
-        #endregion
 
         #region właściwości
 
-        public String Name
+        public String Word
         {
             get
             {
-                return name;
+                return word;
             }
         }
 
@@ -146,8 +153,8 @@ namespace Brain3D
             set
             {
                 recBorder.X = value;
-                recBackground.X = value + 4;
-                text.X = value + 8;
+                recBackground.X = value + 3;
+                text.X = value + 10;
             }
         }
 
@@ -159,13 +166,25 @@ namespace Brain3D
             }
         }
 
-        public int Top
+        public virtual int Top
         {
+            get
+            {
+                return recBorder.Top;
+            }
             set
             {
                 recBorder.Y = value;
-                recBackground.Y = value + 4;
-                text.Y = value + 5;
+                recBackground.Y = value + 3;
+                text.Y = value + 7;
+            }
+        }
+
+        public int Bottom
+        {
+            get
+            {
+                return recBorder.Bottom;
             }
         }
 

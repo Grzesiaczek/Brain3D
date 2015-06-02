@@ -46,7 +46,6 @@ namespace Brain3D
             base.Dispose(disposing);
         }
 
-
         #endregion
 
         #region Paint

@@ -15,11 +15,57 @@ namespace Brain3D
 
     #endregion
 
+    class Change
+    {
+        float start;
+        float finish;
+        float change;
+
+        public Change(float value)
+        {
+            start = value;
+            finish = value;
+        }
+
+        public Change(float start, float finish)
+        {
+            this.start = start;
+            this.finish = finish;
+            change = finish - start;
+        }
+
+        public float Start
+        {
+            get
+            {
+                return start;
+            }
+        }
+
+        public float Finish
+        {
+            get
+            {
+                return finish;
+            }
+        }
+
+        public float Value
+        {
+            get
+            {
+                return change;
+            }
+        }
+    }
+
     class NeuronData
     {
         #region deklaracje
 
         bool active;
+        bool treshold;
+
         double value;
         double refraction;
 
@@ -53,6 +99,18 @@ namespace Brain3D
             set
             {
                 active = value;
+            }
+        }
+
+        public bool Treshold
+        {
+            get
+            {
+                return treshold;
+            }
+            set
+            {
+                treshold = value;
             }
         }
 

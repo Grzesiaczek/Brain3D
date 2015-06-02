@@ -50,7 +50,7 @@ namespace Brain3D
 
             for (int i = 0; i < pattern.Length; i++)
             {
-                framework[i] = Vector3.Transform(pattern[i], camera.Rotation);
+                framework[i] = Vector3.Transform(pattern[i], camera.Rotation) * scale;
                 vertices[i] = new VertexPositionColor(framework[i] + position, Color.Black);
             }
 
@@ -58,6 +58,7 @@ namespace Brain3D
                 indices[i] = numbers[i];
 
             offset = buffer.add(vertices, indices);
+            initialized = true;
         }
 
         public int Value

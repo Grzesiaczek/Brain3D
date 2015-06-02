@@ -26,6 +26,9 @@ namespace Brain3D
             this.width = width;
 
             corner = location;
+
+            if(width != 0)
+                corner.X += width - font.MeasureString(text).X / 2;
         }
 
         public override void draw()

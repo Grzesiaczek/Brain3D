@@ -8,27 +8,24 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class AnimatedState : CompositeElement
+    class AnimatedState : AnimatedElement
     {
         #region deklaracje
 
         AnimatedVector vector;
-
-        List<CreationData> history;
         Synapse synapse;
 
         StateDisk disk;
         BorderedDisk state;
         Signal signal;
 
-        Vector3 shiftDisk = new Vector3(0.5f, 0, 0.8f);
-        Vector3 shiftState = new Vector3(0.8f, 0, -0.82f);
+        Vector3 shiftDisk = new Vector3(0, 0, -0.1f);
+        Vector3 shiftState = new Vector3(0.3f, 0, -0.12f);
 
         bool active;
-        bool activated;
         bool duplex;
 
-        float change;
+        float factor;
         float weight;
 
         #endregion
@@ -39,20 +36,19 @@ namespace Brain3D
             this.vector = vector;
             this.duplex = duplex;
 
-            history = new List<CreationData>();
-            color = Color.LightYellow;
+            disk = new StateDisk(position + shiftDisk, true);
+            state = new BorderedDisk(position + shiftState);
 
-            color.R -= (byte)(10 * synapse.Factor);
-            color.G -= (byte)(33 * synapse.Factor);
-            color.B -= (byte)(45 * synapse.Factor);
-
-            disk = new StateDisk(position + shiftDisk, color, 0.5f);
-            state = new BorderedDisk(position + shiftState, color, 0.5f);
-            
             if (duplex)
+            {
                 signal = new Signal(vector.Target, vector.Source);
+                factor = 0.25f;
+            }
             else
+            {
                 signal = new Signal(vector.Source, vector.Target);
+                factor = 0.75f;
+            }
 
             drawables.Add(state);
             drawables.Add(disk);
@@ -61,34 +57,33 @@ namespace Brain3D
 
         #region sterowanie
 
-        //walnąć Ray
-        public bool active2(Point location)
-        {
-            /*if (synapse.Weight == 0)
-                return false;
-
-            float x = state.Center.X - location.X;
-            float y = state.Center.Y - location.Y;
-
-            if (x * x + y * y < 144)
-            {
-                activated = true;
-                return true;
-            }
-
-            activated = false;*/
-            return false;
-        }
-
         public void create()
         {
+            Scale = 1;
+            setFactor(synapse.Factor);
             disk.setValue(synapse.Weight);
-            activated = false;
+            weight = synapse.Weight;
         }
 
-        public void setChange(CreationData data)
+        public void setChange(float source, float target)
         {
-            disk.setChange(data);
+            disk.setChange(source, target);
+        }
+
+        public void setFactor(float factor)
+        {
+            color = Color.LightYellow;
+            color.R -= (byte)(10 * factor);
+            color.G -= (byte)(33 * factor);
+            color.B -= (byte)(45 * factor);
+
+            disk.Color = color;
+            state.Color = color;
+        }
+
+        public void setValue(float weight)
+        {
+            disk.changeValue(weight);
         }
 
         public void tick(int frame, double rest)
@@ -113,15 +108,14 @@ namespace Brain3D
             }
         }
 
-        public void setWeight(float weight)
-        {
-            disk.setValue(weight);
-        }
-
         public override void rotate()
         {
-            shiftDisk = Vector3.Transform(new Vector3(0.5f * vector.Angle.X, 0.5f * vector.Angle.Y, -0.104f), camera.Rotation);
-            shiftState = Vector3.Transform(new Vector3(0.8f * vector.Angle.X, 0.8f * vector.Angle.Y, -0.102f), camera.Rotation);
+            Vector3 pre = device.Viewport.Project(vector.Source, effect.Projection, effect.View, effect.World);
+            Vector3 post = device.Viewport.Project(vector.Target, effect.Projection, effect.View, effect.World);
+            position = device.Viewport.Unproject(factor * (post - pre) + pre, effect.Projection, effect.View, effect.World);
+
+            shiftDisk = Vector3.Transform(new Vector3(0, 0, -0.104f), camera.Rotation);
+            shiftState = Vector3.Transform(new Vector3(0.3f * vector.Angle, -0.102f), camera.Rotation);
 
             disk.Position = position + shiftDisk;
             state.Position = position + shiftState;
@@ -138,51 +132,75 @@ namespace Brain3D
             }
         }
 
+        public override void idle()
+        {
+            if (active)
+                state.Color = Color.IndianRed;
+            else
+                state.Color = color;
+        }
+
+        public override void hover()
+        {
+            state.Color = Color.Orange;
+        }
+
+        public override bool cursor(int x, int y)
+        {
+            return disk.cursor(x, y);
+        }
+
+        public override void move(int x, int y)
+        {
+            Vector3 start = device.Viewport.Project(vector.Source, effect.Projection, effect.View, effect.World);
+            Vector3 end = device.Viewport.Project(vector.Target, effect.Projection, effect.View, effect.World);
+            Vector3 vec = end - start;
+
+            Tuple<Vector2, float, float> tuple = Constant.getDistance(start, end, new Vector3(x, y, (start.Z + end.Z) / 2));
+
+            float min = 20 / vec.Length();
+            float max = 1 - min;
+
+            if (tuple.Item3 < min)
+                factor = min;
+            else if (tuple.Item3 > max)
+                factor = max;
+            else
+                factor = tuple.Item3;
+
+            rotate();
+            move();
+        }
+
         #endregion
 
         #region właściwości
 
-        public Synapse Synapse
+        public override Vector3 Screen
         {
             get
             {
-                return synapse;
+                return device.Viewport.Project(position, effect.Projection, effect.View, effect.World);
             }
         }
 
-        public Tuple<bool, double>[] Activity
+        public AnimatedVector Vector
         {
             get
             {
-                return synapse.Activity;
-            }
-            set
-            {
-                synapse.Activity = value;
+                return vector;
             }
         }
 
-        public List<CreationData> History
+        public float Factor
         {
             get
             {
-                return history;
+                return factor;
             }
             set
             {
-                history = value;
-            }
-        }
-
-        public float Change
-        {
-            get
-            {
-                return change;
-            }
-            set
-            {
-                change = value;
+                factor = value;
             }
         }
 

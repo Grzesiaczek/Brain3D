@@ -9,11 +9,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class Sequence : SpriteElement
+    class Sequence : SpriteComposite
     {
         protected List<Tile> sequence;
         protected BuiltTile builder;
-        protected int position = 10;
 
         public Sequence()
         {
@@ -25,27 +24,32 @@ namespace Brain3D
         public void add(Tile element)
         {
             sequence.Add(element);
+            element.show();
         }
 
-        public virtual void clear()
+        public void remove(Tile element)
         {
-            sequence.Clear();
+            sequence.Remove(element);
+            element.hide();
         }
 
-        public override void draw()
+        public override void show()
         {
-            foreach (Tile element in sequence)
-                element.draw();
+            foreach (Tile tile in sequence)
+                tile.show();
+        }
 
-            if(builder != null)
-                builder.draw();
+        public override void hide()
+        {
+            foreach (Tile tile in sequence)
+                tile.hide();
         }
 
         public void arrange()
         {
             int position = 10;
 
-            foreach(Tile element in sequence)
+            foreach (Tile element in sequence)
             {
                 element.Top = 8;
                 element.Left = position;
@@ -60,13 +64,21 @@ namespace Brain3D
         public void add(char key)
         {
             if (builder == null)
-            {
-                builder = new BuiltTile("");
-                builder.Left = position;
-                builder.Top = 8;
-            }
+                return;
 
             builder.add(key);
+        }
+
+        public virtual void space()
+        {
+            if (builder.Word.Length == 0)
+                return;
+
+            remove(builder);
+            add(createTile(builder));
+
+            builder = new BuiltTile(builder.Right + 10);
+            add(builder);
         }
 
         public bool erase()
@@ -74,26 +86,35 @@ namespace Brain3D
             if (!builder.erase())
                 return false;
 
-            if (sequence.Count == 0)
+            if (sequence.Count == 1)
                 return true;
 
-            Tile last = sequence.Last<Tile>();
+            remove(builder);
+
+            Tile last = sequence.Last();
+            remove(last);
+
             builder = new BuiltTile(last);
-            sequence.Remove(last);
+            add(builder);
 
             return false;
         }
 
-        #endregion
-
-        #region właściwości
-
-        public int Count
+        public bool execute()
         {
-            get
-            {
-                return sequence.Count;
-            }
+            if (sequence.Count == 1 && builder.Word.Length == 0)
+                return false;
+
+            remove(builder);
+            add(createTile(builder));
+            builder = null;
+
+            return true;
+        }
+
+        protected Tile createTile(BuiltTile builder)
+        {
+            return new SequenceTile(builder);
         }
 
         #endregion

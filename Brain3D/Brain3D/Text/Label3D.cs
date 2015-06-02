@@ -18,11 +18,11 @@ namespace Brain3D
             color = Color.DarkBlue;
 
             if (text.Width > 40)
-                scale = 1.6f / text.Width;
+                ratio = 1.6f / text.Width;
             else
-                scale = 0.04f;
+                ratio = 0.04f;
             
-            shift = new Vector3(-text.Width * scale / 2, -0.7f, -0.01f);
+            shift = new Vector3(-text.Width * ratio / 2, -0.7f, -0.01f);
         }
 
         public override void initialize()
@@ -37,9 +37,9 @@ namespace Brain3D
 
             for (int i = 0; i < vertex; i++)
             {
-                pattern[i] = text.Vertices[i].Position * scale + shift;
+                pattern[i] = text.Vertices[i].Position * ratio + shift;
                 pattern[i].X *= -1;
-                framework[i] = Vector3.Transform(pattern[i], camera.Rotation);
+                framework[i] = Vector3.Transform(pattern[i], camera.Rotation) * scale;
                 vertices[i] = new VertexPositionColor(framework[i] + position, Color.Black);
             }
 
@@ -47,6 +47,7 @@ namespace Brain3D
                 indices[i] = text.Indices[i];
 
             offset = buffer.add(vertices, indices);
+            initialized = true;
         }
     }
 }

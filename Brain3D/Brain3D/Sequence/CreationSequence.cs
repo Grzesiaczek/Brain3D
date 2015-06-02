@@ -14,12 +14,22 @@ namespace Brain3D
         public CreationSequence()
         {
             frames = new List<CreationFrame>();
+
+            if (sequence.Count == 0)
+                builder = new BuiltTile();
+            else
+                builder = new BuiltTile(sequence.Last().Right + 10);
+
+            add(builder);
         }
 
         public CreationSequence(List<CreationFrame> frames)
         {
             foreach (CreationFrame frame in frames)
-                sequence.Add(frame.Neuron);
+            {
+                sequence.Add(frame.Tile);
+                frame.Sequence = this;
+            }
 
             this.frames = frames;
             arrange();
@@ -34,9 +44,9 @@ namespace Brain3D
         {
             if (builder == null)
                 return null;
-
+            /*
             CreationFrame frame = brain.add(this, builder, index);
-            NeuronTile neuron = frame.Neuron;
+            SequenceTile neuron = frame.Neuron;
 
             neuron.Top = 8;
             neuron.Left = builder.Left;
@@ -46,7 +56,9 @@ namespace Brain3D
             builder = null;
             sequence.Add(neuron);
             frames.Add(frame);
-            return frame;
+            return frame;*/
+
+            return null;
         }
 
         public List<CreationFrame> Frames

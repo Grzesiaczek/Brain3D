@@ -19,16 +19,15 @@ namespace Brain3D
         String word;
 
         int count;
-        int time;
         int index;
         int signum;
 
-        bool active;
-        int refraction;
+        bool refraction;
 
+        double ratio;
         double target;
         double treshold;
-        double value;
+        //double value;
 
         static double[] relaxation;
         static double[] activation;
@@ -45,21 +44,13 @@ namespace Brain3D
             if (!initialized)
                 throw new Exception("Neuron class not initialized!");
 
-            this.word = word;
-            treshold = 1.0;
-            target = treshold;
-
             input = new List<Synapse>();
             output = new List<Synapse>();
-            activity = new NeuronData[size];
 
-            signals = new List<Tuple<double, int>>();
-
-            for (int i = 0; i < size; i++)
-                activity[i] = new NeuronData();
+            this.word = word;
         }
 
-        public static void initialize()
+        public static void initializeArrays()
         {
             relaxation = new double[(int)omega];
             relaxation[0] = 1;
@@ -80,11 +71,31 @@ namespace Brain3D
 
         #region sterowanie
 
-        public void tick()
+        public void initialize()
         {
+            signals = new List<Tuple<double, int>>();
+            activity = new NeuronData[size];
+
+            for (int i = 0; i < size; i++)
+                activity[i] = new NeuronData();
+
+            treshold = 1.0;
+            target = treshold;
+        }
+
+        public void tick(int time)
+        {
+            double value = 0;
+
+            if (time > 0)
+                value = activity[time - 1].Value;
+
+            if (index < 0)
+                index = 0;
+
             if(signum > 1)
             {
-                if (++index == tmax)
+                if (++index >= tmax)
                 {
                     index = (int)((1.0 - Math.Pow(value, 0.25)) * omega);
                     signum = 1;
@@ -95,10 +106,14 @@ namespace Brain3D
 
                     if (value >= treshold)
                     {
-                        signals.Clear();
                         activate(new Tuple<Neuron, int>(this, time), null);
+
+                        activity[time].Active = true;
+                        activity[time].Treshold = true;
+
+                        signals.Clear();
                         value = treshold;
-                        refraction = 1;
+                        refraction = true;
                         signum = 0;
 
                         foreach (Synapse synapse in output)
@@ -113,24 +128,20 @@ namespace Brain3D
                 if (++index == omega)
                     signum = 0;
                 else
-                {
-                    value = signum * relaxation[index];
-                    activity[time].Value = value;
-                }
+                    activity[time].Value = signum * relaxation[index];
             }
-            else if(refraction > 0)
+            else if(refraction)
             {
                 activity[time].Active = true;
                 activity[time].Value = 1;
-                activity[time].Refraction = refraction;
-                              
-                if (refraction++ == 30)
-                {
-                    activity[time + 1].Refraction = refraction;
+                activity[time].Refraction = activity[time - 1].Refraction + 1;
 
-                    refraction = 0;
+                if (activity[time].Refraction == 30)
+                {
+                    activity[time].Treshold = true;
+                    refraction = false;
+
                     signum = -1;
-                    value = -1;
                     index = 0;
                     target = 1;
                 }
@@ -144,33 +155,44 @@ namespace Brain3D
                 {
                     signum = 2;
                     target += signal.Item1;
-                    index = (int)((1 - Math.Pow(1 - (value + treshold) / target, 0.5)) * tmax);
+
+                    double factor = 1 - (value + treshold) / target;
+
+                    if (factor < 0)
+                        index = (int)tmax - 1;
+                    else
+                        index = (int)((1 - Math.Pow(factor, 0.5)) * tmax);
+
                     removed.Add(signal);
                 }
             }
 
             foreach (Tuple<double, int> signal in removed)
                 signals.Remove(signal);
-
-            time++;
-        }
-
-        public void undo()
-        {
-        }
-
-        public void clear(bool init)
-        {
         }
 
         public void impulse(double value, int time)
         {
-            signals.Add(new Tuple<double, int>(value, time));
+            if(!refraction)
+                signals.Add(new Tuple<double, int>(value, time));
         }
 
-        public void shot(int time)
+        public void shot(double time)
         {
-            impulse(5, time);
+            impulse(5, (int)time + 1);
+        }
+
+        public void calculate()
+        {
+            ratio = 0;
+
+            foreach(NeuronData data in activity)
+            {
+                if (data.Active)
+                    ratio += 1;
+                else
+                    ratio += data.Value * data.Value;
+            }
         }
 
         #endregion
@@ -206,6 +228,14 @@ namespace Brain3D
             get
             {
                 return word;
+            }
+        }
+
+        public double Ratio
+        {
+            get
+            {
+                return ratio;
             }
         }
 

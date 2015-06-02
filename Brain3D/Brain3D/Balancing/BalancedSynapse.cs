@@ -16,7 +16,7 @@ namespace Brain3D
         BalancedNeuron pre;
         BalancedNeuron post;
 
-        static float k = 50;
+        static float k = 120;
         float factor;
 
         public BalancedSynapse(AnimatedSynapse synapse)
@@ -40,9 +40,6 @@ namespace Brain3D
             
             pre.move(shift);
             post.move(-shift);
-
-            pre.repulse(post.Position, true);
-            post.repulse(pre.Position, true);
         }
 
         public void repulse(BalancedNeuron neuron)
@@ -50,52 +47,37 @@ namespace Brain3D
             if (neuron == pre || neuron == post)
                 return;
 
-            Vector3 vec = synapse.Post.Position - synapse.Pre.Position;
-            Vector3 pos = neuron.Position - synapse.Pre.Position;
             Vector3 shift = Vector3.Zero;
-            vec.Z = 0;
+            Tuple<Vector2, float, float> tuple = Constant.getDistance(synapse.Pre.Position, synapse.Post.Position, neuron.Position);
 
-            String start = ((AnimatedNeuron)synapse.Pre).Name;
-            String end = ((AnimatedNeuron)synapse.Post).Name;
-            String word = neuron.Name;
+            float distance = tuple.Item2;
+            float eq = tuple.Item3;
 
-            float a = vec.Y;
-            float b = vec.X;
-            float c = b * pos.X + a * pos.Y;
-            float x, y;
-            float eq; // punkt równowagi
-
-            if(a == 0)
-            {
-                x = c / b;
-                y = 0;
-                eq = x / b;
-            }
-            else if (b == 0)
-            {
-                x = 0;
-                y = c / a;
-                eq = y / a;
-            }
-            else
-            {
-                x = c * b / (vec.LengthSquared());
-                eq = x / b;
-                y = a * eq;
-            }
-
-            if (eq < 0 || eq > 1)
-                return;
-
+            float factor = 50;
             float force = 0;
-            float distance = Math.Abs(b * pos.Y - a * pos.X) / vec.Length();
+
+            if(eq < 0.25)
+            {
+                if (eq < -0.25)
+                    return;
+
+                factor *= (eq + 0.25f) * 2;
+            }
+
+            if(eq > 0.75)
+            {
+                if (eq > 1.25)
+                    return;
+
+                factor *= (1.25f - eq) * 2;
+            }
 
             if (distance == 0)
                 return;
 
-            force = 100 * (1.56f - (float)Math.Atan(distance - 2));
+            force = factor * (1.56f - (float)Math.Atan(distance - 2));
 
-            shift = new Vector3(force * (pos.X - x) / distance, force * (pos.Y - y) / distance, 0) * 0.8f;
+            shift = new Vector3(force * tuple.Item1.X / distance, force * tuple.Item1.Y / distance, 0);
             neuron.move(shift);
             
             eq = - eq;

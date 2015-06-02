@@ -10,8 +10,6 @@ namespace Brain3D
     class CreatedNeuron : CreatedElement
     {
         AnimatedNeuron neuron;
-
-        bool created;
         int frame;
 
         public CreatedNeuron(AnimatedNeuron neuron)
@@ -19,6 +17,12 @@ namespace Brain3D
             this.neuron = neuron;
             element = neuron;
             created = false;
+        }
+
+        public void create()
+        {
+            created = true;
+            Scale = 1;
         }
 
         #region właściwości
@@ -36,6 +40,14 @@ namespace Brain3D
             get
             {
                 return created;
+            }
+        }
+
+        public float Scale
+        {
+            set
+            {
+                neuron.Scale = value;
             }
         }
 

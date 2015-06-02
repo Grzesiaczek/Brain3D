@@ -14,14 +14,14 @@ namespace Brain3D
         protected static Camera camera;
         protected static ContentManager content;
         protected static GraphicsDevice device;
+        protected static Display display;
         protected static BasicEffect effect;
-
-        protected Vector3[] framework;
-        protected Vector3 position;
 
         public virtual void move() { }
 
         public virtual void rotate() { }
+
+        public virtual bool cursor(int x, int y) { return false; }
 
         public static Camera Camera
         {
@@ -47,23 +47,19 @@ namespace Brain3D
             }
         }
 
+        public static Display Display
+        {
+            set
+            {
+                display = value;
+            }
+        }
+
         public static BasicEffect Effect
         {
             set
             {
                 effect = value;
-            }
-        }
-
-        public virtual Vector3 Position
-        {
-            get
-            {
-                return position;
-            }
-            set
-            {
-                position = value;
             }
         }
     }

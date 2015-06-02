@@ -6,11 +6,11 @@ using Microsoft.Xna.Framework;
 
 namespace Brain3D
 {
-    class CompositeElement : DrawableElement
+    class DrawableComposite : DrawableElement
     {
         protected List<DrawableElement> drawables;
 
-        public CompositeElement()
+        public DrawableComposite()
         {
             drawables = new List<DrawableElement>();
         }
@@ -27,6 +27,12 @@ namespace Brain3D
                 drawable.move();
         }
 
+        public override void rescale()
+        {
+            foreach (DrawableElement drawable in drawables)
+                drawable.rescale();
+        }
+
         public override void rotate()
         {
             base.rotate();
@@ -39,12 +45,31 @@ namespace Brain3D
         {
             foreach (DrawableElement drawable in drawables)
                 drawable.show();
+
+            visible = true;
         }
 
         public override void hide()
         {
             foreach (DrawableElement drawable in drawables)
                 drawable.hide();
+
+            visible = false;
+        }
+
+        public override void remove()
+        {
+            foreach (DrawableElement drawable in drawables)
+                drawable.remove();
+        }
+
+        public override GraphicsBuffer Buffer
+        {
+            set
+            {
+                foreach (DrawableElement drawable in drawables)
+                    drawable.Buffer = value;
+            }
         }
 
         public override Vector3 Position
@@ -59,6 +84,17 @@ namespace Brain3D
 
                 foreach (DrawableElement drawable in drawables)
                     drawable.Position = position;
+            }
+        }
+
+        public override float Scale
+        {
+            set
+            {
+                scale = value;
+
+                foreach (DrawableElement drawable in drawables)
+                    drawable.Scale = scale;
             }
         }
     }

@@ -18,24 +18,29 @@ namespace Brain3D
 
         AnimatedVector vector;
 
-        AnimatedState synapse;
+        AnimatedState state;
         AnimatedState duplex;
+
+        List<Vector3> pos = new List<Vector3>();
+        List<Vector3> vec = new List<Vector3>();
+        List<Vector3> sta = new List<Vector3>();
+        List<Vector3> con = new List<Vector3>();
 
         #endregion
 
         #region konstruktory
 
-        public AnimatedSynapse(AnimatedNeuron pre, AnimatedNeuron post, Synapse syn)
+        public AnimatedSynapse(AnimatedNeuron pre, AnimatedNeuron post, Synapse synapse)
         {
             this.pre = pre;
             this.post = post;
 
             duplex = null;
             vector = new AnimatedVector(pre, post);
-            synapse = new AnimatedState(syn, vector);
+            state = new AnimatedState(synapse, vector);
 
             drawables.Add(vector);
-            drawables.Add(synapse);
+            drawables.Add(state);
 
             pre.Output.Add(this);
             post.Input.Add(this);
@@ -50,7 +55,7 @@ namespace Brain3D
             int frame = (int)time;
             double rest = time - frame;
 
-            synapse.tick(frame, rest);
+            state.tick(frame, rest);
 
             if (duplex != null)
                 duplex.tick(frame, rest);
@@ -65,101 +70,57 @@ namespace Brain3D
         public override void rotate()
         {
             vector.rotate();
-
-            Vector3 diff = vector.Vector;
-            Vector3 constant = diff;
-
-            constant.Normalize();
-            constant *= 0.2f;
-
-            synapse.Position = 0.9f * diff + vector.Start - constant;
-            synapse.rotate();
+            state.rotate();
 
             if(duplex != null)
-            {
-                duplex.Position = 0.1f * diff + vector.Start + constant;
                 duplex.rotate();
-            }
         }
 
         public override void setFrame(int frame)
         {
             frame *= 10;
-            synapse.tick(frame, 0);
+            state.tick(frame, 0);
 
             if (duplex != null)
                 duplex.tick(frame, 0);
+        }
+
+        public override bool cursor(int x, int y)
+        {
+            if (!visible)
+                return false;
+
+            return base.cursor(x, y);
         }
 
         #endregion
 
         #region sterowanie
 
-        public void change(CreationData data)
-        {
-            if (data.Synapse == synapse.Synapse)
-                synapse.setChange(data);
-            else
-                duplex.setChange(data);
-        }
-
-        public void create(CreationData data)
-        {
-            if (data.Synapse == synapse.Synapse)
-            {
-                synapse.History.Add(data);
-                synapse.setWeight(data.Weight);
-                synapse.Change = 0;
-            }
-            else
-            {
-                duplex.History.Add(data);
-                duplex.setWeight(data.Weight);
-                synapse.Change = 0;
-            }
-        }
-
-        public void setWeight(CreationData data, bool undo = false)
-        {
-            float value = data.Weight;
-
-            if (undo)
-                value = data.Start;
-
-            if (data.Synapse == synapse.Synapse)
-                synapse.setWeight(value);
-            else
-                duplex.setWeight(value);
-        }
-
         public void create()
         {
-            synapse.create();
+            vector.Scale = 1;
+            state.create();
 
             if (duplex != null)
                 duplex.create();
+        }
+
+        public void init()
+        {
+            state.setValue(0);
+
+            if (duplex != null)
+                duplex.setValue(0);
+
+            Scale = 0;
+            show();
         }
 
         public void setDuplex(Synapse synapse)
         {
             duplex = new AnimatedState(synapse, vector, true);
             drawables.Add(duplex);
-        }
-
-        public bool isDuplex()
-        {
-            if (duplex == null)
-                return false;
-
-            return true;
-        }
-
-        public AnimatedState getState(bool duplex)
-        {
-            if (duplex)
-                return this.duplex;
-
-            return synapse;
         }
 
         #endregion
@@ -188,21 +149,21 @@ namespace Brain3D
             {
                 return vector;
             }
-        } 
+        }
 
-        public Synapse Synapse
+        public AnimatedState State
         {
             get
             {
-                return synapse.Synapse;
+                return state;
             }
         }
 
-        public Synapse Duplex
+        public AnimatedState Duplex
         {
             get
             {
-                return duplex.Synapse;
+                return duplex;
             }
         }
 
@@ -210,12 +171,24 @@ namespace Brain3D
         {
             get
             {
-                float weight = synapse.Weight;
+                float weight = state.Weight;
 
                 if (duplex != null)
                     weight += duplex.Weight;
 
                 return weight;
+            }
+        }
+
+        public override float Scale
+        {
+            set
+            {
+                vector.Scale = value;
+                state.Scale = value;
+
+                if (duplex != null)
+                    duplex.Scale = value;
             }
         }
 

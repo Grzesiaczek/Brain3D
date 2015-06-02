@@ -1,74 +1,122 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class CreationData
+    class CreationData : GraphicsElement
     {
         #region deklaracje
 
         CreationFrame frame;
-        Synapse synapse;
-        Color background;
+        CreatedState state;
 
-        float start;
-        float finish;
-        float change;
-        float step;
+        Change value;
+        Change factor;
+
+        StateDisk before;
+        StateDisk after;
+
+        Text2D number;
+        Text2D change;
+
+        bool visible;
 
         #endregion
+
+        public CreationData(CreatedState state, CreationFrame frame, Change value, Change factor)
+        {
+            this.state = state;
+            this.frame = frame;
+            this.value = value;
+            this.factor = factor;
+
+            int n = (int)(100 * value.Value);
+
+            before = new StateDisk(value, factor.Start);
+            after = new StateDisk(value.Finish, factor.Finish);
+
+            SpriteFont font = content.Load<SpriteFont>("History");
+
+            number = new Text2D(frame.Frame.ToString(), font, Vector2.Zero, Color.DarkSlateBlue, 10);
+
+            if(value.Value > 0)
+                change = new Text2D(n.ToString(), font, Vector2.Zero, Color.Green, 10);
+            else
+                change = new Text2D((-n).ToString(), font, Vector2.Zero, Color.Red, 10);
+        }
 
         #region logika
 
-        public CreationData(Synapse synapse, CreationFrame frame, float start, float finish)
+        public void tick(float scale)
         {
-            this.synapse = synapse;
-            this.frame = frame;
-            this.start = start;
-            this.finish = finish;
-            change = finish - start;
-            /*
-            Height = 35;
-            Width = 160;
-            initializeGraphics();
-
-            MouseEnter += new EventHandler(mouseEnter);
-            MouseLeave += new EventHandler(mouseLeave);*/
-            background = SystemColors.Control;
+            state.setChange(value.Start, value.Start + value.Value * scale);
+            state.setFactor(factor.Start + factor.Value * scale);
         }
 
-        private void mouseEnter(object sender, EventArgs e)
+        public void set()
         {
-            background = SystemColors.ControlLight;
+            state.setChange(value.Start, value.Finish);
+            state.setFactor(factor.Finish);
         }
 
-        private void mouseLeave(object sender, EventArgs e)
+        public void execute()
         {
-            background = SystemColors.Control;
+            state.setValue(value.Finish);
+            state.setFactor(factor.Finish);
+        }
+
+        public void undo()
+        {
+            state.setValue(value.Start);
+            state.setFactor(factor.Start);
         }
 
         #endregion
 
-        #region właściwości
+        #region wyświetlanie
 
-        public Synapse Synapse
+        public void show(GraphicsBuffer buffer)
         {
-            get
-            {
-                return synapse;
-            }
+            before.Scale = 1;
+            after.Scale = 1;
+
+            before.Buffer = buffer;
+            after.Buffer = buffer;
+
+            display.add(number);
+            display.add(change);
+
+            visible = true;
         }
 
-        public float Change
+        public void hide()
         {
-            get
+            if (!visible)
+                return;
+
+            before.remove();
+            after.remove();
+
+            number.hide();
+            change.hide();
+        }
+
+        #endregion
+
+        public Vector3 Position
+        {
+            set
             {
-                return change;
+                before.Position = new Vector3(70, 20, 0) + value;
+                after.Position = new Vector3(130, 20, 0) + value;
+
+                number.Location = new Vector2(20 + value.X, 10 + value.Y);
+                change.Location = new Vector2(90 + value.X, 10 + value.Y);
             }
         }
 
@@ -79,43 +127,5 @@ namespace Brain3D
                 return frame.Frame;
             }
         }
-
-        public float Step
-        {
-            get
-            {
-                return step;
-            }
-            set
-            {
-                step = value;
-            }
-        }
-
-        public float Start
-        {
-            get
-            {
-                return start;
-            }
-            set
-            {
-                start = value;
-            }
-        }
-
-        public float Weight
-        {
-            get
-            {
-                return finish;
-            }
-            set
-            {
-                finish = value;
-            }
-        }
-
-        #endregion
     }
 }

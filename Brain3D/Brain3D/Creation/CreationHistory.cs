@@ -1,54 +1,83 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class CreationHistory
+    class CreationHistory : GraphicsElement
     {
-        AnimatedState synapse;
+        List<CreationData> history;
+        AnimatedState state;
+        Vector3 position;
 
-        public CreationHistory(AnimatedState active)
+        Rect background;
+        Rect border;
+
+        public CreationHistory(AnimatedState state)
         {
-            synapse = active;
+            history = new List<CreationData>();
+            this.state = state;
         }
 
-        protected void initializeGraphics()
+        public void add(CreationData data)
         {
-            /*Height = Math.Min(synapse.History.Count, 4) * 36 + 40;
-            Width = 164;
-
-            int x = Location.X;
-            int y = Location.Y;
-
-            if (Parent.Width - Location.X < Width)
-                x = Location.X - Width;
-
-            if (Parent.Height - Location.Y < Height)
-                y = Location.Y - Height;
-
-            if (x != Location.X || y != Location.Y)
-                Location = new Point(x, y);*/
-
-            //base.initializeGraphics();
+            history.Add(data);
         }
 
-        public void show()
+        public void show(int x, int y, int frame)
         {
-            /*base.show();
-            Controls.Clear();
+            int interval = 40;
 
-            for (int i = Math.Max(0, synapse.History.Count - 4), j = 0; i < synapse.History.Count; i++, j++)
+            int width = 160;
+            int height = 10;
+
+            int size = 4;
+            int size2 = 2 * size;
+
+            GraphicsBuffer buffer = display.show(this);
+            buffer.clear();
+
+            position = new Vector3(x, y, -0.2f);
+
+            foreach (CreationData data in history)
             {
-                CreationData cd = synapse.History[i];
-                Controls.Add(cd);
-                cd.Location = new Point(2, j * 36 + 40);
-                cd.show();
-            }*/
+                if (data.Frame > frame)
+                    break;
+
+                data.Position = position + new Vector3(0, height, 0.1f);
+                data.show(buffer);
+                height += interval;
+            }
+
+            height += 6;
+
+            if (position.X + width + 20 > device.Viewport.Width)
+                position.X -= width;
+
+            if (position.Y + height + 40 > device.Viewport.Height)
+                position.Y -= height;
+
+            background = new Rect(position + new Vector3(size, size, 0.1f), new Vector3(width - size2, height - size2, -0.2f), Color.PeachPuff);
+            background.Buffer = buffer;
+
+            border = new Rect(position, new Vector3(160, height, -0.3f), Color.MediumPurple);
+            border.Buffer = buffer;
+
+            buffer.initialize();
+            buffer.show();
+        }
+
+        public void hide()
+        {
+            foreach (CreationData data in history)
+                data.hide();
+
+            background.hide();
+            border.hide();
         }
     }
 }

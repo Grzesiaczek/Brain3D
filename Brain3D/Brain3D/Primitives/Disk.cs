@@ -10,20 +10,22 @@ namespace Brain3D
 {
     class Disk : DrawableElement
     {
-        Circle framework;
+        Circle pattern;
 
         float radius;
         int points;
 
-        public Disk(Vector3 position, Circle framework, Color color, float radius)
+        public Disk(Vector3 position, Circle pattern, Color color, float radius)
         {
             this.position = position;
-            this.framework = framework;
+            this.pattern = pattern;
             this.color = color;
             this.radius = radius;
 
-            points = framework.Points;
+            points = pattern.Points;
+            //scale = 1;
 
+            framework = new Vector3[points];
             vertices = new VertexPositionColor[points + 1];
             indices = new int[3 * points];
         }
@@ -33,7 +35,10 @@ namespace Brain3D
             vertices[points] = new VertexPositionColor(position, color);
 
             for (int i = 0; i < points; i++)
-                vertices[i] = new VertexPositionColor(framework.Data[i] * radius + position, color);
+            {
+                framework[i] = pattern.Data[i] * radius * scale;
+                vertices[i] = new VertexPositionColor(framework[i] + position, color);
+            }
 
             indices[0] = points;
             indices[1] = points - 1;
@@ -48,22 +53,37 @@ namespace Brain3D
             }
 
             offset = buffer.add(vertices, indices);
+            initialized = true;
         }
 
         public override void move()
         {
+            if (!initialized)
+                return;
+
             buffer.Vertices[offset + points].Position = position;
 
             for (int i = 0, j = offset; i < points; i++)
-                buffer.Vertices[j++].Position = framework.Data[i] * radius + position;
+                buffer.Vertices[j++].Position = framework[i] + position;
         }
 
         public override void repaint()
         {
+            if (!initialized)
+                return;
+
             buffer.Vertices[offset + points].Color = color;
 
             for (int i = 0, j = offset; i < points; i++)
                 buffer.Vertices[j++].Color = color;
+        }
+
+        public override void rescale()
+        {
+            for (int i = 0; i < points; i++)
+                framework[i] = pattern.Data[i] * radius * scale;
+
+            move();
         }
 
         public float Radius
@@ -71,7 +91,6 @@ namespace Brain3D
             set
             {
                 radius = value;
-                move();
             }
         }
     }

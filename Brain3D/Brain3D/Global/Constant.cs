@@ -12,25 +12,30 @@ namespace Brain3D
 {
     class Constant
     {
-        static String path;
-        static StringFormat format;
+        #region deklaracje
 
-        static float pi2;
-        static float pi4;
+        static Random random;
+        static String path;
 
         static Vector3 box;
+        static Vector3 balance;
+        static Vector3 normal;
+        static Vector3 shift;
+
+        static Vector2[] circle;
+
+        static float pi2;
         static float radius;
 
         static SpaceMode space;
         public static event EventHandler spaceChanged;
 
+        #endregion
+
         public static void load()
         {
             StreamReader reader;
-
-            format = new StringFormat();
-            format.Alignment = StringAlignment.Center;
-            format.LineAlignment = StringAlignment.Center;
+            random = new Random();
 
             try
             {
@@ -52,12 +57,28 @@ namespace Brain3D
             }
 
             pi2 = (float)Math.PI / 2;
-            pi4 = (float)Math.PI / 4;
-
-            box = new Vector3(48, 30, 20);
             radius = 25;
 
+            balance = new Vector3(48, 30, 16);
+            normal = new Vector3(48, 30, 4);
+
+            shift = normal - balance;
+            box = normal;
+
             space = SpaceMode.Box;
+
+            initializeCircle();
+        }
+
+        static void initializeCircle()
+        {
+            int total = 128;
+            float interval = (float)Math.PI * 2 / total;
+
+            circle = new Vector2[total];
+
+            for (int i = 0; i < total; i++)
+                circle[i] = new Vector2((float)Math.Cos(interval * i), (float)Math.Sin(interval * i));
         }
 
         public static void save()
@@ -73,9 +94,9 @@ namespace Brain3D
             writer.Close();
         }
 
-        public static void changePath(String path)
+        static void changePath(String path)
         {
-            Path = path;
+            Constant.path = path;
             Constant.save();
 
             if (File.Exists(System.IO.Path.Combine(path, "data.xml")))
@@ -94,23 +115,87 @@ namespace Brain3D
             changePath(System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Files"));
         }
 
+        public static Vector3 randomPoint()
+        {
+            Vector3 area;
+
+            if (Constant.Space == SpaceMode.Box)
+                area = Constant.Box;
+            else
+            {
+                float radius = Constant.Radius * 0.7f;
+                area = new Vector3(radius, radius, radius);
+            }
+
+            float x = random.Next((int)-area.X + 1, (int)area.X - 1);
+            float y = random.Next((int)-area.Y + 1, (int)area.Y - 1);
+            float z = random.Next((int)-area.Z + 1, (int)area.Z - 1);
+
+            return new Vector3(x, y, z);
+        }
+
+        public static void setBox(Balancing.Phase phase)
+        {
+            if (phase == Balancing.Phase.Three)
+                box = normal;
+            else
+                box = balance;
+        }
+
+        public static void setBox(float factor)
+        {
+            box = balance + factor * shift;
+        }
+
+        public static Tuple<Vector2, float, float> getDistance(Vector3 source, Vector3 target, Vector3 point)
+        {
+            Vector3 vector = target - source;
+            Vector3 position = point - source;
+            vector.Z = 0;
+
+            float a = vector.Y;
+            float b = vector.X;
+            float c = b * position.X + a * position.Y;
+            float x, y;
+            float eq; // punkt równowagi
+
+            if (a == 0)
+            {
+                x = c / b;
+                y = 0;
+                eq = x / b;
+            }
+            else if (b == 0)
+            {
+                x = 0;
+                y = c / a;
+                eq = y / a;
+            }
+            else
+            {
+                x = c * b / (vector.LengthSquared());
+                eq = x / b;
+                y = a * eq;
+            }
+
+            return new Tuple<Vector2, float, float>(new Vector2(position.X - x, position.Y - y), Math.Abs(b * position.Y - a * position.X) / vector.Length(), eq);
+        }
+
+        #region własciwości
+
+        public static Vector2[] Circle
+        {
+            get
+            {
+                return circle;
+            }
+        }
+
         public static String Path
         {
             get
             {
                 return path;
-            }
-            set
-            {
-                path = value;
-            }
-        }
-
-        public static StringFormat Format
-        {
-            get
-            {
-                return format;
             }
         }
 
@@ -133,10 +218,6 @@ namespace Brain3D
             {
                 return box;
             }
-            set
-            {
-                box = value;
-            }
         }
 
         public static float Radius
@@ -155,12 +236,6 @@ namespace Brain3D
             }
         }
 
-        public static float PI4
-        {
-            get
-            {
-                return pi4;
-            }
-        }
+        #endregion
     }
 }

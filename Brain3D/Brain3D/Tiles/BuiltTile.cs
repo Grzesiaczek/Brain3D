@@ -12,14 +12,26 @@ namespace Brain3D
 
         #region konstruktory
 
-        public BuiltTile(String name) : base(name)
+        public BuiltTile()
         {
-            builder = new StringBuilder(name);
+            prepare(10);
         }
 
-        public BuiltTile(Tile element) : base(element.Name)
+        public BuiltTile(int left)
         {
-            builder = new StringBuilder(name);
+            prepare(left);
+        }
+
+        public BuiltTile(Tile tile) : base(tile.Word)
+        {
+            prepare(tile.Left);
+        }
+
+        void prepare(int left)
+        {
+            builder = new StringBuilder(word);
+            Left = left;
+            Top = 10;
         }
 
         public override void initialize()
@@ -40,19 +52,19 @@ namespace Brain3D
 
         public bool erase()
         {
-            builder.Remove(builder.Length - 1, 1);
-            rename();
-
             if (builder.Length == 0)
                 return true;
+
+            builder.Remove(builder.Length - 1, 1);
+            rename();
 
             return false;
         }
 
         void rename()
         {
-            name = builder.ToString();
-            width = 16 + (int)font.MeasureString(name).X;
+            word = builder.ToString();
+            width = (int)font.MeasureString(word).X + 20;
 
             recBackground.Width = width - 8;
             recBorder.Width = width;

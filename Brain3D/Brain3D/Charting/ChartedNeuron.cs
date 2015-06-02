@@ -9,49 +9,90 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class ChartedNeuron : CompositeElement
+    class ChartedNeuron : DrawableComposite
     {
         Neuron neuron;
         ChartedTile tile;
         Chart chart;
 
-        static Color[] palette = { Color.Red, Color.Purple, Color.Orchid, Color.BlueViolet, Color.Goldenrod, Color.DarkGreen, Color.Maroon, Color.Navy,
-                                     Color.HotPink, Color.Firebrick, Color.Crimson, Color.Indigo, Color.Khaki, Color.Lavender};
-        static int index = 0;
-        bool visible;
+        bool active = false;
 
-        public ChartedNeuron(Neuron neuron)
+        public ChartedNeuron(Neuron neuron, Point corner, Color color)
         {
-            this.neuron = neuron;
-            visible = false;
-            chart = new Chart(neuron, palette[index++]);
+            chart = new Chart(neuron, color);
+            tile = new ChartedTile(neuron.Word, corner, color);
 
-            if (index == 14)
-                index = 0;
+            this.neuron = neuron;
+            visible = true;
         }
 
         public override void show()
         {
-            display.add(this);
-            display.add(chart);
+            chart.show();
+            tile.activate();
+            tile.show();
+            visible = true;
         }
 
-        void click(object sender, EventArgs e)
+        public override void hide()
         {
-            
+            chart.hide();
+            visible = false;
         }
 
-        void mouseOn(object sender, EventArgs e)
+        public void change()
         {
-            
+            if(visible)
+            {
+                chart.hide();
+                visible = false;
+            }
+            else
+            {
+                chart.show();
+                visible = true;
+            }
         }
 
-        void mouseOff(object sender, EventArgs e)
+        public void hover()
         {
-            
+            if(active)
+            {
+                if (visible)
+                    tile.activate();
+                else
+                    tile.idle();
+
+                chart.idle();
+                active = false;
+            }
+            else
+            {
+                chart.activate();
+                tile.hover();
+                active = true;
+            }
         }
 
-        public event EventHandler showNeuron;
-        public event EventHandler hideNeuron;
+        public override bool cursor(int x, int y)
+        {
+            return tile.cursor(x, y);
+        }
+
+        public int Top
+        {
+            set
+            {
+                tile.Top = value;
+            }
+        }
+
+        public override float Scale
+        {
+            set
+            {
+                chart.Scale = value;
+            }
+        }
     }
 }

@@ -20,7 +20,7 @@ namespace Brain3D
         public Camera(Vector3 position)
         {
             this.position = position;
-            target = new Vector3(position.X, 0, 0);
+            target = new Vector3(position.X, position.Y, 0);
             initialize();
         }
 
@@ -45,6 +45,12 @@ namespace Brain3D
         {
             position = spherical.getVector();
             rotation = Matrix.CreateFromYawPitchRoll(-spherical.Longitude - Constant.PI2, spherical.Latitude, 0);
+        }
+
+        public void moveX(float value)
+        {
+            position.X = value;
+            target.X = value;
         }
 
         public void moveLeft()
@@ -169,6 +175,8 @@ namespace Brain3D
                 spherical = new Spherical(position);
         }
 
+        #region właściwości
+
         public Vector3 Position
         {
             get
@@ -200,5 +208,7 @@ namespace Brain3D
                 return rotation;
             }
         }
+
+        #endregion
     }
 }

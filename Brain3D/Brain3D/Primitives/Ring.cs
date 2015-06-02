@@ -10,7 +10,7 @@ namespace Brain3D
 {
     class Ring : DrawableElement
     {
-        Circle framework;
+        Circle pattern;
 
         int points;
         int points2;
@@ -18,16 +18,17 @@ namespace Brain3D
         float r1;
         float r2;
 
-        public Ring(Vector3 position, Circle framework, Color color)
+        public Ring(Vector3 position, Circle pattern, Color color)
         {
             this.position = position;
-            this.framework = framework;
+            this.pattern = pattern;
 
             this.color = color;
-            points = framework.Points;
+            points = pattern.Points;
             points2 = 2 * points;
 
-            vertices = new VertexPositionColor[2 * points];
+            framework = new Vector3[points2];
+            vertices = new VertexPositionColor[points2];
             indices = new int[6 * points];
         }
 
@@ -35,9 +36,12 @@ namespace Brain3D
         {
             for (int i = 0, j = 0; i < points; i++)
             {
-                vertices[j++] = new VertexPositionColor(framework.Data[i] * r1 + position, color);
-                vertices[j++] = new VertexPositionColor(framework.Data[i] * r2 + position, color);
+                framework[j++] = pattern.Data[i] * r1 * scale;
+                framework[j++] = pattern.Data[i] * r2 * scale;
             }
+
+            for (int i = 0; i < points2; i++)
+                vertices[i] = new VertexPositionColor(framework[i] + position, color);
 
             int index = 6;
             int vertex = 2 * points - 2;
@@ -62,24 +66,33 @@ namespace Brain3D
             }
 
             offset = buffer.add(vertices, indices);
+            initialized = true;
         }
 
         public override void move()
         {
-            for (int i = 0, j = offset; i < points; i++)
-            {
-                buffer.Vertices[j++].Position = framework.Data[i] * r1 + position;
-                buffer.Vertices[j++].Position = framework.Data[i] * r2 + position;
-            }
+            if (!initialized)
+                return;
+
+            for (int i = 0, j = offset; i < points2; i++)
+                buffer.Vertices[j++].Position = framework[i] + position;
         }
 
         public override void repaint()
         {
-            for (int i = 0, j = offset; i < points; i++)
+            for (int i = 0, j = offset; i < points2; i++)
+                buffer.Vertices[j++].Color = color;
+        }
+
+        public override void rescale()
+        {
+            for (int i = 0, j = 0; i < points; i++)
             {
-                buffer.Vertices[j++].Color = color;
-                buffer.Vertices[j++].Color = color;
+                framework[j++] = pattern.Data[i] * r1 * scale;
+                framework[j++] = pattern.Data[i] * r2 * scale;
             }
+
+            move();
         }
 
         public float R1

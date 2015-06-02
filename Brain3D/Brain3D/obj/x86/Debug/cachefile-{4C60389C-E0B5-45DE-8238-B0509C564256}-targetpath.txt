@@ -2,3 +2,4 @@ Content\Standard.xnb
 Content\Sequence.xnb
 Content\Numbers.xnb
 Content\Test.xnb
+Content\History.xnb

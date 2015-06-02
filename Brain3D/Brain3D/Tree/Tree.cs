@@ -22,10 +22,11 @@ namespace Brain3D
         {
             Tuple<Neuron, int> tuple = (Tuple<Neuron, int>)sender;
             Leaf leaf = new Leaf(tuple.Item1, tuple.Item2);
+            List<Synapse> synapses = new List<Synapse>(brain.Synapses.Keys);
 
             foreach (Leaf source in leafs)
             {
-                Synapse synapse = brain.Synapses.Find(k => k.Pre == source.Neuron && k.Post == leaf.Neuron);
+                Synapse synapse = synapses.Find(k => k.Pre == source.Neuron && k.Post == leaf.Neuron);
 
                 if(synapse != null)
                     branches.Add(new Branch(source, leaf));
@@ -34,18 +35,27 @@ namespace Brain3D
             leafs.Add(leaf);
         }
 
-        protected override void brainLoaded(object sender, EventArgs e)
+        public void clear()
         {
-            base.brainLoaded(sender, e);
+            foreach (Branch branch in branches)
+                branch.hide();
+
+            foreach (Leaf leaf in leafs)
+                leaf.hide();
+
+            branches.Clear();
+            leafs.Clear();
         }
 
         public override void show()
         {
             foreach (Branch branch in branches)
-                display.add(branch);
+                branch.show();
 
             foreach (Leaf leaf in leafs)
-                display.add(leaf);
+                leaf.show();
+
+            display.show(this);
         }
     }
 }

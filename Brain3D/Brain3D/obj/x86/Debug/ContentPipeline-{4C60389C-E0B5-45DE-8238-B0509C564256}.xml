@@ -37,6 +37,15 @@
       <Output>C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\Test.xnb</Output>
       <Time>2015-04-04T17:56:08+02:00</Time>
     </Item>
+    <Item>
+      <Source>History.spritefont</Source>
+      <Name>History</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\History.xnb</Output>
+      <Time>2015-05-29T11:00:49.957245+02:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <ContentProjectGUID>{4C60389C-E0B5-45DE-8238-B0509C564256}</ContentProjectGUID>

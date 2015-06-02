@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
@@ -19,42 +21,137 @@ namespace Brain3D
         protected static Display display;
 
         protected Balancing balancing;
-        protected Timer timer;
 
-        protected bool animation;
+        protected bool insertion;
         protected bool visible;
 
+        protected List<Mouse> mouses;
+
+        protected Mouse active;
+        protected Mouse shifted;
+
+        Stopwatch stopwatch;
+        bool started;
+
+        public event EventHandler animationStop;
         public static event EventHandler loadBrain;
 
         #endregion
 
         public Presentation()
         {
-            timer = new Timer();
-            timer.Tick += new EventHandler(tick);
-            timer.Interval = 25;
+            mouses = new List<Mouse>();
+            stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             loadBrain += brainLoaded;
             balancing = Balancing.Instance;
         }
 
         protected virtual void brainLoaded(object sender, EventArgs e) { }
 
-        protected virtual void tick(object sender, EventArgs e) { }
-
-        public bool started()
+        void timer(object state)
         {
-            return animation;
+            while (started)
+            {
+                if (stopwatch.Elapsed.TotalMilliseconds > 20)
+                {
+                    stopwatch.Restart();
+                    tick();
+                }
+
+                Thread.Sleep(2);
+            }
         }
+
+        public virtual void changeInsertion()
+        {
+            insertion = !insertion;
+            controller.Insertion = insertion;
+        }
+
+        public virtual void start()
+        {
+            started = true;
+            ThreadPool.QueueUserWorkItem(timer);
+        }
+
+        public virtual void stop()
+        {
+            if (started)
+            {
+                started = false;
+                animationStop(this, null);
+            }
+        }
+
+        protected virtual void tick() { }
+
+        public virtual void resize() { }
+
+        #region obsługa zdarzeń myszy
+
+        public virtual void mouseClick(int x, int y)
+        {
+
+        }
+
+        public virtual void mouseMove(int x, int y)
+        {
+            if (shifted != null)
+            {
+                shifted.move(x, y);
+                return;
+            }
+
+            Mouse hover = null;
+
+            foreach (Mouse mouse in mouses)
+                if (mouse.cursor(x, y))
+                {
+                    hover = mouse;
+                    break;
+                }
+
+            if (active != null && active != hover)
+            {
+                active.idle();
+                active = null;
+            }
+
+            if (hover != null && hover != active)
+            {
+                hover.hover();
+                active = hover;
+            }
+        }
+
+        public virtual void mouseDown(int x, int y)
+        {
+            if (active != null)
+            {
+                shifted = active;
+                shifted.push(x, y);
+            }
+        }
+
+        public virtual void mouseUp(int x, int y)
+        {
+            if (shifted != null)
+                shifted = null;
+        }
+
+        #endregion
 
         #region funkcje sterujące
 
-        public virtual void start() { }
-
-        public virtual void stop() { }
+        public virtual void back() { }
 
         public virtual void forth() { }
 
-        public virtual void back() { }
+        public virtual void higher() { }
+
+        public virtual void lower() { }
 
         public virtual void changeFrame(int frame) { }
 
@@ -75,10 +172,30 @@ namespace Brain3D
         public virtual void hide()
         {
             visible = false;
+            balancing.stop();
             display.clear();
+            stop();
         }
 
+        public virtual void left() { }
+
+        public virtual void right() { }
+
+        public virtual void up() { }
+
+        public virtual void down() { }
+
+        public virtual void closer() { }
+
+        public virtual void farther() { }
+
+        public virtual void broaden() { }
+
+        public virtual void tighten() { }
+
         #endregion
+
+        #region właściwości
 
         public static Brain Brain
         {
@@ -108,5 +225,15 @@ namespace Brain3D
                 display = value;
             }
         }
+
+        public bool Started
+        {
+            get
+            {
+                return started;
+            }
+        }
+
+        #endregion
     }
 }

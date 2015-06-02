@@ -8,12 +8,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class AnimatedVector : CompositeElement
+    class AnimatedVector : DrawableComposite
     {
         #region deklaracje
 
-        AnimatedElement source;
-        AnimatedElement target;
+        AnimatedNeuron source;
+        AnimatedNeuron target;
 
         Pipe pipe;
         Vector2 angle;
@@ -23,7 +23,7 @@ namespace Brain3D
 
         #endregion
 
-        public AnimatedVector(AnimatedElement source, AnimatedElement target)
+        public AnimatedVector(AnimatedNeuron source, AnimatedNeuron target)
         {
             this.source = source;
             this.target = target;
@@ -34,19 +34,12 @@ namespace Brain3D
             refreshAngle();
         }
 
-        public override void move()
+        public override void rotate()
         {
             refreshAngle();
             pipe.Source = source.pointVector(-angle);
             pipe.Target = target.pointVector(angle);
             pipe.rotate();
-            pipe.move();
-        }
-
-        public override void rotate()
-        {
-            base.rotate();
-            move();
         }
 
         void refreshAngle()
@@ -76,6 +69,8 @@ namespace Brain3D
         {
             get
             {
+                direction = target.Position - source.Position;
+                direction.Normalize();
                 return direction;
             }
         }
@@ -84,7 +79,7 @@ namespace Brain3D
         {
             get
             {
-                return source.Position;
+                return pipe.Source;
             }
         }
 
@@ -92,7 +87,7 @@ namespace Brain3D
         {
             get
             {
-                return target.Position;
+                return pipe.Target;
             }
         }
 
@@ -101,14 +96,6 @@ namespace Brain3D
             get
             {
                 return vector;
-            }
-        }
-
-        public Vector3 Start
-        {
-            get
-            {
-                return pipe.Source;
             }
         }
 

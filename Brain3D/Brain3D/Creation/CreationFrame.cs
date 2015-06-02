@@ -10,155 +10,164 @@ namespace Brain3D
     {
         #region deklaracje
 
-        NeuronTile neuron;
+        enum Phase { Zero, One, Two, Three, Finish }
 
-        List<Synapse> created;
+        Phase phase;
+
+        CreatedNeuron neuron;
+        CreationSequence sequence;
+        SequenceTile tile;
+
+        List<CreatedSynapse> synapses;
         List<CreationData> data;
 
-        static Dictionary<Neuron, CreatedNeuron> neurons;
-        static Dictionary<Synapse, CreatedSynapse> synapses;
-
         int frame;
-        int count;
-        int phase;
-
-        static int interval;
-
-        public event EventHandler finish;
+        double time;
 
         #endregion
 
-        public CreationFrame(Neuron neuron, int frame)
+        public CreationFrame(CreatedNeuron neuron, int frame)
         {
-            this.neuron = new NeuronTile(neuron);
-            created = new List<Synapse>();
+            this.neuron = neuron;
+            this.frame = frame;
+
+            synapses = new List<CreatedSynapse>();
             data = new List<CreationData>();
 
-            this.frame = frame;
-            count = 0;
-            phase = 1;
-        }
-
-        public static void setDictionary(Dictionary<Neuron, CreatedNeuron> mapNeurons, Dictionary<Synapse, CreatedSynapse> mapSynapses)
-        {
-            neurons = mapNeurons;
-            synapses = mapSynapses;
+            tile = new SequenceTile(neuron.Neuron.Word);
+            phase = Phase.Zero;
         }
 
         public void create()
         {
-            CreatedNeuron cn = neurons[neuron.Neuron];
+            if (!neuron.Created)
+            {
+                neuron.show();
+                neuron.create();
+            }
 
-            if (!cn.Created)
-                cn.show();
+            foreach (CreatedSynapse synapse in synapses)
+            {
+                synapse.show();
+                synapse.create();
+            }
 
-            foreach (Synapse synapse in created)
-                synapses[synapse].show();
+            foreach (CreationData cd in data)
+                cd.execute();
+        }
+
+        public void activate()
+        {
+            tile.activate();
+            neuron.Neuron.activate();
+        }
+
+        public void idle()
+        {
+            tile.idle();
+            neuron.Neuron.idle();
         }
 
         public void undo()
         {
-            CreatedNeuron cn = neurons[neuron.Neuron];
-            neuron.idle();
+            idle();
 
-            if(cn.Frame == frame)
-                cn.hide();
+            if(neuron.Frame == frame)
+                neuron.hide();
 
-            foreach (Synapse synapse in created)
-                synapses[synapse].hide();
+            foreach (CreatedSynapse synapse in synapses)
+                synapse.hide();
 
             foreach (CreationData cd in data)
-                synapses[cd.Synapse].Synapse.setWeight(cd, true);
+                cd.undo();
         }
 
         public void execute()
         {
-            neuron.idle();
-
             foreach (CreationData cd in data)
-                synapses[cd.Synapse].Synapse.setWeight(cd);
+                cd.execute();
         }
 
         public void change()
         {
-            neuron.activate();
+            activate();
 
             foreach (CreationData cd in data)
-                synapses[cd.Synapse].Synapse.change(cd);
+                cd.set();
         }
 
-        public void create2()
+        public bool tick(double interval)
         {
-            foreach (CreationData cd in data)
-                synapses[cd.Synapse].Synapse.create(cd);
-        }
-
-        public void tick()
-        {
-            float factor = (float)count / interval;
+            time += interval;
+            float scale = (float)(time / 20);
 
             switch (phase)
             {
-                case 1:
-                    if (neurons[neuron.Neuron].Created)
-                        phase = 2;
-                    else
-                        ;//neurons[neuron.Neuron].draw(factor);
+                case Phase.Zero:
+                    neuron.Scale = 0;
+                    neuron.show();
+                    time = 50;
+                    break;
+                case Phase.One:
+                    neuron.Scale = scale;
+                    break;
+                case Phase.Two:
+                    foreach(CreatedSynapse synapse in synapses)
+                        synapse.Scale = scale;
 
                     break;
-                case 2:
-                    if (created.Count == 0)
-                        phase = 3;
-                    /*
-                    foreach (Synapse s in created)
-                        synapses[s].draw(factor);*/
-
-                    break;
-                case 3:
+                case Phase.Three:
                     foreach (CreationData cd in data)
-                    {
-                        CreatedSynapse cs = synapses[cd.Synapse];
-                        cs.tick(cd);
-                    }
+                        cd.tick(scale);
+
                     break;
             }
 
-            if(++count == interval)
+            if(time > 20)
             {
-                switch(phase++)
+                bool finish = false;
+                time = 0;
+
+                while (!finish)
                 {
-                    case 1:
-                        if (synapses.Count == 0)
-                            phase++;
+                    switch (phase)
+                    {
+                        case Phase.Zero:
+                            phase = Phase.One;
 
-                        CreatedNeuron cn = neurons[neuron.Neuron];
-                        cn.show();
-                        cn.Frame = frame;
-                        finish(cn, null);
-                        break;
-                    case 2:
-                        finish(created, null);
-                        break;
-                    case 3:
-                        create();
-                        finish(this, null);
-                        break;
+                            if(!neuron.Created)
+                                finish = true;
+
+                            break;
+                        case Phase.One:
+                            neuron.create();
+                            phase = Phase.Two;
+
+                            foreach (CreatedSynapse synapse in synapses)
+                                synapse.init();
+
+                            if(synapses.Count != 0)
+                                finish = true;
+
+                            break;
+                        case Phase.Two:
+                            if(data.Count == 0)
+                                return true;
+
+                            phase = Phase.Three;
+                            finish = true;
+
+                            break;
+                        case Phase.Three:
+                            foreach (CreatedSynapse synapse in synapses)
+                                synapse.create();
+
+                            return true;
+                    }
                 }
-
-                count = 0;
             }
-        }
 
-        public void setInterval(int value)
-        {
-            count *= (int)((float)value / interval);
-            interval = value;
-        }
-
-        public void step()
-        {
-            foreach (CreationData cd in data)
-                cd.Step = (cd.Weight - cd.Start) / interval;
+            return false;
         }
 
         public void add(CreationData data)
@@ -166,14 +175,26 @@ namespace Brain3D
             this.data.Add(data);
         }
 
-        public void add(Synapse synapse)
+        public void add(CreatedSynapse synapse)
         {
-            created.Add(synapse);
+            synapses.Add(synapse);
         }
 
         #region właściwości
 
-        public NeuronTile Neuron
+        public CreationSequence Sequence
+        {
+            get
+            {
+                return sequence;
+            }
+            set
+            {
+                sequence = value;
+            }
+        }
+
+        public CreatedNeuron Neuron
         {
             get
             {
@@ -181,11 +202,11 @@ namespace Brain3D
             }
         }
 
-        public List<CreationData> Data
+        public SequenceTile Tile
         {
             get
             {
-                return data;
+                return tile;
             }
         }
 
@@ -194,18 +215,6 @@ namespace Brain3D
             get
             {
                 return frame;
-            }
-            set
-            {
-                frame = value;
-            }
-        }
-
-        public static int Interval
-        {
-            set
-            {
-                interval = value;
             }
         }
 

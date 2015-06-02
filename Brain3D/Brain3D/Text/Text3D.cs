@@ -16,9 +16,10 @@ namespace Brain3D
 
         protected Text text;
         protected Vector3 shift;
-        protected float scale;
+        protected float ratio;
 
         protected Vector3[] pattern;
+
 
         protected static Tuple<Vector3[], int[]> getPattern(String data)
         {
@@ -46,10 +47,18 @@ namespace Brain3D
 
         public override void rotate()
         {
+            if (!initialized)
+                return;
+
             for (int i = 0; i < vertices.Length; i++)
-                framework[i] = Vector3.Transform(pattern[i], camera.Rotation);
+                framework[i] = Vector3.Transform(pattern[i], camera.Rotation) * scale;
 
             move();
+        }
+
+        public override void rescale()
+        {
+            rotate();
         }
     }
 }
