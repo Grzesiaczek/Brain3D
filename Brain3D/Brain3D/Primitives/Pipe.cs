@@ -89,15 +89,16 @@ namespace Brain3D
 
         public override void rotate()
         {
-            direction = vector;
-            direction.Z = 0;
+            Vector3 start = device.Viewport.Project(source, effect.Projection, effect.View, effect.World);
+            Vector3 end = device.Viewport.Project(target, effect.Projection, effect.View, effect.World);
 
+            direction = end - start;
             direction.Normalize();
-            direction = new Vector3(-direction.Y, direction.X, 0);
+            direction = new Vector3(direction.Y, direction.X, 0);
 
             v1 = direction * r1;
             v2 = direction * (r1 + (r2 - r1) * scale);
-            v3 = target * scale;
+            v3 = source + (target - source) * scale;
 
             framework[0] = source - v1;
             framework[2] = source;
@@ -110,7 +111,7 @@ namespace Brain3D
 
         public override void rescale()
         {
-            rotate();
+            move();
         }
 
         public void add()

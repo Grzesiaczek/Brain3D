@@ -20,19 +20,18 @@ namespace Brain3D
         QuerySequence added;
         QuerySequence query;
 
-        List<AnimatedNeuron> neurons;
-        List<AnimatedSynapse> synapses;
-        List<AnimatedState> states;
+        HashSet<AnimatedNeuron> neurons;
+        HashSet<AnimatedVector> vectors;
+        HashSet<AnimatedSynapse> synapses;
 
         bool loaded = false;
-
         int frame = 0;
-        int length = 250;
 
         double time = 0;
         double interval = 0.4;
 
         public event EventHandler balanceFinished;
+        public event EventHandler intervalChanged;
         public event EventHandler queryAccepted;
 
         #endregion
@@ -42,38 +41,37 @@ namespace Brain3D
             balancing.balanceEnded += balanceEnded;
             balancing.balanceUpdate += balanceUpdate;
 
-            neurons = new List<AnimatedNeuron>();
-            synapses = new List<AnimatedSynapse>();
-            states = new List<AnimatedState>();
+            neurons = new HashSet<AnimatedNeuron>();
+            vectors = new HashSet<AnimatedVector>();
+            synapses = new HashSet<AnimatedSynapse>();
         }
 
         #region funkcje inicjujące
 
         public void clear()
         {
-            balancing.stop();
             neurons.Clear();
+            vectors.Clear();
             synapses.Clear();
-            states.Clear();
             mouses.Clear();
         }
 
         public void reload()
         {
+            clear();
+            balanced = false;
+
             foreach (Tuple<AnimatedNeuron, CreatedNeuron> tuple in brain.Neurons.Values)
                 neurons.Add(tuple.Item1);
+
+            foreach (Tuple<AnimatedVector, CreatedVector> tuple in brain.Vectors.Values)
+                vectors.Add(tuple.Item1);
 
             foreach (Tuple<AnimatedSynapse, CreatedSynapse> tuple in brain.Synapses.Values)
                 synapses.Add(tuple.Item1);
 
-            foreach (Tuple<AnimatedState, CreatedState> tuple in brain.States.Values)
-                states.Add(tuple.Item1);
-
             mouses.AddRange(neurons);
-            mouses.AddRange(states);
-
-            query = new QuerySequence("what is this monkey like");
-            query.load(brain);
+            mouses.AddRange(synapses);
         }
 
         protected override void brainLoaded(object sender, EventArgs e)
@@ -132,8 +130,8 @@ namespace Brain3D
             foreach (AnimatedNeuron neuron in neurons)
                 neuron.setFrame(frame);
 
-            foreach(AnimatedSynapse synapse in synapses)
-                synapse.setFrame(frame);
+            foreach(AnimatedVector vector in vectors)
+                vector.setFrame(frame);
 
             controller.changeFrame(frame);
         }
@@ -153,15 +151,15 @@ namespace Brain3D
 
         #region balansowanie grafu
 
-        public void balance()
+        public override void balanceSynapses()
         {
-            stopBalance();
-            balancing.animate(neurons, synapses, 60);
+            balancing.balance(vectors);
         }
 
-        public void stopBalance()
+        public void balance()
         {
             balancing.stop();
+            balancing.balance(neurons, vectors, 32);
         }
 
         private void balanceUpdate(object sender, EventArgs e)
@@ -171,8 +169,8 @@ namespace Brain3D
 
         private void balanceEnded(object sender, EventArgs e)
         {
+            balanced = true;
             controller.idle();
-            display.move();
             balanceFinished(this, new EventArgs());
         }
 
@@ -180,11 +178,14 @@ namespace Brain3D
 
         public void simulate(int value)
         {
-            brain.initialize();
-            brain.simulate(query, value);
-
             loaded = true;
             length = value;
+
+            query = new QuerySequence("what is this monkey like", 10 * length + 1);
+            query.load(brain);
+
+            brain.initialize();
+            brain.simulate(query, value);
         }
 
         public override void mouseClick(int x, int y)
@@ -204,14 +205,23 @@ namespace Brain3D
         public override void enter()
         {
             if (!insertion)
+            {
+                query.execute();
+                intervalChanged(this, null);
                 return;
+            }
 
             if (added.execute())
             {
                 query = added;
                 query.load(brain);
+
                 changeInsertion();
+                controller.changeFrame(0);
                 queryAccepted(this, null);
+
+                time = 0;
+                frame = 0;
             }
         }
 
@@ -231,7 +241,7 @@ namespace Brain3D
 
             if (insertion)
             {
-                added = new QuerySequence();
+                added = new QuerySequence(10 * length + 1);
                 display.show(added);
             }
             else
@@ -248,12 +258,18 @@ namespace Brain3D
 
         public override void higher()
         {
-            query.intervalUp();
+            if (added == null)
+                query.intervalUp();
+            else
+                added.intervalUp();
         }
 
         public override void lower()
         {
-            query.intervalDown();
+            if (added == null)
+                query.intervalDown();
+            else
+                added.intervalDown();
         }
 
         #region takie tam
@@ -263,10 +279,10 @@ namespace Brain3D
             foreach (AnimatedNeuron neuron in neurons)
                 neuron.show();
 
-            foreach (AnimatedSynapse synapse in synapses)
+            foreach (AnimatedVector vector in vectors)
             {
-                synapse.show();
-                synapse.create();
+                vector.show();
+                vector.create();
             }
 
             display.show(this);
@@ -278,7 +294,9 @@ namespace Brain3D
             foreach (AnimatedNeuron neuron in neurons)
                 neuron.Scale = 1;
 
-            balance();
+            if(!balanced)
+                balance();
+
             insertion = false;
             visible = true;
         }
@@ -306,8 +324,8 @@ namespace Brain3D
             foreach (AnimatedNeuron neuron in neurons)
                 neuron.tick(time);
 
-            foreach (AnimatedSynapse synapse in synapses)
-                synapse.tick(time);
+            foreach (AnimatedVector vector in vectors)
+                vector.tick(time);
 
             query.tick(time);
         }

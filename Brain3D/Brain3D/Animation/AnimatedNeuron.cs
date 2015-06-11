@@ -17,13 +17,12 @@ namespace Brain3D
 
         Neuron neuron;
 
-        List<AnimatedSynapse> input;
-        List<AnimatedSynapse> output;
-
-        Label3D label;
-        Number3D number;
+        List<AnimatedVector> input;
+        List<AnimatedVector> output;
 
         StateDisk disk;
+        Label3D label;
+        Number3D number;
 
         bool refraction; 
         double value;
@@ -40,8 +39,8 @@ namespace Brain3D
             this.neuron = neuron;
             this.position = position;
 
-            input = new List<AnimatedSynapse>();
-            output = new List<AnimatedSynapse>();
+            input = new List<AnimatedVector>();
+            output = new List<AnimatedVector>();
 
             radius = 1.2f;
 
@@ -73,11 +72,11 @@ namespace Brain3D
             screen = device.Viewport.Project(position, effect.Projection, effect.View, effect.World);
         }
 
-        void setData(NeuronData data)
+        void setData(NeuronActivity data)
         {
             value = data.Value;
             
-            if (data.Active)
+            if (data.Phase == ActivityPhase.Active)
             {
                 if (!refraction)
                 {
@@ -100,8 +99,8 @@ namespace Brain3D
 
         public override void tick(double time)
         {
-            NeuronData data = neuron.Activity[(int)time];
-            NeuronData next = neuron.Activity[(int)time + 1];
+            NeuronActivity data = neuron.Activity[(int)time];
+            NeuronActivity next = neuron.Activity[(int)time + 1];
 
             double factor = time - (int)time;
             double value = data.Value + factor * (next.Value - data.Value);
@@ -110,12 +109,12 @@ namespace Brain3D
             if (data.Refraction == 30)
                 refraction = 30;
 
-            setData(new NeuronData(data.Active, value, refraction));
+            setData(new NeuronActivity(data.Phase, value, refraction));
         }
 
         public override void setFrame(int frame)
         {
-            NeuronData data = neuron.Activity[frame * 10];
+            NeuronActivity data = neuron.Activity[frame * 10];
             setData(data);
         }
 
@@ -135,10 +134,10 @@ namespace Brain3D
             position = device.Viewport.Unproject(new Vector3(shift.X + x, shift.Y + y, screen.Z), effect.Projection, effect.View, effect.World);
             move();
 
-            foreach (AnimatedSynapse synapse in input)
+            foreach (AnimatedVector synapse in input)
                 synapse.move();
 
-            foreach (AnimatedSynapse synapse in output)
+            foreach (AnimatedVector synapse in output)
                 synapse.move();
         }
 
@@ -168,6 +167,13 @@ namespace Brain3D
             disk.setFactor((float)(neuron.Count - 1) / 4);
         }
 
+        public void create()
+        {
+            disk.setValue(0);
+            number.Value = 0;
+            show();
+        }
+
         #endregion
 
         #region właściwości
@@ -188,7 +194,7 @@ namespace Brain3D
             }
         }
 
-        public List<AnimatedSynapse> Input
+        public List<AnimatedVector> Input
         {
             get
             {
@@ -196,7 +202,7 @@ namespace Brain3D
             }
         }
 
-        public List<AnimatedSynapse> Output
+        public List<AnimatedVector> Output
         {
             get
             {

@@ -2,117 +2,176 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
     class BalancedSynapse
     {
-        static Dictionary<AnimatedNeuron, BalancedNeuron> map;
+        static List<AnimatedVector> vectors = new List<AnimatedVector>();
+        
         AnimatedSynapse synapse;
+        AnimatedVector vector;
 
-        BalancedNeuron pre;
-        BalancedNeuron post;
+        bool duplex;
 
-        static float k = 120;
-        float factor;
+        float origin;
+        float target;
+        float length;
 
-        public BalancedSynapse(AnimatedSynapse synapse)
+        public BalancedSynapse(AnimatedSynapse synapse, bool duplex = false)
         {
             this.synapse = synapse;
-            pre = map[synapse.Pre];
-            post = map[synapse.Post];
+            this.duplex = duplex;
 
-            factor = (1f / pre.Count + 1f / post.Count);
-            factor = k / (factor * (1 + synapse.Weight));
+            if(!duplex)
+                vectors.Add(synapse.Vector);
+
+            origin = synapse.Factor;
+            vector = synapse.Vector;
         }
 
-        public void attract()
+        public void calculate()
         {
-            Vector3 delta = post.Position - pre.Position;
-            Vector3 shift = delta * delta * delta / factor;
-            /*
-            shift.X *= Math.Abs(delta.X);
-            shift.Y *= Math.Abs(delta.Y);
-            shift.Z *= Math.Abs(delta.Z);*/
-            
-            pre.move(shift);
-            post.move(-shift);
-        }
+            List<float> crosses = new List<float>();
 
-        public void repulse(BalancedNeuron neuron)
-        {
-            if (neuron == pre || neuron == post)
+            length = vector.Length;
+            crosses.Add(0);
+
+            foreach(AnimatedVector vec in vectors)
+            {
+                if (vector == vec)
+                    continue;
+
+                if (vector.Source == vec.Source || vector.Target == vec.Target)
+                    continue;
+
+                if (vector.Source == vec.Target || vector.Target == vec.Source)
+                    continue;
+
+                Nullable<float> value = cross(vector, vec);
+
+                if (value.HasValue)
+                    crosses.Add(value.Value * length);
+            }
+
+            crosses.Sort();
+            crosses.Reverse();
+
+            if (place(crosses[0], length, true))
                 return;
 
-            Vector3 shift = Vector3.Zero;
-            Tuple<Vector2, float, float> tuple = Constant.getDistance(synapse.Pre.Position, synapse.Post.Position, neuron.Position);
+            int index = 0;
 
-            float distance = tuple.Item2;
-            float eq = tuple.Item3;
-
-            float factor = 50;
-            float force = 0;
-
-            if(eq < 0.25)
-            {
-                if (eq < -0.25)
+            while(++index < crosses.Count)
+                if(place(crosses[index], crosses[index - 1]))
                     return;
-
-                factor *= (eq + 0.25f) * 2;
-            }
-
-            if(eq > 0.75)
-            {
-                if (eq > 1.25)
-                    return;
-
-                factor *= (1.25f - eq) * 2;
-            }
-
-            if (distance == 0)
-                return;
-
-            force = factor * (1.56f - (float)Math.Atan(distance - 2));
-
-            shift = new Vector3(force * tuple.Item1.X / distance, force * tuple.Item1.Y / distance, 0);
-            neuron.move(shift);
-            
-            eq = - eq;
-            post.move(shift * eq);
-
-            eq = -1 - eq;
-            pre.move(shift * eq);
         }
 
-        public static Dictionary<AnimatedNeuron, BalancedNeuron> Map
+        bool place(float start, float end, bool first = false)
         {
-            get
+            float treshold = 1.6f;
+
+            if (first)
+                treshold = 3;
+
+            float segment = end - start;
+
+            if (segment < treshold)
+                return false;
+
+            float min = 0;
+            float max = 0;
+            float position;
+            float half = segment * 0.6f;
+
+            if(first)
             {
-                return map;
+                min = start + 1;
+                max = end - 1.5f;
+
+                if (segment < 8)
+                    position = start + half;
+                else
+                {
+                    min = start + half;
+                    position = end - 2.4f - 0.1f * length;
+                }
             }
-            set
+            else
             {
-                map = value;
+                min = start + 0.5f;
+                max = end - 0.5f;
+
+                if (segment < 4)
+                    position = start + half;
+                else
+                {
+                    min = start + half;
+                    position = end - 1.2f - 0.1f * length;
+                }
             }
+
+            if(position > max)
+                position = max;
+
+            if (position < min)
+                position = min;
+
+            target = position / length;
+
+            return true;
         }
 
-        public BalancedNeuron Pre
+        Nullable<float> cross(AnimatedVector v1, AnimatedVector v2)
         {
-            get
-            {
-                return pre;
-            }
+            if (!cross(v1.Source, v1.Target, v2.Source, v2.Target))
+                return null;
+
+            Tuple<float, float> V1 = line(v1.Source, v1.Target);
+            Tuple<float, float> V2 = line(v2.Source, v2.Target);
+
+            float x = (V2.Item2 - V1.Item2) / (V2.Item1 - V1.Item1);
+            float y = V1.Item2 - V1.Item1 * x;
+
+            return (y - v1.Source.Y) / (v1.Target.Y - v1.Source.Y);
         }
 
-        public BalancedNeuron Post
+        Tuple<float, float> line(Vector3 A, Vector3 B)
         {
-            get
-            {
-                return post;
-            }
+            if (A.X == B.X)
+                return new Tuple<float, float>(0, A.X);
+
+            float a = (B.Y - A.Y) / (B.X - A.X);
+            float b = A.Y - a * A.X;
+
+            return new Tuple<float, float>(a, b);
+        }
+
+        bool cross(Vector3 A, Vector3 B, Vector3 C, Vector3 D)
+        {
+            if (side(A, B, C) * side(A, B, D) > 0)
+                return false;
+
+            if (side(C, D, A) * side(C, D, B) > 0)
+                return false;
+
+            return true;
+        }
+
+        float side(Vector3 A, Vector3 B, Vector3 P)
+        {
+            return A.X * (B.Y - P.Y) + B.X * (P.Y - A.Y) + P.X * (A.Y - B.Y);
+        }
+
+        public void update(float scale)
+        {
+            synapse.Factor = origin + (target - origin) * scale;
+        }
+
+        public void update()
+        {
+            synapse.Factor = target;
         }
     }
 }

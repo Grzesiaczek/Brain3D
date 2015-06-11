@@ -2,49 +2,49 @@
 <XnaContent xmlns:Pipeline="Microsoft.Xna.Framework.Content.Pipeline">
   <Asset Type="Pipeline:BuildItemCollection">
     <Item>
-      <Source>Standard.spritefont</Source>
-      <Name>Standard</Name>
+      <Source>VectorArial.spritefont</Source>
+      <Name>VectorArial</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>NuclexVectorFontDescriptionProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\Standard.xnb</Output>
-      <Time>2015-04-08T16:16:07.8459688+02:00</Time>
+      <Output>C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\VectorArial.xnb</Output>
+      <Time>2015-06-11T18:32:33.8638052+02:00</Time>
     </Item>
     <Item>
-      <Source>Sequence.spritefont</Source>
-      <Name>Sequence</Name>
+      <Source>SpriteVerdana.spritefont</Source>
+      <Name>SpriteVerdana</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\Sequence.xnb</Output>
+      <Output>C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\SpriteVerdana.xnb</Output>
       <Time>2015-04-09T14:02:31.6022562+02:00</Time>
     </Item>
     <Item>
-      <Source>Numbers.spritefont</Source>
-      <Name>Numbers</Name>
+      <Source>VectorCalibri.spritefont</Source>
+      <Name>VectorCalibri</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>NuclexVectorFontDescriptionProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\Numbers.xnb</Output>
-      <Time>2015-04-08T17:15:45.273717+02:00</Time>
+      <Output>C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\VectorCalibri.xnb</Output>
+      <Time>2015-06-11T18:32:08.1051167+02:00</Time>
     </Item>
     <Item>
-      <Source>Test.fx</Source>
-      <Name>Test</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\Test.xnb</Output>
-      <Time>2015-04-04T17:56:08+02:00</Time>
-    </Item>
-    <Item>
-      <Source>History.spritefont</Source>
-      <Name>History</Name>
+      <Source>SpriteCalibri.spritefont</Source>
+      <Name>SpriteCalibri</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\History.xnb</Output>
+      <Output>C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\SpriteCalibri.xnb</Output>
       <Time>2015-05-29T11:00:49.957245+02:00</Time>
+    </Item>
+    <Item>
+      <Source>SpriteArial.spritefont</Source>
+      <Name>SpriteArial</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\SpriteArial.xnb</Output>
+      <Time>2015-06-02T20:46:58.0211062+02:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>

@@ -11,13 +11,13 @@ namespace Brain3D
     class CreationHistory : GraphicsElement
     {
         List<CreationData> history;
-        AnimatedState state;
+        AnimatedSynapse state;
         Vector3 position;
 
         Rect background;
         Rect border;
 
-        public CreationHistory(AnimatedState state)
+        public CreationHistory(AnimatedSynapse state)
         {
             history = new List<CreationData>();
             this.state = state;

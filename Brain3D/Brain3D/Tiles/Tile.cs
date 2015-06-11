@@ -13,8 +13,6 @@ namespace Brain3D
     {
         #region deklaracje
 
-        protected static SpriteFont font;
-
         protected Rectangle recBackground;
         protected Rectangle recBorder;
 
@@ -35,6 +33,7 @@ namespace Brain3D
         protected static Tuple<Texture2D, Texture2D> texturesNeuron;
         protected static Tuple<Texture2D, Texture2D> texturesNormal;
         protected static Tuple<Texture2D, Texture2D> texturesRefract;
+        protected static Tuple<Texture2D, Texture2D> texturesShot;
 
         #endregion
 
@@ -48,14 +47,14 @@ namespace Brain3D
 
         protected void prepare()
         {
-            Vector2 size = font.MeasureString(word);
+            Vector2 size = Fonts.SpriteVerdana.MeasureString(word);
 
             width = 20 + (int)size.X;
             height = 12 + (int)size.Y;
             text = new Vector2(10, 11);
 
             if (word.Length == 0)
-                height += (int)font.MeasureString("0").Y;
+                height += (int)Fonts.SpriteVerdana.MeasureString("0").Y;
 
             recBorder = new Rectangle(0, 0, width, height);
             recBackground = new Rectangle(0, 0, width - 6, height - 6);
@@ -66,13 +65,12 @@ namespace Brain3D
 
         public static void initializeTextures()
         {
-            font = content.Load<SpriteFont>("Sequence");
-
             texturesActive = getTextures(Color.RosyBrown, Color.IndianRed);
             texturesBuilt = getTextures(Color.GreenYellow, Color.Purple);
-            texturesNeuron = getTextures(Color.LightGreen, Color.Thistle);
-            texturesNormal = getTextures(Color.LightYellow, Color.Thistle);
-            texturesRefract = getTextures(Color.IndianRed, Color.LawnGreen);
+            texturesNeuron = getTextures(Color.LightGreen, Color.DarkGoldenrod);
+            texturesNormal = getTextures(Color.LightYellow, Color.DarkSlateBlue);
+            texturesRefract = getTextures(Color.MediumVioletRed, Color.SkyBlue);
+            texturesShot = getTextures(Color.Azure, Color.IndianRed);
         }
 
         protected static Tuple<Texture2D, Texture2D> getTextures(Color backgroundColor, Color borderColor)
@@ -131,7 +129,7 @@ namespace Brain3D
         {
             batch.Draw(texBorder, recBorder, Color.White);
             batch.Draw(texBackground, recBackground, Color.White);
-            batch.DrawString(font, word, text, Color.Black);
+            batch.DrawString(Fonts.SpriteVerdana, word, text, Color.Black);
         }
 
         #region właściwości

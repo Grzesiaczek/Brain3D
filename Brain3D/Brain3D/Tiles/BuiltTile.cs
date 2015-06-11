@@ -29,9 +29,12 @@ namespace Brain3D
 
         void prepare(int left)
         {
+            word = "";
+            prepare();
+
             builder = new StringBuilder(word);
             Left = left;
-            Top = 10;
+            Top = 8;
         }
 
         public override void initialize()
@@ -64,9 +67,9 @@ namespace Brain3D
         void rename()
         {
             word = builder.ToString();
-            width = (int)font.MeasureString(word).X + 20;
+            width = (int)Fonts.SpriteVerdana.MeasureString(word).X + 20;
 
-            recBackground.Width = width - 8;
+            recBackground.Width = width - 6;
             recBorder.Width = width;
         }
 

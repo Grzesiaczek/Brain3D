@@ -12,7 +12,7 @@ namespace Brain3D
         static Vector2[] angles;
 
         List<Tuple<Disk, int>> disks;
-        NeuronData[] activity;
+        NeuronActivity[] activity;
         
         Vector3[] active;
         Vector3[] normal;
@@ -38,26 +38,6 @@ namespace Brain3D
 
             vertices = new VertexPositionColor[vertex];
             indices = new int[6 * count - 6];
-
-            Circle pattern = new Circle(1);
-            disks = new List<Tuple<Disk, int>>();
-
-            for(int i = 0; i < activity.Length; i++)
-            {
-                if (!activity[i].Treshold)
-                    continue;
-
-                Disk disk;
-                
-                if(activity[i].Refraction == 0)
-                    disk = new Disk(new Vector3(0.01f * (i + 1), 1, 0.02f), pattern, Color.LightSalmon, 0.04f);
-                else
-                    disk = new Disk(new Vector3(0.01f * (i + 1), -1, 0.02f), pattern, Color.LightSkyBlue, 0.04f);
-
-                disk.Scale = 1;
-                drawables.Add(disk);
-                disks.Add(new Tuple<Disk, int>(disk, i + 1));
-            }
         }
 
         public static void initializeAngles()
@@ -83,6 +63,8 @@ namespace Brain3D
 
         public override void show()
         {
+            prepareCircles();
+
             if (buffer == null)
                 display.add(this);
             else
@@ -124,7 +106,36 @@ namespace Brain3D
             initialized = true;
         }
 
-        public void prepare()
+        void prepareCircles()
+        {
+            Circle pattern = new Circle(1);
+            pattern.Direction = new Vector3(0, 0, 1);
+            pattern.rotate();
+
+            disks = new List<Tuple<Disk, int>>();
+            drawables.Clear();
+
+            for (int i = 0; i < activity.Length; i++)
+            {
+                Disk disk = null;
+
+                if (activity[i].Phase == ActivityPhase.Start)
+                    disk = new Disk(new Vector3(0.01f * (i + 1), 1, 0.001f), pattern, Color.LightSalmon, 0.04f);
+                if (activity[i].Phase == ActivityPhase.Finish)
+                    disk = new Disk(new Vector3(0.01f * (i + 1), -1, 0.001f), pattern, Color.LightSkyBlue, 0.04f);
+                if (activity[i].Phase == ActivityPhase.Break)
+                    disk = new Disk(new Vector3(0.01f * (i + 1), (float)activity[i].Value, 0.001f), pattern, color, 0.025f);
+
+                if (disk == null)
+                    continue;
+
+                disk.Scale = 1;
+                drawables.Add(disk);
+                disks.Add(new Tuple<Disk, int>(disk, i + 1));
+            }
+        }
+
+        void prepare()
         {
             float constant = 0;
             float ratio = scale * 0.01f;
@@ -144,16 +155,30 @@ namespace Brain3D
 
             for (int i = 2; i < count; i++)
             {
-                NeuronData data = activity[i];
+                NeuronActivity data = activity[i];
                 constant = ratio * i;
 
-                if (data.Active)
-                    next = 1 - (float)data.Refraction / 15;
-                else
-                    next = (float)data.Value;
+                switch(data.Phase)
+                {
+                    case ActivityPhase.Start:
+                        next = 1;
+                        break;
+                    case ActivityPhase.Finish:
+                        next = -1;
+                        break;
+                    case ActivityPhase.Active:
+                        next = 1 - (float)data.Refraction / 15;
+                        break;
+                    case ActivityPhase.Normal:
+                        next = (float)data.Value;
+                        break;
+                    case ActivityPhase.Break:
+                        next = (float)data.Value;
+                        break;
+                }
 
-                double a1 = Math.Atan((value - previous) * scale * 100);
-                double a2 = Math.Atan((next - value) * scale * 100);
+                double a1 = Math.Atan((value - previous) * 100 / scale);
+                double a2 = Math.Atan((next - value) * 100 / scale);
                 double an = (a1 + a2) / 2;
                 double ad = an - a1;
 
@@ -163,6 +188,9 @@ namespace Brain3D
                 int index = (int)(157 + an * 100);
                 float factor = (float)(thin / Math.Cos(ad));
 
+                if (factor > 0.02f)
+                    factor = 0.02f;
+
                 Vector2 angle = angles[index] * factor;
 
                 normal[2 * i] = new Vector3(constant - angle.X, value - angle.Y, 0);
@@ -170,8 +198,8 @@ namespace Brain3D
 
                 angle *= thick / thin;
 
-                active[2 * i] = new Vector3(constant - angle.X, value - angle.Y, 0.01f);
-                active[2 * i + 1] = new Vector3(constant + angle.X, value + angle.Y, 0.01f);
+                active[2 * i] = new Vector3(constant - angle.X, value - angle.Y, 0.0005f);
+                active[2 * i + 1] = new Vector3(constant + angle.X, value + angle.Y, 0.0005f);
 
                 previous = value;
                 value = next;

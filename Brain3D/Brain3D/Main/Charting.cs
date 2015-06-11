@@ -11,25 +11,20 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class Charting : Presentation
+    class Charting : TimeLine
     {
         List<ChartedNeuron> neurons;
 
-        ChartedNeuron active;
+        ChartedNeuron highlight;
         ChartLayout layout;
 
         Color[] palette = { Color.Olive, Color.BlueViolet, Color.Goldenrod, Color.Green, Color.MediumVioletRed, Color.Peru,
                                      Color.HotPink, Color.Firebrick, Color.Crimson, Color.Indigo, Color.Khaki, Color.Lavender };
 
-        float scale;
-        int frame;
-
         public Charting()
         {
             neurons = new List<ChartedNeuron>();
             layout = new ChartLayout();
-            frame = 30;
-            scale = 1;
         }
 
         public void load()
@@ -51,11 +46,18 @@ namespace Brain3D
             foreach (ChartedNeuron neuron in neurons)
                 neuron.show();
 
-            layout.show();
-            display.show(this);
-
             resize();
-            controller.changeFrame(frame);
+            layout.show();
+            base.show();
+        }
+
+        public override void hide()
+        {
+            foreach (ChartedNeuron neuron in neurons)
+                neuron.hide();
+
+            layout.hide();
+            base.hide();
         }
 
         public override void resize()
@@ -64,52 +66,7 @@ namespace Brain3D
                 neurons[i].Top = display.Height - 160;
         }
 
-        #region sterowanie widokiem
-
-        public override void left()
-        {
-            back();
-        }
-
-        public override void right()
-        {
-            forth();
-        }
-
-        public override void back()
-        {
-            if (frame > 0)
-                changeFrame(--frame);
-
-            controller.changeFrame(frame);
-        }
-
-        public override void forth()
-        {
-            changeFrame(++frame);
-
-            controller.changeFrame(frame);
-        }
-
-        public override void broaden()
-        {
-            if (scale >= 2)
-                return;
-
-            scale += 0.1f;
-            rescale();
-        }
-
-        public override void tighten()
-        {
-            if (scale <= 0.4f)
-                return;
-
-            scale -= 0.1f;
-            rescale();
-        }
-
-        void rescale()
+        protected override void rescale()
         {
             foreach (ChartedNeuron neuron in neurons)
                 neuron.Scale = scale;
@@ -117,13 +74,6 @@ namespace Brain3D
             layout.Scale = scale;
         }
 
-        public override void changeFrame(int frame)
-        {
-            display.moveX(0.1f * frame);
-            this.frame = frame;
-        }
-
-        #endregion
 
         #region zdarzenia myszy
 
@@ -148,16 +98,16 @@ namespace Brain3D
                     break;
                 }
 
-            if (active != null && active != hover)
+            if (highlight != null && highlight != hover)
             {
-                active.hover();
-                active = null;
+                highlight.hover();
+                highlight = null;
             }
 
-            if (hover != null && hover != active)
+            if (hover != null && hover != highlight)
             {
                 hover.hover();
-                active = hover;
+                highlight = hover;
             }
         }
 

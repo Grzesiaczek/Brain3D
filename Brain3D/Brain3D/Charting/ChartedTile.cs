@@ -14,7 +14,7 @@ namespace Brain3D
         public ChartedTile(String name, Point corner, Color color)
         {
             this.word = name;
-            Vector2 size = font.MeasureString(name);
+            Vector2 size = Fonts.SpriteVerdana.MeasureString(name);
 
             width = 100;
             height = 40;

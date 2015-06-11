@@ -26,6 +26,11 @@ namespace Brain3D
             element.hover();
         }
 
+        public void activate()
+        {
+            element.activate();
+        }
+
         public void idle()
         {
             element.idle();

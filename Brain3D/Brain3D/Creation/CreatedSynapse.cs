@@ -1,83 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 
 namespace Brain3D
 {
     class CreatedSynapse : CreatedElement
     {
         AnimatedSynapse synapse;
-
-        CreatedState state;
-        CreatedState duplex;
+        CreationHistory history;
 
         public CreatedSynapse(AnimatedSynapse synapse)
         {
+            history = new CreationHistory(synapse);
             this.synapse = synapse;
             element = synapse;
-
-            state = new CreatedState(synapse.State);
         }
 
-        public void setDuplex(Synapse synapse)
+        public void add(CreationData data)
         {
-            this.synapse.setDuplex(synapse);
-            duplex = new CreatedState(this.synapse.Duplex);
+            history.add(data);
         }
 
-        public override void show()
+        public void setChange(float source, float target)
         {
-            Scale = 0;
-            synapse.show();
+            synapse.setChange(source, target);
         }
 
-        public void init()
+        public void setFactor(float factor)
         {
-            synapse.init();
+            synapse.setFactor(factor);
         }
 
-        public void create()
+        public void setValue(float value)
         {
-            synapse.create();
+            synapse.setValue(value);
         }
 
-        #region właściwości
-
-        public AnimatedSynapse Synapse
+        public void historyShow(int x, int y, int frame)
         {
-            get
-            {
-                return synapse;
-            }
+            history.show(x, y, frame);
         }
 
-        public CreatedState State
+        public void historyHide()
         {
-            get
-            {
-                return state;
-            }
+            history.hide();
         }
-
-        public CreatedState Duplex
-        {
-            get
-            {
-                return state;
-            }
-        }
-
-        public float Scale
-        {
-            set
-            {
-                synapse.Scale = value;
-            }
-        }
-
-        #endregion;
     }
 }

@@ -18,7 +18,7 @@ namespace Brain3D
         CreationSequence sequence;
         SequenceTile tile;
 
-        List<CreatedSynapse> synapses;
+        List<CreatedVector> vectors;
         List<CreationData> data;
 
         int frame;
@@ -31,7 +31,7 @@ namespace Brain3D
             this.neuron = neuron;
             this.frame = frame;
 
-            synapses = new List<CreatedSynapse>();
+            vectors = new List<CreatedVector>();
             data = new List<CreationData>();
 
             tile = new SequenceTile(neuron.Neuron.Word);
@@ -46,7 +46,7 @@ namespace Brain3D
                 neuron.create();
             }
 
-            foreach (CreatedSynapse synapse in synapses)
+            foreach (CreatedVector synapse in vectors)
             {
                 synapse.show();
                 synapse.create();
@@ -59,13 +59,13 @@ namespace Brain3D
         public void activate()
         {
             tile.activate();
-            neuron.Neuron.activate();
+            neuron.activate();
         }
 
         public void idle()
         {
             tile.idle();
-            neuron.Neuron.idle();
+            neuron.idle();
         }
 
         public void undo()
@@ -75,8 +75,8 @@ namespace Brain3D
             if(neuron.Frame == frame)
                 neuron.hide();
 
-            foreach (CreatedSynapse synapse in synapses)
-                synapse.hide();
+            foreach (CreatedVector vector in vectors)
+                vector.hide();
 
             foreach (CreationData cd in data)
                 cd.undo();
@@ -86,14 +86,6 @@ namespace Brain3D
         {
             foreach (CreationData cd in data)
                 cd.execute();
-        }
-
-        public void change()
-        {
-            activate();
-
-            foreach (CreationData cd in data)
-                cd.set();
         }
 
         public bool tick(double interval)
@@ -112,7 +104,7 @@ namespace Brain3D
                     neuron.Scale = scale;
                     break;
                 case Phase.Two:
-                    foreach(CreatedSynapse synapse in synapses)
+                    foreach(CreatedVector synapse in vectors)
                         synapse.Scale = scale;
 
                     break;
@@ -143,10 +135,10 @@ namespace Brain3D
                             neuron.create();
                             phase = Phase.Two;
 
-                            foreach (CreatedSynapse synapse in synapses)
+                            foreach (CreatedVector synapse in vectors)
                                 synapse.init();
 
-                            if(synapses.Count != 0)
+                            if(vectors.Count != 0)
                                 finish = true;
 
                             break;
@@ -159,7 +151,7 @@ namespace Brain3D
 
                             break;
                         case Phase.Three:
-                            foreach (CreatedSynapse synapse in synapses)
+                            foreach (CreatedVector synapse in vectors)
                                 synapse.create();
 
                             return true;
@@ -175,9 +167,9 @@ namespace Brain3D
             this.data.Add(data);
         }
 
-        public void add(CreatedSynapse synapse)
+        public void add(CreatedVector synapse)
         {
-            synapses.Add(synapse);
+            vectors.Add(synapse);
         }
 
         #region właściwości

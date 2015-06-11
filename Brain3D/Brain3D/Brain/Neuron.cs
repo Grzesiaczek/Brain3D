@@ -15,7 +15,7 @@ namespace Brain3D
 
         List<Tuple<double, int>> signals;
 
-        NeuronData[] activity;
+        NeuronActivity[] activity;
         String word;
 
         int count;
@@ -74,13 +74,18 @@ namespace Brain3D
         public void initialize()
         {
             signals = new List<Tuple<double, int>>();
-            activity = new NeuronData[size];
+            activity = new NeuronActivity[size];
 
             for (int i = 0; i < size; i++)
-                activity[i] = new NeuronData();
+                activity[i] = new NeuronActivity();
 
             treshold = 1.0;
             target = treshold;
+            refraction = false;
+
+            signum = 0;
+            ratio = 0;
+            index = 0;
         }
 
         public void tick(int time)
@@ -98,6 +103,7 @@ namespace Brain3D
                 if (++index >= tmax)
                 {
                     index = (int)((1.0 - Math.Pow(value, 0.25)) * omega);
+                    activity[time].Phase = ActivityPhase.Break;
                     signum = 1;
                 }
                 else
@@ -107,9 +113,7 @@ namespace Brain3D
                     if (value >= treshold)
                     {
                         activate(new Tuple<Neuron, int>(this, time), null);
-
-                        activity[time].Active = true;
-                        activity[time].Treshold = true;
+                        activity[time].Phase = ActivityPhase.Start;
 
                         signals.Clear();
                         value = treshold;
@@ -120,25 +124,26 @@ namespace Brain3D
                             synapse.impulse(time);
                     }
                 }
-
-                activity[time].Value = value;
             }
             else if (signum != 0)
             {
                 if (++index == omega)
+                {
                     signum = 0;
+                    value = 0;
+                }
                 else
-                    activity[time].Value = signum * relaxation[index];
+                    value = signum * relaxation[index];
             }
             else if(refraction)
             {
-                activity[time].Active = true;
-                activity[time].Value = 1;
+                activity[time].Phase = ActivityPhase.Active;
                 activity[time].Refraction = activity[time - 1].Refraction + 1;
+                value = 1;
 
                 if (activity[time].Refraction == 30)
                 {
-                    activity[time].Treshold = true;
+                    activity[time].Phase = ActivityPhase.Finish;
                     refraction = false;
 
                     signum = -1;
@@ -147,16 +152,34 @@ namespace Brain3D
                 }
             }
 
+            activity[time].Value = value;
+
             List<Tuple<double, int>> removed = new List<Tuple<double, int>>();
 
             foreach (Tuple<double, int> signal in signals)
             {
                 if (signal.Item2 == time)
                 {
+                    if (signum == 2)
+                        target += signal.Item1;
+                    else if (signum == 0)
+                        target = treshold + signal.Item1;
+                    else
+                    {
+                        int finish = index + (int)tmax;
+
+                        if (finish >= omega)
+                            target = treshold + signal.Item1;
+                        else if(signum < 0)
+                            target = signum * relaxation[finish] + treshold + signal.Item1;
+                        else
+                            target = value + treshold + signal.Item1;
+                    }
+                     
                     signum = 2;
-                    target += signal.Item1;
 
                     double factor = 1 - (value + treshold) / target;
+                    activity[time].Phase = ActivityPhase.Break;
 
                     if (factor < 0)
                         index = (int)tmax - 1;
@@ -186,9 +209,9 @@ namespace Brain3D
         {
             ratio = 0;
 
-            foreach(NeuronData data in activity)
+            foreach(NeuronActivity data in activity)
             {
-                if (data.Active)
+                if (data.Phase == ActivityPhase.Active)
                     ratio += 1;
                 else
                     ratio += data.Value * data.Value;
@@ -215,7 +238,7 @@ namespace Brain3D
             }
         }
 
-        public NeuronData[] Activity
+        public NeuronActivity[] Activity
         {
             get
             {

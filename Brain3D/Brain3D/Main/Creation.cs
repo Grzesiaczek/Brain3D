@@ -16,15 +16,14 @@ namespace Brain3D
 
         List<CreationSequence> sequences;
         List<CreationFrame> frames;
-        List<Synapse> duplex;
 
-        List<CreatedNeuron> neurons;
-        List<CreatedSynapse> synapses;
-        List<CreatedState> states;
+        HashSet<CreatedNeuron> neurons;
+        HashSet<CreatedVector> vectors;
+        HashSet<CreatedSynapse> synapses;
       
         CreationFrame frame;
         CreationSequence sequence;
-        CreationHistory history;
+        CreatedSynapse history;
 
         int count;
 
@@ -37,12 +36,11 @@ namespace Brain3D
 
         public Creation()
         {
-            neurons = new List<CreatedNeuron>();
-            synapses = new List<CreatedSynapse>();
-            states = new List<CreatedState>();
+            neurons = new HashSet<CreatedNeuron>();
+            vectors = new HashSet<CreatedVector>();
+            synapses = new HashSet<CreatedSynapse>();
 
             frames = new List<CreationFrame>();
-            duplex = new List<Synapse>();
 
             invitation = false;
             count = 0;
@@ -53,8 +51,8 @@ namespace Brain3D
         public void clear()
         {
             neurons.Clear();
+            vectors.Clear();
             synapses.Clear();
-            states.Clear();
 
             mouses.Clear();
             frames.Clear();
@@ -68,14 +66,14 @@ namespace Brain3D
             foreach (Tuple<AnimatedNeuron, CreatedNeuron> tuple in brain.Neurons.Values)
                 neurons.Add(tuple.Item2);
 
+            foreach (Tuple<AnimatedVector, CreatedVector> tuple in brain.Vectors.Values)
+                vectors.Add(tuple.Item2);
+
             foreach (Tuple<AnimatedSynapse, CreatedSynapse> tuple in brain.Synapses.Values)
                 synapses.Add(tuple.Item2);
 
-            foreach (Tuple<AnimatedState, CreatedState> tuple in brain.States.Values)
-                states.Add(tuple.Item2);
-
             mouses.AddRange(neurons);
-            mouses.AddRange(states);
+            mouses.AddRange(synapses);
 
             sequences = brain.Sequences;
 
@@ -95,20 +93,37 @@ namespace Brain3D
             foreach (CreatedNeuron neuron in neurons)
                 neuron.show();
 
-            foreach (CreatedSynapse synapse in synapses)
-                synapse.show();
+            foreach (CreatedVector vector in vectors)
+                vector.show();
 
             display.show(this);
             display.hide();
 
-            balancing.stop();
-            balancing.balance(neurons, synapses);
+            if (!balanced)
+            {
+                balancing.stop();
+                balancing.balance(neurons, vectors);
+            }
+
+            foreach (CreatedNeuron neuron in neurons)
+                neuron.hide();
+
+            foreach (CreatedVector vector in vectors)
+                vector.hide();
+
+            for (int i = 0; i < count; i++)
+                frames[i].create();
 
             controller.changeState(count, frames.Count);
             controller.show();
 
             insertion = false;
             visible = true;
+        }
+
+        public override void balanceSynapses()
+        {
+            balancing.balance(vectors);
         }
         
         protected override void tick()
@@ -119,6 +134,26 @@ namespace Brain3D
             {
                 if (count < frames.Count)
                     setFrame(count + 1);
+            }
+        }
+
+        public override void mouseClick(int x, int y)
+        {
+            if (history != null)
+            {
+                history.historyHide();
+
+                if (active == history)
+                {
+                    history = null;
+                    return;
+                }
+            }
+
+            if (active != null && active is CreatedSynapse)
+            {
+                history = (CreatedSynapse)active;
+                history.historyShow(x, y, count);
             }
         }
 
@@ -133,8 +168,14 @@ namespace Brain3D
 
             if (count < frames.Count - 1)
             {
-                frame = frames[count++];
-                controller.changeFrame(count);
+                if (count == 0)
+                    frames[0].activate();
+
+                if (!paused)
+                {
+                    frame = frames[count++];
+                    controller.changeFrame(count);
+                }
 
                 if(sequence == null)
                 {
@@ -234,23 +275,8 @@ namespace Brain3D
         // do zrobienia
         void addFrame(bool enter = false)
         {
-            if (sequence == null)
-                return;
-
-            Dictionary<object, object> map;
-
-            if (frame != null)
-            {
-               // map = display.loadFrame(frame, count);
-
-                if (enter)
-                    frame.activate();
-            }
-            else
-                return;
 
             //addMap(map);
-            frame.change();
         }
 
         void addMap(Dictionary<object, object> map)
@@ -276,9 +302,9 @@ namespace Brain3D
                 }
                 else
                 {
-                    CreatedSynapse synapse = (CreatedSynapse)(map[key]);
+                    CreatedVector synapse = (CreatedVector)(map[key]);
                     //mapSynapses.Add((Synapse)key, synapse);
-                    synapses.Add(synapse);
+                    vectors.Add(synapse);
                     synapse.show();
                 }
         }
@@ -300,6 +326,7 @@ namespace Brain3D
         {
             controller.changeFrame(index);
             bool forward = true;
+            paused = false;
 
             if (count > index)
                 forward = false;

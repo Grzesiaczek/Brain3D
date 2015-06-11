@@ -25,6 +25,11 @@ namespace Brain3D
             Scale = 1;
         }
 
+        public override void show()
+        {
+            neuron.create();
+        }
+
         #region właściwości
 
         public AnimatedNeuron Neuron

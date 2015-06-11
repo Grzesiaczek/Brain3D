@@ -9,15 +9,22 @@ namespace Brain3D
 {
     class LabelAxis : Text3D
     {
-        int number;
-
         public LabelAxis(int number)
         {
             position = new Vector3(number * 0.1f, -1.2f, 0);
-            this.number = number;
-            ratio = 0.008f;
+            ratio = 0.004f;
 
-            text = font.Fill(number.ToString());
+            text = Fonts.VectorArial.Fill(number.ToString());
+            shift = new Vector3(-text.Width * ratio / 2, 0, 0);
+            color = Color.DarkBlue;        
+        }
+
+        public LabelAxis(Vector3 position, String word)
+        {
+            this.position = position;
+            ratio = 0.0025f;
+
+            text = Fonts.VectorArial.Fill(word);
             shift = new Vector3(-text.Width * ratio / 2, 0, 0);
             color = Color.DarkBlue;        
         }
@@ -42,12 +49,6 @@ namespace Brain3D
 
             offset = buffer.add(vertices, indices);
             initialized = true;
-        }
-
-        public void move(float x)
-        {
-            position = new Vector3(x, -1.2f, 0);
-            move();
         }
     }
 }

@@ -13,6 +13,8 @@ namespace Brain3D
 
     enum SpaceMode { Box, Sphere, Chart }
 
+    enum ActivityPhase { Normal, Active, Break, Start, Finish}
+
     #endregion
 
     class Change
@@ -59,12 +61,11 @@ namespace Brain3D
         }
     }
 
-    class NeuronData
+    class NeuronActivity
     {
         #region deklaracje
 
-        bool active;
-        bool treshold;
+        ActivityPhase phase;
 
         double value;
         double refraction;
@@ -73,15 +74,14 @@ namespace Brain3D
 
         #region konstruktory
 
-        public NeuronData()
+        public NeuronActivity()
         {
-            active = false;
-            value = 0;
+            phase = ActivityPhase.Normal;
         }
 
-        public NeuronData(bool active, double value, double refraction)
+        public NeuronActivity(ActivityPhase phase, double value, double refraction)
         {
-            this.active = active;
+            this.phase = phase;
             this.value = value;
             this.refraction = refraction;
         }
@@ -90,27 +90,15 @@ namespace Brain3D
 
         #region właściwości
 
-        public bool Active
+        public ActivityPhase Phase
         {
             get
             {
-                return active;
+                return phase;
             }
             set
             {
-                active = value;
-            }
-        }
-
-        public bool Treshold
-        {
-            get
-            {
-                return treshold;
-            }
-            set
-            {
-                treshold = value;
+                phase = value;
             }
         }
 

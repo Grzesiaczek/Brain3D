@@ -27,7 +27,6 @@ namespace Brain3D
 
         public static void initializePatterns()
         {
-            font = content.Load<VectorFont>("Standard");
             patterns = new Tuple<Vector3[], int[]>[101];
 
             for (int i = 0; i < 100; i++)

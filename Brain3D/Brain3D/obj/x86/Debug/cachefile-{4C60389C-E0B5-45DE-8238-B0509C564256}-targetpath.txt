@@ -1,5 +1,5 @@
-Content\Standard.xnb
-Content\Sequence.xnb
-Content\Numbers.xnb
-Content\Test.xnb
-Content\History.xnb
+Content\VectorArial.xnb
+Content\SpriteVerdana.xnb
+Content\VectorCalibri.xnb
+Content\SpriteCalibri.xnb
+Content\SpriteArial.xnb

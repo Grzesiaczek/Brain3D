@@ -33,38 +33,38 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Standard.spritefont">
-      <Name>Standard</Name>
+    <Compile Include="VectorArial.spritefont">
+      <Name>VectorArial</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>NuclexVectorFontDescriptionProcessor</Processor>
       <SubType>Designer</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sequence.spritefont">
-      <Name>Sequence</Name>
+    <Compile Include="SpriteVerdana.spritefont">
+      <Name>SpriteVerdana</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Numbers.spritefont">
-      <Name>Numbers</Name>
+    <Compile Include="VectorCalibri.spritefont">
+      <Name>VectorCalibri</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>NuclexVectorFontDescriptionProcessor</Processor>
       <SubType>Designer</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Test.fx">
-      <Name>Test</Name>
-      <Importer>EffectImporter</Importer>
-      <Processor>EffectProcessor</Processor>
+    <Compile Include="SpriteCalibri.spritefont">
+      <Name>SpriteCalibri</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="History.spritefont">
-      <Name>History</Name>
+    <Compile Include="SpriteArial.spritefont">
+      <Name>SpriteArial</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
     </Compile>

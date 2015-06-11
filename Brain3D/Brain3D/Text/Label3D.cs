@@ -14,13 +14,13 @@ namespace Brain3D
         public Label3D(String data, Vector3 position)
         {
             this.position = position;
-            text = font.Fill(data);
+            text = Fonts.VectorArial.Fill(data);
             color = Color.DarkBlue;
 
-            if (text.Width > 40)
+            if (text.Width > 80)
                 ratio = 1.6f / text.Width;
             else
-                ratio = 0.04f;
+                ratio = 0.02f;
             
             shift = new Vector3(-text.Width * ratio / 2, -0.7f, -0.01f);
         }

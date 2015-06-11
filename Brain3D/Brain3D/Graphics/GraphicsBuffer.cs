@@ -52,8 +52,8 @@ namespace Brain3D
 
         public void initialize()
         {
-            foreach (DrawableElement element in elements)
-                element.initialize();
+                foreach (DrawableElement element in elements)
+                    element.initialize();
 
             vdata = new VertexPositionColor[vertex];
             

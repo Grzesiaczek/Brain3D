@@ -5,24 +5,29 @@ using System.Text;
 
 namespace Brain3D
 {
-    class Tree : Presentation
+    class Tree : TimeLine
     {
         List<Leaf> leafs;
         List<Branch> branches;
+
+        Random random;
+        TreeLayout layout;
 
         public Tree()
         {
             leafs = new List<Leaf>();
             branches = new List<Branch>();
+            layout = new TreeLayout();
 
+            random = new Random();
             Neuron.activate += new EventHandler(activate);
         }
 
         void activate(object sender, EventArgs e)
         {
             Tuple<Neuron, int> tuple = (Tuple<Neuron, int>)sender;
-            Leaf leaf = new Leaf(tuple.Item1, tuple.Item2);
-            List<Synapse> synapses = new List<Synapse>(brain.Synapses.Keys);
+            Leaf leaf = new Leaf(tuple.Item1, tuple.Item2, (float)(2 * random.NextDouble() - 0.5));
+            List<Synapse> synapses = new List<Synapse>(brain.Vectors.Keys);
 
             foreach (Leaf source in leafs)
             {
@@ -37,12 +42,6 @@ namespace Brain3D
 
         public void clear()
         {
-            foreach (Branch branch in branches)
-                branch.hide();
-
-            foreach (Leaf leaf in leafs)
-                leaf.hide();
-
             branches.Clear();
             leafs.Clear();
         }
@@ -55,7 +54,31 @@ namespace Brain3D
             foreach (Leaf leaf in leafs)
                 leaf.show();
 
-            display.show(this);
+            layout.show();
+            base.show();
+        }
+
+        public override void hide()
+        {
+            foreach (Branch branch in branches)
+                branch.hide();
+
+            foreach (Leaf leaf in leafs)
+                leaf.hide();
+
+            layout.hide();
+            base.hide();
+        }
+
+        protected override void rescale()
+        {
+            foreach (Leaf leaf in leafs)
+                leaf.Scale = scale;
+
+            foreach (Branch branch in branches)
+                branch.move();
+
+            layout.Scale = scale;
         }
     }
 }

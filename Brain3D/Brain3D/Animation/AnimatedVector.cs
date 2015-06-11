@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,12 +9,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class AnimatedVector : DrawableComposite
+    class AnimatedVector : AnimatedElement
     {
         #region deklaracje
 
-        AnimatedNeuron source;
-        AnimatedNeuron target;
+        AnimatedNeuron pre;
+        AnimatedNeuron post;
+
+        AnimatedSynapse state;
+        AnimatedSynapse duplex;
 
         Pipe pipe;
         Vector2 angle;
@@ -23,39 +27,156 @@ namespace Brain3D
 
         #endregion
 
-        public AnimatedVector(AnimatedNeuron source, AnimatedNeuron target)
-        {
-            this.source = source;
-            this.target = target;
+        #region konstruktory
 
-            pipe = new Pipe(source.pointVector(-angle), target.pointVector(angle), 0.1f, 0.1f, 0);
+        public AnimatedVector(AnimatedNeuron pre, AnimatedNeuron post, Synapse synapse)
+        {
+            this.pre = pre;
+            this.post = post;
+
+            duplex = null;
+
+            pipe = new Pipe(pre.pointVector(-angle), post.pointVector(angle), 0.1f, 0.1f, 0);
+            state = new AnimatedSynapse(synapse, this);
+
             drawables.Add(pipe);
+            drawables.Add(state);
+
+            pre.Output.Add(this);
+            post.Input.Add(this);
 
             refreshAngle();
+        }
+
+        #endregion
+
+        #region rysowanie
+
+        public override void tick(double time)
+        {
+            int frame = (int)time;
+            double rest = time - frame;
+
+            state.tick(frame, rest);
+
+            if (duplex != null)
+                duplex.tick(frame, rest);
+        }
+
+        public override void move()
+        {
+            rotate();
+            base.move();
         }
 
         public override void rotate()
         {
             refreshAngle();
-            pipe.Source = source.pointVector(-angle);
-            pipe.Target = target.pointVector(angle);
+            pipe.Source = pre.pointVector(-angle);
+            pipe.Target = post.pointVector(angle);
+
             pipe.rotate();
+            state.rotate();
+
+            if(duplex != null)
+                duplex.rotate();
         }
 
         void refreshAngle()
         {
-            Vector3 v1 = source.Screen;
-            Vector3 v2 = target.Screen;
+            Vector3 v1 = pre.Screen;
+            Vector3 v2 = post.Screen;
 
             angle = new Vector2(v2.X - v1.X, v2.Y - v1.Y);
             angle.Normalize();
 
             vector = pipe.Target - pipe.Source;
-            direction = target.Position - source.Position;
+            direction = post.Position - pre.Position;
             direction.Normalize();
         }
 
+        public override void setFrame(int frame)
+        {
+            frame *= 10;
+            state.tick(frame, 0);
+
+            if (duplex != null)
+                duplex.tick(frame, 0);
+        }
+
+        public override bool cursor(int x, int y)
+        {
+            if (!visible)
+                return false;
+
+            return base.cursor(x, y);
+        }
+
+        #endregion
+
+        #region sterowanie
+
+        public void create()
+        {
+            pipe.Scale = 1;
+            state.create();
+
+            if (duplex != null)
+                duplex.create();
+        }
+
+        public void init()
+        {
+            state.setValue(0);
+
+            if (duplex != null)
+                duplex.setValue(0);
+
+            Scale = 0;
+            show();
+        }
+
+        public void setDuplex(Synapse synapse)
+        {
+            duplex = new AnimatedSynapse(synapse, this, true);
+            drawables.Add(duplex);
+        }
+
+        #endregion
+
         #region właściwości
+
+        public AnimatedNeuron Pre
+        {
+            get
+            {
+                return pre;
+            }
+        }
+
+        public AnimatedNeuron Post
+        {
+            get
+            {
+                return post;
+            }
+        }
+
+        public AnimatedSynapse State
+        {
+            get
+            {
+                return state;
+            }
+        }
+
+        public AnimatedSynapse Duplex
+        {
+            get
+            {
+                return duplex;
+            }
+        }
 
         public Vector2 Angle
         {
@@ -69,7 +190,7 @@ namespace Brain3D
         {
             get
             {
-                direction = target.Position - source.Position;
+                direction = post.Position - pre.Position;
                 direction.Normalize();
                 return direction;
             }
@@ -91,11 +212,44 @@ namespace Brain3D
             }
         }
 
-        public Vector3 Vector
+        public override float Depth
         {
             get
             {
-                return vector;
+                return (pre.Depth + post.Depth) / 2;
+            }
+        }
+
+        public override float Scale
+        {
+            set
+            {
+                pipe.Scale = value;
+                state.Scale = value;
+
+                if (duplex != null)
+                    duplex.Scale = value;
+            }
+        }
+
+        public float Length
+        {
+            get
+            {
+                return vector.Length();
+            }
+        }
+
+        public float Weight
+        {
+            get
+            {
+                float weight = state.Weight;
+
+                if (duplex != null)
+                    weight += duplex.Weight;
+
+                return weight;
             }
         }
 

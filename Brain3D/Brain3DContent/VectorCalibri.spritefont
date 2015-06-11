@@ -3,7 +3,7 @@
   <Asset Type="Graphics:FontDescription">
 
     <FontName>Calibri</FontName>
-    <Size>12</Size>
+    <Size>24</Size>
     <Spacing>0</Spacing>
     <UseKerning>true</UseKerning>
     <Style>Bold</Style>

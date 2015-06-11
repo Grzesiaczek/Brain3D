@@ -5,8 +5,17 @@ using System.Text;
 
 namespace Brain3D
 {
-    class Graph : Presentation
+    abstract class Graph : Presentation
     {
+        protected static bool balanced;
+
+        public override void hide()
+        {
+            visible = false;
+            display.clear();
+            stop();
+        }
+
         public override void left()
         {
             display.left();

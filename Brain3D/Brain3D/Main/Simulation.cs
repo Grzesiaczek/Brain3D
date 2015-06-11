@@ -18,7 +18,7 @@ namespace Brain3D
     {
         #region deklaracje
 
-        Brain brain;
+        //Brain brain;
 
         Animation animation;
         Creation creation;
@@ -49,7 +49,7 @@ namespace Brain3D
             Presentation.Display = display;
             Controls.Add(display);
 
-            brain = new Brain();
+            BrainElement.initialize(100, 20);
             Neuron.initializeArrays();
 
             animation = new Animation();
@@ -73,6 +73,7 @@ namespace Brain3D
             animation.changePace(trackBarPace.Value);
 
             animation.balanceFinished += new EventHandler(balanceFinished);
+            animation.intervalChanged += new EventHandler(intervalChanged);
             animation.queryAccepted += new EventHandler(queryAccepted);
 
             animation.animationStop += new EventHandler(animationStop);
@@ -168,6 +169,9 @@ namespace Brain3D
         {
             switch (keyData)
             {
+                case Keys.Escape:
+                    Balancing.Instance.stop();
+                    break;
                 case Keys.F1:
                     display.print(presentation);
                     break;
@@ -175,7 +179,10 @@ namespace Brain3D
 
                     break;
                 case Keys.F11:
-                    animation.stopBalance();
+                    Balancing.Instance.phaseFour();
+                    break;
+                case Keys.F12:
+                    presentation.balanceSynapses();
                     break;
                 case Keys.Insert:
                     presentation.changeInsertion();
@@ -225,6 +232,9 @@ namespace Brain3D
                 case Keys.NumPad9:
                     presentation.farther();
                     break;
+                case Keys.NumPad5:
+                    presentation.center();
+                    break;
                 default:
 
                     int code = msg.WParam.ToInt32();
@@ -238,7 +248,8 @@ namespace Brain3D
                     }
                     break;
             }
-            
+
+            display.Focus();
             return false;
         }
 
@@ -339,6 +350,8 @@ namespace Brain3D
             /*
             brain.addSentence("type new sequence"));
             sbrain.addSentence("or load from file"));*/
+
+            Brain brain = new Brain();
             
             brain.addSentence("i have a monkey");
             brain.addSentence("my monkey is very small");
@@ -357,7 +370,7 @@ namespace Brain3D
 
             simulate();
             show(presentation);
-            //radioButtonCreation.Checked = true;
+            //radioButtonTree.Checked = true;
 
             WindowState = FormWindowState.Maximized;
             
@@ -383,9 +396,13 @@ namespace Brain3D
             }));
         }
 
+        private void intervalChanged(object sender, EventArgs e)
+        {
+            simulate();
+        }
+
         private void queryAccepted(object sender, EventArgs e)
         {
-            tree.clear();
             simulate();
         }
 
@@ -419,10 +436,7 @@ namespace Brain3D
 
         void openData(String path)
         {
-            brain.clear();
-            animation.clear();
-            creation.clear();
-
+            Brain brain = new Brain();
             DateTime date = DateTime.Now;
             String name = date.ToString("yyyyMMdd-HHmmss");
 
@@ -432,13 +446,13 @@ namespace Brain3D
             reader.Close();
 
             XmlNode node = xml.ChildNodes.Item(1).FirstChild;
-            //Dictionary<Neuron, SequenceNeuron> map = new Dictionary<Neuron, SequenceNeuron>();
 
             foreach (XmlNode xn in node.ChildNodes)
                 brain.addSentence(xn.InnerText.ToLower());
 
-            presentation.show();
-            //animation.create(creation);
+            Presentation.Brain = brain;
+            simulate();
+            show(presentation);
         }
 
         void saveData(String path)
@@ -494,13 +508,13 @@ namespace Brain3D
         {
             if(checkBoxWhite.Checked)
             {
-                display.Background = Microsoft.Xna.Framework.Color.WhiteSmoke;
-                trackBarFrame.BackColor = Color.WhiteSmoke;
+                display.Background = Microsoft.Xna.Framework.Color.White;
+                trackBarFrame.BackColor = Color.White;
             }
             else
             {
-                display.Background = Microsoft.Xna.Framework.Color.CornflowerBlue;
-                trackBarFrame.BackColor = Color.CornflowerBlue;
+                display.Background = Microsoft.Xna.Framework.Color.Gainsboro;
+                trackBarFrame.BackColor = Color.Gainsboro;
             }
         }
     }

@@ -24,10 +24,10 @@ namespace Brain3D
             this.radius = 0.5f;
 
             disk = new Disk(position, pattern, Color.LightYellow, radius);
-            border = new Ring(position, pattern, Color.Purple);
+            border = new Ring(position, pattern, Color.DarkSlateBlue);
 
             border.R1 = radius;
-            border.R2 = radius * 1.1f;
+            border.R2 = radius * 1.12f;
 
             drawables.Add(disk);
             drawables.Add(border);

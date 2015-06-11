@@ -45,7 +45,7 @@ namespace Brain3D
                 tile.hide();
         }
 
-        public void arrange()
+        protected virtual void arrange()
         {
             int position = 10;
 
@@ -100,7 +100,7 @@ namespace Brain3D
             return false;
         }
 
-        public bool execute()
+        public virtual bool execute()
         {
             if (sequence.Count == 1 && builder.Word.Length == 0)
                 return false;
@@ -112,7 +112,7 @@ namespace Brain3D
             return true;
         }
 
-        protected Tile createTile(BuiltTile builder)
+        protected virtual Tile createTile(BuiltTile builder)
         {
             return new SequenceTile(builder);
         }

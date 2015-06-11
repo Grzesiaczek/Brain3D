@@ -149,7 +149,7 @@ namespace Brain3D
 
         protected virtual void PaintUsingSystemDrawing(Graphics graphics, string text)
         {
-            graphics.Clear(Color.CornflowerBlue);
+            graphics.Clear(Color.Gainsboro);
 
             using (Brush brush = new SolidBrush(Color.Black))
             {

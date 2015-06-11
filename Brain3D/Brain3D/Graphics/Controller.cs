@@ -30,10 +30,8 @@ namespace Brain3D
 
         public Controller()
         {
-            SpriteFont font = content.Load<SpriteFont>("Sequence");
-
-            fps = new Text2D("FPS: 0", font, new Vector2(position.X, 20), Color.DarkMagenta);
-            status = new Text2D("Waiting...", font, new Vector2(position.X, 50), Color.DarkOliveGreen);
+            fps = new Text2D("FPS: 0", Fonts.SpriteVerdana, new Vector2(position.X, 20), Color.DarkMagenta);
+            status = new Text2D("Waiting...", Fonts.SpriteVerdana, new Vector2(position.X, 50), Color.DarkOliveGreen);
             counter = new CounterTile(new Point(20, display.Height - 80), 0);
 
             Balancing.Instance.balanceState += new EventHandler(updateState);
@@ -123,7 +121,7 @@ namespace Brain3D
         {
             fps.Location = new Vector2(display.Width - 100, 20);
             status.Location = new Vector2(display.Width - 100, 50);
-            counter.Top = display.Height - 90;
+            counter.Top = display.Height - 84;
         }
 
         public bool Insertion

@@ -11,18 +11,18 @@ namespace Brain3D
     {
         #region deklaracje
 
-        List<Neuron> neurons;  
-        List<Synapse> synapses;
-
         List<CreationFrame> frames;
         List<CreationSequence> sequences;
         List<Single> floats;
 
-        Dictionary<Neuron, Tuple<AnimatedNeuron, CreatedNeuron>> mapNeurons;
-        Dictionary<Synapse, Tuple<AnimatedSynapse, CreatedSynapse>> mapSynapses;
-        Dictionary<Synapse, Tuple<AnimatedState, CreatedState>> mapStates;
+        HashSet<Neuron> neurons;
+        HashSet<Synapse> synapses;
 
-        QuerySequence sequence;
+        Dictionary<Neuron, Tuple<AnimatedNeuron, CreatedNeuron>> mapNeurons;
+        Dictionary<Synapse, Tuple<AnimatedVector, CreatedVector>> mapVectors;
+        Dictionary<Synapse, Tuple<AnimatedSynapse, CreatedSynapse>> mapSynapses;
+
+        QuerySequence query;
 
         double tr;
         double ts;
@@ -39,12 +39,12 @@ namespace Brain3D
 
         public Brain()
         {
-            neurons = new List<Neuron>();
-            synapses = new List<Synapse>();
+            neurons = new HashSet<Neuron>();
+            synapses = new HashSet<Synapse>();
 
             mapNeurons = new Dictionary<Neuron, Tuple<AnimatedNeuron, CreatedNeuron>>();
+            mapVectors = new Dictionary<Synapse, Tuple<AnimatedVector, CreatedVector>>();
             mapSynapses = new Dictionary<Synapse, Tuple<AnimatedSynapse, CreatedSynapse>>();
-            mapStates = new Dictionary<Synapse, Tuple<AnimatedState, CreatedState>>();
 
             frames = new List<CreationFrame>();
             sequences = new List<CreationSequence>();
@@ -59,7 +59,6 @@ namespace Brain3D
             theta = 1;
 
             sentences = 0;
-            BrainElement.initialize(omega, tmax);
 
             floats = new List<Single>();
             floats.Add(0);
@@ -75,8 +74,10 @@ namespace Brain3D
 
         public void simulate(QuerySequence sequence, int length)
         {
-            this.sequence = sequence;
+            this.query = sequence;
             this.length = length * 10 + 1;
+
+            sequence.initialize();
             simulate(0);
         }
 
@@ -84,18 +85,13 @@ namespace Brain3D
         {
             for (int i = start; i < length; i++)
             {
-                sequence.tick(i);
+                query.tick(i);
 
                 foreach (Neuron neuron in neurons)
                     neuron.tick(i);
             }
-        }
 
-        public void clear()
-        {
-            neurons.Clear();
-            synapses.Clear();
-            sequences.Clear();
+            query.loadTiles();
         }
 
         public void initialize()
@@ -153,8 +149,8 @@ namespace Brain3D
                     if (start == synapse.Weight)
                         continue;
 
-                    CreationData data = new CreationData(mapStates[synapse].Item2, frame, new Change(start, synapse.Weight), new Change(synapse.Factor));
-                    mapStates[synapse].Item2.add(data);
+                    CreationData data = new CreationData(mapSynapses[synapse].Item2, frame, new Change(start, synapse.Weight), new Change(synapse.Factor));
+                    mapSynapses[synapse].Item2.add(data);
                     frame.add(data);
                 }
 
@@ -169,8 +165,8 @@ namespace Brain3D
                     eta = ((Neuron)synapse.Pre).Count;
                     synapse.Weight = (float)(eta * factor * theta / (eta + (eta - 1) *factor));
 
-                    CreationData data = new CreationData(mapStates[synapse].Item2, frame, new Change(start, synapse.Weight), new Change(synapse.Factor, factor));
-                    mapStates[synapse].Item2.add(data);
+                    CreationData data = new CreationData(mapSynapses[synapse].Item2, frame, new Change(start, synapse.Weight), new Change(synapse.Factor, factor));
+                    mapSynapses[synapse].Item2.add(data);
                     frame.add(data);
 
                     synapse.Change = 0;
@@ -195,35 +191,38 @@ namespace Brain3D
             return created;
         }
 
-        CreatedSynapse create(Synapse synapse)
+        CreatedVector create(Synapse synapse)
         {
-            AnimatedSynapse animated = null;
-            CreatedSynapse created = null;
+            AnimatedNeuron pre = mapNeurons[synapse.Pre].Item1;
+            AnimatedNeuron post = mapNeurons[synapse.Post].Item1;
 
-            if (mapSynapses.ContainsKey(synapse))
+            Synapse duplexed = mapVectors.Keys.FirstOrDefault(k => k.Pre == synapse.Post && k.Post == synapse.Pre);
+
+            AnimatedVector animated = null;
+            CreatedVector created = null;
+
+            if (duplexed != null)
             {
-                animated = mapSynapses[synapse].Item1;
-                created = mapSynapses[synapse].Item2;
+                animated = mapVectors[duplexed].Item1;
+                created = mapVectors[duplexed].Item2;
+
                 created.setDuplex(synapse);
-                mapStates.Add(synapse, new Tuple<AnimatedState, CreatedState>(animated.Duplex, created.Duplex));
+                mapSynapses.Add(synapse, new Tuple<AnimatedSynapse, CreatedSynapse>(animated.Duplex, created.Duplex));
             }
             else
             {
-                AnimatedNeuron pre = mapNeurons[synapse.Pre].Item1;
-                AnimatedNeuron post = mapNeurons[synapse.Post].Item1;
-
-                animated = new AnimatedSynapse(pre, post, synapse);
-                created = new CreatedSynapse(animated);
-                mapStates.Add(synapse, new Tuple<AnimatedState, CreatedState>(animated.State, created.State));
+                animated = new AnimatedVector(pre, post, synapse);
+                created = new CreatedVector(animated);
+                mapSynapses.Add(synapse, new Tuple<AnimatedSynapse, CreatedSynapse>(animated.State, created.State));
             }
 
-            mapSynapses.Add(synapse, new Tuple<AnimatedSynapse, CreatedSynapse>(animated, created));
+            mapVectors.Add(synapse, new Tuple<AnimatedVector, CreatedVector>(animated, created));
             return created;
         }
 
         CreationFrame create(String word, int frame)
         {
-            Neuron neuron = neurons.Find(i => i.Word == word);
+            Neuron neuron = neurons.FirstOrDefault(k => k.Word == word); 
             CreatedNeuron created = null;
 
             if (neuron == null)
@@ -274,19 +273,19 @@ namespace Brain3D
             }
         }
 
+        public Dictionary<Synapse, Tuple<AnimatedVector, CreatedVector>> Vectors
+        {
+            get
+            {
+                return mapVectors;
+            }
+        }
+
         public Dictionary<Synapse, Tuple<AnimatedSynapse, CreatedSynapse>> Synapses
         {
             get
             {
                 return mapSynapses;
-            }
-        }
-
-        public Dictionary<Synapse, Tuple<AnimatedState, CreatedState>> States
-        {
-            get
-            {
-                return mapStates;
             }
         }
 

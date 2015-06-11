@@ -12,22 +12,19 @@ namespace Brain3D
 {
     class Text3D : DrawableElement
     {
-        protected static VectorFont font;
-
         protected Text text;
         protected Vector3 shift;
         protected float ratio;
 
         protected Vector3[] pattern;
 
-
         protected static Tuple<Vector3[], int[]> getPattern(String data)
         {
-            Text text = font.Fill(data);
+            Text text = Fonts.VectorArial.Fill(data);
             int vertex = text.Vertices.Length;
             int index = text.Indices.Length;
 
-            float scale = 0.07f;
+            float scale = 0.032f;
             Vector3 shift = new Vector3(-text.Width * scale / 2, 0, -0.01f);
 
             Vector3[] vertices = new Vector3[vertex];

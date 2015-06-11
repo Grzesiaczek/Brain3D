@@ -19,11 +19,13 @@ namespace Brain3D
         protected static Brain brain;
         protected static Controller controller;
         protected static Display display;
+        protected static Int32 length;
 
         protected Balancing balancing;
 
         protected bool insertion;
         protected bool visible;
+        protected bool paused;
 
         protected List<Mouse> mouses;
 
@@ -73,6 +75,7 @@ namespace Brain3D
         public virtual void start()
         {
             started = true;
+            paused = false;
             ThreadPool.QueueUserWorkItem(timer);
         }
 
@@ -81,6 +84,7 @@ namespace Brain3D
             if (started)
             {
                 started = false;
+                paused = true;
                 animationStop(this, null);
             }
         }
@@ -89,12 +93,11 @@ namespace Brain3D
 
         public virtual void resize() { }
 
+        public virtual void balanceSynapses() { }
+
         #region obsługa zdarzeń myszy
 
-        public virtual void mouseClick(int x, int y)
-        {
-
-        }
+        public virtual void mouseClick(int x, int y) { }
 
         public virtual void mouseMove(int x, int y)
         {
@@ -169,13 +172,7 @@ namespace Brain3D
 
         public virtual void show() { }
 
-        public virtual void hide()
-        {
-            visible = false;
-            balancing.stop();
-            display.clear();
-            stop();
-        }
+        public virtual void hide() { }
 
         public virtual void left() { }
 
@@ -192,6 +189,8 @@ namespace Brain3D
         public virtual void broaden() { }
 
         public virtual void tighten() { }
+
+        public virtual void center() { }
 
         #endregion
 
@@ -223,6 +222,14 @@ namespace Brain3D
             set
             {
                 display = value;
+            }
+        }
+
+        public static int Length
+        {
+            set
+            {
+                length = value;
             }
         }
 

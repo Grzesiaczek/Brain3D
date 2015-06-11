@@ -70,6 +70,12 @@ namespace Brain3D
             visible = false;
         }
 
+        public virtual void moveX(float x)
+        {
+            position = new Vector3(x, position.Y, position.Z);
+            move();
+        }
+
         public virtual GraphicsBuffer Buffer
         {
             set

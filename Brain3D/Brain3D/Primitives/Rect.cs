@@ -39,5 +39,13 @@ namespace Brain3D
             offset = buffer.add(vertices, indices);
             initialized = true;
         }
+
+        public override void move()
+        {
+            buffer.Vertices[offset + 0].Position = position;
+            buffer.Vertices[offset + 1].Position = position + new Vector3(0, size.Y, 0);
+            buffer.Vertices[offset + 2].Position = position + new Vector3(size.X, 0, 0);
+            buffer.Vertices[offset + 3].Position = position + size;
+        }
     }
 }

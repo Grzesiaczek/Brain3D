@@ -9,46 +9,74 @@ namespace Brain3D
 {
     class QuerySequence : Sequence
     {
-        List<Neuron> query;
         List<int> activity;
 
         CounterTile counter;
         CounterTile interval;
 
         int count;
-        int index;
         int treshold;
         int start;
+        int length;
 
-        public QuerySequence()
+        int index;
+        int prev;
+
+        public QuerySequence(int length)
         {
             builder = new BuiltTile();
             sequence.Add(builder);
+            this.length = length;
             prepare();
         }
 
-        public QuerySequence(String sentence)
+        public QuerySequence(String sentence, int length)
         {
             String[] words = sentence.Split(' ');
+            this.length = length;
 
             foreach (String word in words)
-                sequence.Add(new SequenceTile(word));
+                sequence.Add(new QueryTile(word, length));
 
             prepare();
-            arrange();
         }
 
         void prepare()
         {
-            counter = new CounterTile(new Point(1400, 8), 5);
-            interval = new CounterTile(new Point(1480, 8), 20);
+            counter = new CounterTile(new Point(20, 8), 0);
+            interval = new CounterTile(new Point(100, 8), 15);
+
             Neuron.activate += new EventHandler(activate);
+            arrange();
+        }
+
+        protected override void arrange()
+        {
+            int position = 200;
+
+            foreach (Tile element in sequence)
+            {
+                element.Top = 8;
+                element.Left = position;
+                position = element.Right + 10;
+            }
+        }
+
+        public void initialize()
+        {
+            activity.Clear();
+            counter.Value = 5;
+            start = counter.Value * 10;
+
+            treshold = 2;
+            count = 0;
+            index = 0;
+            prev = -1;
         }
 
         public void load(Brain brain)
         {
             List<Neuron> neurons = new List<Neuron>(brain.Neurons.Keys);
-            query = new List<Neuron>();
             activity = new List<int>();
 
             for (int i = 0; i < sequence.Count; i++)
@@ -57,35 +85,42 @@ namespace Brain3D
 
                 if (neuron != null)
                 {
-                    sequence[i] = new QueryTile(neuron);
-                    query.Add(neuron);
+                    ((QueryTile)sequence[i]).add(neuron);
+                    treshold++;
                 }
             }
 
             arrange();
+            initialize();
+        }
 
-            start = 50;
-            treshold = 2;
-            index = 0;
+        public void loadTiles()
+        {
+            foreach (QueryTile tile in sequence)
+                tile.load();
         }
 
         public void tick(double time)
         {
             int frame = (int)time;
 
-            foreach (SequenceTile tile in sequence)
-                if (tile is QueryTile)
-                    ((QueryTile)tile).tick(frame);
+            foreach (QueryTile tile in sequence)
+                tile.tick(frame);
 
             counter.Value = activity[frame / 10];
+
+            if (counter.Value == 0)
+                counter.activate();
+            else
+                counter.idle();
         }
 
         public void tick(int time)
         {
-            if (count >= treshold || query.Count == 0)
+            if (count > treshold)
             {
                 if (time % 10 == 0)
-                    activity.Add(0);
+                    activity.Add(-1);
 
                 return;
             }
@@ -98,23 +133,42 @@ namespace Brain3D
             if (ticks > interval.Value)
                 ticks -= interval.Value;
 
-            activity.Add(ticks);
-
             if (ticks == interval.Value)
             {
-                query[index].shot(time);
+                ((QueryTile)sequence[index]).shot(time);
+                activity.Add(0);
 
-                if (++index == query.Count)
+                prev = index;
+
+                if (++index == sequence.Count)
+                {
                     index = 0;
+                    count = 0;
+                }
             }
+            else
+                activity.Add(ticks);
         }
 
         void activate(object sender, EventArgs e)
         {
             Neuron neuron = ((Tuple<Neuron, int>)sender).Item1;
+            count++;
+        }
 
-            if(!query.Contains(neuron))
-                count++;
+        protected override Tile createTile(BuiltTile builder)
+        {
+            return new QueryTile(builder, length);
+        }
+
+        public override bool execute()
+        {
+            interval.idle();
+
+            if (builder == null)
+                return true;
+
+            return base.execute();
         }
 
         public override void show()
@@ -135,12 +189,16 @@ namespace Brain3D
         {
             if (interval.Value < 40)
                 interval.Value++;
+
+            interval.activate();
         }
 
         public void intervalDown()
         {
             if (interval.Value > 5)
                 interval.Value--;
+
+            interval.activate();
         }
     }
 }

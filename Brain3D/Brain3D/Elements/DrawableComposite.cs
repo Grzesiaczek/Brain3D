@@ -63,6 +63,12 @@ namespace Brain3D
                 drawable.remove();
         }
 
+        public override void moveX(float x)
+        {
+            foreach (DrawableElement drawable in drawables)
+                drawable.moveX(x);
+        }
+
         public override GraphicsBuffer Buffer
         {
             set

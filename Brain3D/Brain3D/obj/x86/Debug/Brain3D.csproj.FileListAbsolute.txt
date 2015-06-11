@@ -1,8 +1,5 @@
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Files\config.xml
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Files\data.xml
-C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\Standard.xnb
-C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\Numbers.xnb
-C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\Test.xnb
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Brain3D.exe
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Brain3D.pdb
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Nuclex.Fonts.dll
@@ -13,5 +10,8 @@ C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\obj\x86\Debug\Brain3D.csproj.GenerateResource.Cache
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\obj\x86\Debug\Brain3D.exe
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\obj\x86\Debug\Brain3D.pdb
-C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\Sequence.xnb
-C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\History.xnb
+C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\VectorArial.xnb
+C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\SpriteVerdana.xnb
+C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\VectorCalibri.xnb
+C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\SpriteCalibri.xnb
+C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\SpriteArial.xnb

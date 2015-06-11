@@ -61,5 +61,17 @@ namespace Brain3D
             this.source = source;
             this.target = target;
         }
+
+        public override void moveX(float x)
+        {
+            source = new Vector3(x, source.Y, source.Z);
+            target = new Vector3(x, target.Y, target.Z);
+            Vector3 vector = new Vector3(size, 0, 0);
+
+            buffer.Vertices[offset + 0].Position = source - vector;
+            buffer.Vertices[offset + 1].Position = source + vector;
+            buffer.Vertices[offset + 2].Position = target - vector;
+            buffer.Vertices[offset + 3].Position = target + vector;
+        }
     }
 }

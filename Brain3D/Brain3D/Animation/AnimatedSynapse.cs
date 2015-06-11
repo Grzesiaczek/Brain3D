@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,133 +12,177 @@ namespace Brain3D
     {
         #region deklaracje
 
-        AnimatedNeuron pre;
-        AnimatedNeuron post;
-
         AnimatedVector vector;
+        Synapse synapse;
 
-        AnimatedState state;
-        AnimatedState duplex;
+        StateDisk disk;
+        BorderedDisk state;
+        Signal signal;
 
-        List<Vector3> pos = new List<Vector3>();
-        List<Vector3> vec = new List<Vector3>();
-        List<Vector3> sta = new List<Vector3>();
-        List<Vector3> con = new List<Vector3>();
+        Vector3 shiftDisk = new Vector3(0, 0, -0.1f);
+        Vector3 shiftState = new Vector3(0.3f, 0, -0.12f);
+
+        bool active;
+        bool duplex;
+
+        float factor;
+        float weight;
 
         #endregion
 
-        #region konstruktory
-
-        public AnimatedSynapse(AnimatedNeuron pre, AnimatedNeuron post, Synapse synapse)
+        public AnimatedSynapse(Synapse synapse, AnimatedVector vector, bool duplex = false)
         {
-            this.pre = pre;
-            this.post = post;
+            this.synapse = synapse;
+            this.vector = vector;
+            this.duplex = duplex;
+            factor = 0.25f;
 
-            duplex = null;
-            vector = new AnimatedVector(pre, post);
-            state = new AnimatedState(synapse, vector);
+            disk = new StateDisk(position + shiftDisk, true);
+            state = new BorderedDisk(position + shiftState);
 
-            drawables.Add(vector);
+            if (duplex)
+                signal = new Signal(vector.Target, vector.Source);                
+            else
+                signal = new Signal(vector.Source, vector.Target);
+
             drawables.Add(state);
-
-            pre.Output.Add(this);
-            post.Input.Add(this);
+            drawables.Add(disk);
+            drawables.Add(signal);
         }
-
-        #endregion
-
-        #region rysowanie
-
-        public override void tick(double time)
-        {
-            int frame = (int)time;
-            double rest = time - frame;
-
-            state.tick(frame, rest);
-
-            if (duplex != null)
-                duplex.tick(frame, rest);
-        }
-
-        public override void move()
-        {
-            rotate();
-            base.move();
-        }
-
-        public override void rotate()
-        {
-            vector.rotate();
-            state.rotate();
-
-            if(duplex != null)
-                duplex.rotate();
-        }
-
-        public override void setFrame(int frame)
-        {
-            frame *= 10;
-            state.tick(frame, 0);
-
-            if (duplex != null)
-                duplex.tick(frame, 0);
-        }
-
-        public override bool cursor(int x, int y)
-        {
-            if (!visible)
-                return false;
-
-            return base.cursor(x, y);
-        }
-
-        #endregion
 
         #region sterowanie
 
         public void create()
         {
-            vector.Scale = 1;
-            state.create();
-
-            if (duplex != null)
-                duplex.create();
+            Scale = 1;
+            setFactor(synapse.Factor);
+            disk.setValue(synapse.Weight);
+            weight = synapse.Weight;
         }
 
-        public void init()
+        public void setChange(float source, float target)
         {
-            state.setValue(0);
-
-            if (duplex != null)
-                duplex.setValue(0);
-
-            Scale = 0;
-            show();
+            disk.setChange(source, target);
         }
 
-        public void setDuplex(Synapse synapse)
+        public void setFactor(float factor)
         {
-            duplex = new AnimatedState(synapse, vector, true);
-            drawables.Add(duplex);
+            color = Color.LightYellow;
+            color.R -= (byte)(10 * factor);
+            color.G -= (byte)(33 * factor);
+            color.B -= (byte)(45 * factor);
+
+            disk.Color = color;
+            state.Color = color;
+        }
+
+        public void setValue(float weight)
+        {
+            disk.changeValue(weight);
+        }
+
+        public void tick(int frame, double rest)
+        {
+            if (synapse.Activity[frame].Item1 && synapse.Activity[frame + 1].Item1)
+            {
+                signal.setSignal(synapse.Activity[frame].Item2 + rest / 20);
+
+                if (!active)
+                {
+                    active = true;
+                    state.Color = Color.IndianRed;
+                    state.repaint();
+                }
+            }
+            else if (active)
+            {
+                active = false;
+                signal.setSignal(-1);
+                state.Color = color;
+                state.repaint();
+            }
+        }
+
+        public override void rotate()
+        {
+            Vector3 pre = device.Viewport.Project(vector.Source, effect.Projection, effect.View, effect.World);
+            Vector3 post = device.Viewport.Project(vector.Target, effect.Projection, effect.View, effect.World);
+
+            shiftDisk = Vector3.Transform(new Vector3(0, 0, -0.104f), camera.Rotation);
+            
+            if (duplex)
+            {
+                position = device.Viewport.Unproject(factor * (pre - post) + post, effect.Projection, effect.View, effect.World);
+                shiftState = Vector3.Transform(new Vector3(-0.3f * vector.Angle, -0.102f), camera.Rotation);
+
+                signal.Source = vector.Target;
+                signal.Target = vector.Source;
+            }
+            else
+            {
+                position = device.Viewport.Unproject(factor * (post - pre) + pre, effect.Projection, effect.View, effect.World);
+                shiftState = Vector3.Transform(new Vector3(0.3f * vector.Angle, -0.102f), camera.Rotation);
+
+                signal.Source = vector.Source;
+                signal.Target = vector.Target;
+            }
+
+            disk.Position = position + shiftDisk;
+            state.Position = position + shiftState;
+        }
+
+        public override void idle()
+        {
+            if (active)
+                state.Color = Color.IndianRed;
+            else
+                state.Color = color;
+        }
+
+        public override void hover()
+        {
+            state.Color = Color.Orange;
+        }
+
+        public override bool cursor(int x, int y)
+        {
+            return disk.cursor(x, y);
+        }
+
+        public override void move(int x, int y)
+        {
+            Vector3 start = device.Viewport.Project(vector.Source, effect.Projection, effect.View, effect.World);
+            Vector3 end = device.Viewport.Project(vector.Target, effect.Projection, effect.View, effect.World);
+            Vector3 vec = end - start;
+
+            Tuple<Vector2, float, float> tuple = Constant.getDistance(start, end, new Vector3(x, y, (start.Z + end.Z) / 2));
+
+            float min = 20 / vec.Length();
+            float max = 1 - min;
+
+            if (tuple.Item3 < min)
+                factor = min;
+            else if (tuple.Item3 > max)
+                factor = max;
+            else
+                factor = tuple.Item3;
+
+            if (duplex)
+                factor = 1 - factor;
+
+            rotate();
+            move();
         }
 
         #endregion
 
         #region właściwości
 
-        public AnimatedNeuron Pre
+        public override Vector3 Screen
         {
             get
             {
-                return pre;
-            }
-        }
-
-        public AnimatedNeuron Post
-        {
-            get
-            {
-                return post;
+                return device.Viewport.Project(position, effect.Projection, effect.View, effect.World);
             }
         }
 
@@ -151,19 +194,15 @@ namespace Brain3D
             }
         }
 
-        public AnimatedState State
+        public float Factor
         {
             get
             {
-                return state;
+                return factor;
             }
-        }
-
-        public AnimatedState Duplex
-        {
-            get
+            set
             {
-                return duplex;
+                factor = value;
             }
         }
 
@@ -171,32 +210,7 @@ namespace Brain3D
         {
             get
             {
-                float weight = state.Weight;
-
-                if (duplex != null)
-                    weight += duplex.Weight;
-
                 return weight;
-            }
-        }
-
-        public override float Scale
-        {
-            set
-            {
-                vector.Scale = value;
-                state.Scale = value;
-
-                if (duplex != null)
-                    duplex.Scale = value;
-            }
-        }
-
-        public override float Depth
-        {
-            get
-            {
-                return (pre.Depth + post.Depth) / 2;
             }
         }
 

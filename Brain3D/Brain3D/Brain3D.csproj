@@ -87,15 +87,18 @@
   <ItemGroup>
     <Compile Include="Animation\AnimatedElement.cs" />
     <Compile Include="Animation\AnimatedNeuron.cs" />
-    <Compile Include="Animation\AnimatedState.cs" />
     <Compile Include="Animation\AnimatedSynapse.cs" />
     <Compile Include="Animation\AnimatedVector.cs" />
-    <Compile Include="Balancing\BalancedState.cs" />
+    <Compile Include="BalancedBranch.cs" />
+    <Compile Include="BalancedLeaf.cs" />
+    <Compile Include="Balancing\BalancedSynapse.cs" />
     <Compile Include="Charting\ChartedTile.cs" />
     <Compile Include="Charting\Chart.cs" />
     <Compile Include="Charting\ChartLayout.cs" />
+    <Compile Include="DottedLine.cs" />
+    <Compile Include="Fonts.cs" />
     <Compile Include="Tiles\CounterTile.cs" />
-    <Compile Include="CreatedState.cs" />
+    <Compile Include="Creation\CreatedSynapse.cs" />
     <Compile Include="Tiles\CreationTile.cs" />
     <Compile Include="Global\Mouse.cs" />
     <Compile Include="Main\Graph.cs" />
@@ -104,13 +107,15 @@
     <Compile Include="Elements\SpriteComposite.cs" />
     <Compile Include="Text\LabelAxis.cs" />
     <Compile Include="Primitives\Line.cs" />
+    <Compile Include="TimeLine.cs" />
+    <Compile Include="Tree\TreeLayout.cs" />
     <Compile Include="Tree\Branch.cs" />
     <Compile Include="Elements\DrawableComposite.cs" />
     <Compile Include="Graphics\Controller.cs" />
     <Compile Include="Tree\Leaf.cs" />
     <Compile Include="Main\Animation.cs" />
     <Compile Include="Balancing\BalancedNeuron.cs" />
-    <Compile Include="Balancing\BalancedSynapse.cs" />
+    <Compile Include="Balancing\BalancedVector.cs" />
     <Compile Include="Composites\BorderedDisk.cs" />
     <Compile Include="Brain\BrainElement.cs" />
     <Compile Include="Brain\Brain.cs" />
@@ -129,7 +134,7 @@
     <Compile Include="Global\Comparer.cs" />
     <Compile Include="Global\Constant.cs" />
     <Compile Include="Creation\CreatedNeuron.cs" />
-    <Compile Include="Creation\CreatedSynapse.cs" />
+    <Compile Include="Creation\CreatedVector.cs" />
     <Compile Include="Main\Creation.cs" />
     <Compile Include="Creation\CreationData.cs" />
     <Compile Include="Creation\CreationFrame.cs" />

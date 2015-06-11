@@ -17,7 +17,7 @@ namespace Brain3D
             this.value = value;
 
             width = 60;
-            height = 40;
+            height = 32;
             reload();
 
             recBorder = new Rectangle(point.X, point.Y, width, height);
@@ -29,9 +29,13 @@ namespace Brain3D
 
         void reload()
         {
-            word = value.ToString();
-            float x = ((float)width - font.MeasureString(word).X) / 2;
-            text = new Vector2(point.X + x, point.Y + 10);
+            if (value < 0)
+                word = "";
+            else
+                word = value.ToString();
+
+            float x = ((float)width - Fonts.SpriteVerdana.MeasureString(word).X) / 2;
+            text = new Vector2(point.X + x, point.Y + 6);
         }
 
         public override int Top
@@ -41,7 +45,7 @@ namespace Brain3D
                 point.Y = value;
                 recBorder.Y = value;
                 recBackground.Y = value + 3;
-                text.Y = value + 10;
+                text.Y = value + 6;
             }
         }
 

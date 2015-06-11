@@ -122,6 +122,7 @@
             // 
             // rightPanel
             // 
+            this.rightPanel.BackColor = System.Drawing.SystemColors.ControlLight;
             this.rightPanel.Controls.Add(this.radioButtonChart);
             this.rightPanel.Controls.Add(this.radioButtonSimulation);
             this.rightPanel.Controls.Add(this.radioButtonCreation);
@@ -146,7 +147,7 @@
             this.rightPanel.Location = new System.Drawing.Point(840, 0);
             this.rightPanel.Margin = new System.Windows.Forms.Padding(0);
             this.rightPanel.Name = "rightPanel";
-            this.rightPanel.Size = new System.Drawing.Size(140, 760);
+            this.rightPanel.Size = new System.Drawing.Size(144, 760);
             this.rightPanel.TabIndex = 19;
             this.rightPanel.TabStop = false;
             // 
@@ -365,9 +366,9 @@
             // 
             // labelLength
             // 
-            this.labelLength.BackColor = System.Drawing.SystemColors.Control;
+            this.labelLength.BackColor = System.Drawing.SystemColors.ControlLight;
             this.labelLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.labelLength.Location = new System.Drawing.Point(50, 353);
+            this.labelLength.Location = new System.Drawing.Point(48, 353);
             this.labelLength.Name = "labelLength";
             this.labelLength.Size = new System.Drawing.Size(50, 25);
             this.labelLength.TabIndex = 22;
@@ -381,6 +382,7 @@
             // 
             // display
             // 
+            this.display.BackColor = System.Drawing.Color.Gainsboro;
             this.display.Controls.Add(this.buttonBack);
             this.display.Controls.Add(this.buttonForth);
             this.display.Controls.Add(this.trackBarFrame);
@@ -394,7 +396,7 @@
             // 
             this.buttonBack.Location = new System.Drawing.Point(20, 720);
             this.buttonBack.Name = "buttonBack";
-            this.buttonBack.Size = new System.Drawing.Size(32, 24);
+            this.buttonBack.Size = new System.Drawing.Size(36, 24);
             this.buttonBack.TabIndex = 9;
             this.buttonBack.Text = "<<";
             this.buttonBack.UseVisualStyleBackColor = true;
@@ -404,7 +406,7 @@
             // 
             this.buttonForth.Location = new System.Drawing.Point(760, 720);
             this.buttonForth.Name = "buttonForth";
-            this.buttonForth.Size = new System.Drawing.Size(32, 24);
+            this.buttonForth.Size = new System.Drawing.Size(36, 24);
             this.buttonForth.TabIndex = 10;
             this.buttonForth.Text = ">>";
             this.buttonForth.UseVisualStyleBackColor = true;
@@ -413,7 +415,7 @@
             // trackBarFrame
             // 
             this.trackBarFrame.AutoSize = false;
-            this.trackBarFrame.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.trackBarFrame.BackColor = System.Drawing.Color.Gainsboro;
             this.trackBarFrame.Location = new System.Drawing.Point(60, 720);
             this.trackBarFrame.Maximum = 250;
             this.trackBarFrame.Name = "trackBarFrame";
@@ -478,7 +480,6 @@
         private System.Windows.Forms.Button buttonLoad;
         private System.Windows.Forms.OpenFileDialog openFile;
         private System.Windows.Forms.SaveFileDialog saveFile;
-        private Display display;
         private System.Windows.Forms.Button buttonBalance;
         private System.Windows.Forms.CheckBox checkBoxState;
         private System.Windows.Forms.RadioButton radioButtonSphere;
@@ -488,6 +489,7 @@
         private System.Windows.Forms.RadioButton radioButtonSquare;
         private System.Windows.Forms.RadioButton radioButtonTree;
         private System.Windows.Forms.CheckBox checkBoxWhite;
+        private Display display;
     }
 }
 

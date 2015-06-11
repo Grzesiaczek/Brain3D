@@ -13,7 +13,7 @@ namespace Brain3D
         #region deklaracje
 
         CreationFrame frame;
-        CreatedState state;
+        CreatedSynapse state;
 
         Change value;
         Change factor;
@@ -28,7 +28,7 @@ namespace Brain3D
 
         #endregion
 
-        public CreationData(CreatedState state, CreationFrame frame, Change value, Change factor)
+        public CreationData(CreatedSynapse state, CreationFrame frame, Change value, Change factor)
         {
             this.state = state;
             this.frame = frame;
@@ -40,14 +40,12 @@ namespace Brain3D
             before = new StateDisk(value, factor.Start);
             after = new StateDisk(value.Finish, factor.Finish);
 
-            SpriteFont font = content.Load<SpriteFont>("History");
-
-            number = new Text2D(frame.Frame.ToString(), font, Vector2.Zero, Color.DarkSlateBlue, 10);
+            number = new Text2D(frame.Frame.ToString(), Fonts.SpriteVerdana, Vector2.Zero, Color.DarkSlateBlue, 10);
 
             if(value.Value > 0)
-                change = new Text2D(n.ToString(), font, Vector2.Zero, Color.Green, 10);
+                change = new Text2D(n.ToString(), Fonts.SpriteVerdana, Vector2.Zero, Color.Green, 10);
             else
-                change = new Text2D((-n).ToString(), font, Vector2.Zero, Color.Red, 10);
+                change = new Text2D((-n).ToString(), Fonts.SpriteVerdana, Vector2.Zero, Color.Red, 10);
         }
 
         #region logika

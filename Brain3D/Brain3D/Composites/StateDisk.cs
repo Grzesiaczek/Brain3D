@@ -15,6 +15,8 @@ namespace Brain3D
         float r1 = 1;
         float r2 = 1;
 
+        bool activated;
+
         public StateDisk(Vector3 position, bool changes = false)
         {
             this.position = position;
@@ -51,7 +53,7 @@ namespace Brain3D
         {
             disk = new Disk(position, pattern, color, radius);
             outer = new Ring(position, pattern, Color.LightGreen);
-            border = new Ring(position, pattern, Color.Purple);
+            border = new Ring(position, pattern, Color.DarkSlateBlue);
 
             if (changes)
             {
@@ -73,7 +75,9 @@ namespace Brain3D
             color.R -= (byte)(12 * factor);
             color.G -= (byte)(48 * factor);
             color.B -= (byte)(60 * factor);
-            disk.Color = color;
+
+            if(!activated)
+                disk.Color = color;
         }
 
         public void setChange(float source, float target)
@@ -160,18 +164,22 @@ namespace Brain3D
             {
                 outer.R2 = radius;
                 border.R1 = radius;
-                border.R2 = radius * 1.1f;
+                border.R2 = radius * 1.12f;
             }
         }
 
         public void activate()
         {
-            border.Color = Color.RosyBrown;
+            border.Color = Color.IndianRed;
+            disk.Color = Color.LightCoral;
+            activated = true;
         }
 
         public void idle()
         {
             border.Color = Color.Purple;
+            disk.Color = color;
+            activated = false;
         }
 
         public void hover()

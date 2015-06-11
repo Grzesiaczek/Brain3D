@@ -53,6 +53,15 @@ namespace Brain3D
             target.X = value;
         }
 
+        public void rescale(Vector2 factor)
+        {
+            position.X *= factor.X;
+            target.X *= factor.X;
+
+            position.Y *= factor.Y;
+            target.Y *= factor.Y;
+        }
+
         public void moveLeft()
         {
             if (Constant.Space == SpaceMode.Box)

@@ -40,7 +40,7 @@ namespace Brain3D
         SpriteBatch batch;
         Color background;
 
-        float viewArea = 0.8f;
+        float viewArea = 0.84f;
         int margin;
 
         bool initialized;
@@ -60,10 +60,13 @@ namespace Brain3D
             sprites = new List<SpriteElement>();
             comparer = new Comparer();
 
-            DrawableElement.Content = new ContentManager(Services, "Content");
+            ContentManager content = new ContentManager(Services, "Content");
+            DrawableElement.Content = content;
+
+            Fonts.initialize(content);
             Application.Idle += delegate { Invalidate(); };
 
-            background = Color.CornflowerBlue;
+            background = Color.Gainsboro;
             batch = new SpriteBatch(Device);
 
             effect = new BasicEffect(Device);
@@ -82,15 +85,15 @@ namespace Brain3D
             DrawableElement.Display = this;
             SpriteElement.Batch = batch;
 
+            BorderedDisk.initializeCircle(); 
             Number3D.initializePatterns();
             Pipe.initializePalettes();
-            Chart.initializeAngles();
-            BorderedDisk.initializeCircle();
-            
+
+            Chart.initializeAngles();                
             Tile.initializeTextures();
-            Branch.initializeTexture();
 
             controller = new Controller();
+            controller.resize();
 
             buffer = new GraphicsBuffer(Device, effect);
             numbers = new GraphicsBuffer(Device, effect);
@@ -106,23 +109,25 @@ namespace Brain3D
 
         protected override void Draw()
         {
-            Device.DepthStencilState = DepthStencilState.Default;
             Device.Clear(background);
+            Device.DepthStencilState = DepthStencilState.Default;
 
             effect.View = Matrix.CreateLookAt(camera.Position, camera.Target, camera.Up);
 
-            if(presentation is Charting)
-                effect.Projection = Matrix.CreatePerspectiveFieldOfView(viewArea, Device.Viewport.AspectRatio, 2, 5);
-            else
+            if(presentation is Graph)
                 effect.Projection = Matrix.CreatePerspectiveFieldOfView(viewArea, Device.Viewport.AspectRatio, 40, 100);
+            else
+                effect.Projection = Matrix.CreatePerspectiveFieldOfView(viewArea, Device.Viewport.AspectRatio, 4, 6);
 
             effect2.Projection = Matrix.CreateOrthographicOffCenter(0, Device.Viewport.Width, Device.Viewport.Height, 0, 0, 2);
 
-            if(Number3D.Change)
+            if(Number3D.Change && presentation is Animation)
             {
                 numbers.clear(false);
                 numbers.initialize();
-                numbers.show();
+
+                if(presentation is Animation)
+                    numbers.show();
             }
 
             buffer.draw();
@@ -144,12 +149,15 @@ namespace Brain3D
         public void show(Presentation presentation)
         {
             this.presentation = presentation;
+            viewArea = 0.84f;
 
-            if (presentation is Charting)
+            if (presentation is Graph)
+                camera = new Camera(Constant.Radius + 50);
+            else if (presentation is Charting)
                 camera = new Camera(new Vector3(3, -0.5f, 5.0f));
             else
-                camera = new Camera(Constant.Radius + 50);
-
+                camera = new Camera(new Vector3(3, 0.25f, 5.0f));
+            
             DrawableElement.Camera = camera;
 
             initialize();
@@ -218,6 +226,7 @@ namespace Brain3D
 
         void moving(object state)
         {
+            lock (elements)
             foreach (AnimatedElement element in elements)
                 element.move();
 
@@ -231,6 +240,7 @@ namespace Brain3D
 
         void rotation(object state)
         {
+            lock(elements)
             foreach (AnimatedElement element in elements)
                 element.rotate();
         }
@@ -275,7 +285,8 @@ namespace Brain3D
             RenderTarget2D target = new RenderTarget2D(Device, Width, Height, false, Device.DisplayMode.Format, DepthFormat.Depth24, 4, RenderTargetUsage.PlatformContents);
 
             Device.SetRenderTarget(target);
-            Device.Clear(Color.CornflowerBlue);
+            Device.Clear(background);
+            Device.DepthStencilState = DepthStencilState.Default;
             Device.RasterizerState = RasterizerState.CullNone;
 
             effect.CurrentTechnique.Passes[0].Apply();
@@ -334,6 +345,12 @@ namespace Brain3D
         public void moveX(float value)
         {
             camera.moveX(value);
+            rotate();
+        }
+
+        public void rescale(Vector2 factor)
+        {
+            camera.rescale(factor);
             rotate();
         }
 
