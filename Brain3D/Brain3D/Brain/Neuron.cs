@@ -22,6 +22,7 @@ namespace Brain3D
         int index;
         int signum;
 
+        bool activated;
         bool refraction;
 
         double ratio;
@@ -90,6 +91,12 @@ namespace Brain3D
 
         public void tick(int time)
         {
+            if (!activated)
+            {
+                receive(time, activity[time].Value);
+                return;
+            }
+
             double value = 0;
 
             if (time > 0)
@@ -102,9 +109,18 @@ namespace Brain3D
             {
                 if (++index >= tmax)
                 {
-                    index = (int)((1.0 - Math.Pow(value, 0.25)) * omega);
+                    if (value > 0)
+                    {
+                        index = (int)((1.0 - Math.Pow(value, 0.25)) * omega);
+                        signum = 1;
+                    }
+                    else
+                    {
+                        index = (int)((1.0 - Math.Pow(-value, 0.25)) * omega);
+                        signum = -1;
+                    }
+                    
                     activity[time].Phase = ActivityPhase.Break;
-                    signum = 1;
                 }
                 else
                 {
@@ -154,13 +170,24 @@ namespace Brain3D
 
             activity[time].Value = value;
 
+            if(!refraction)
+                receive(time, value);
+        }
+
+        void receive(int time, double value)
+        {
             List<Tuple<double, int>> removed = new List<Tuple<double, int>>();
 
             foreach (Tuple<double, int> signal in signals)
             {
                 if (signal.Item2 == time)
                 {
-                    if (signum == 2)
+                    if(!activated)
+                    {
+                        target = treshold + value + signal.Item1;
+                        activated = true;
+                    }
+                    else if (signum == 2)
                         target += signal.Item1;
                     else if (signum == 0)
                         target = treshold + signal.Item1;
@@ -175,7 +202,7 @@ namespace Brain3D
                         else
                             target = value + treshold + signal.Item1;
                     }
-                     
+                    
                     signum = 2;
 
                     double factor = 1 - (value + treshold) / target;
@@ -203,6 +230,11 @@ namespace Brain3D
         public void shot(double time)
         {
             impulse(5, (int)time + 1);
+        }
+
+        public void neutralize()
+        {
+            activated = false;
         }
 
         public void calculate()

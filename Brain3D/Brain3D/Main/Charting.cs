@@ -19,7 +19,7 @@ namespace Brain3D
         ChartLayout layout;
 
         Color[] palette = { Color.Olive, Color.BlueViolet, Color.Goldenrod, Color.Green, Color.MediumVioletRed, Color.Peru,
-                                     Color.HotPink, Color.Firebrick, Color.Crimson, Color.Indigo, Color.Khaki, Color.Lavender };
+                                     Color.HotPink, Color.Firebrick, Color.Crimson, Color.RoyalBlue, Color.Khaki, Color.Lavender };
 
         public Charting()
         {
@@ -27,7 +27,7 @@ namespace Brain3D
             layout = new ChartLayout();
         }
 
-        public void load()
+        public void reload()
         {
             List<Neuron> neurons = new List<Neuron>(brain.Neurons.Keys);
 
@@ -37,7 +37,7 @@ namespace Brain3D
             neurons.Sort(new Comparer());
             this.neurons.Clear();
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 10; i++)
                 this.neurons.Add(new ChartedNeuron(neurons[i], new Point(100 + 120 * i, display.Height - 160), palette[i]));
         }
 

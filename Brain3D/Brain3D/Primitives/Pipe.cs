@@ -46,7 +46,7 @@ namespace Brain3D
             palettes = new List<Tuple<Color, Color>>();
 
             palettes.Add(new Tuple<Color, Color>(Color.Indigo, Color.Brown));
-            palettes.Add(new Tuple<Color, Color>(Color.Thistle, Color.IndianRed));
+            palettes.Add(new Tuple<Color, Color>(Color.IndianRed, Color.Orange));
         }
 
         public override void initialize()
@@ -78,7 +78,7 @@ namespace Brain3D
 
         public override void move()
         {
-            if (!initialized)
+            if (!initialized || buffer == null)
                 return;
 
             rotate();

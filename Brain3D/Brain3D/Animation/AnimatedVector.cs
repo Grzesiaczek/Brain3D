@@ -190,8 +190,6 @@ namespace Brain3D
         {
             get
             {
-                direction = post.Position - pre.Position;
-                direction.Normalize();
                 return direction;
             }
         }

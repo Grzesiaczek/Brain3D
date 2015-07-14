@@ -10,12 +10,12 @@ namespace Brain3D
     {
         Line horizontal;
         List<Line> legend;
-        List<LabelAxis> labels;
+        List<LabelTL> labels;
 
         public TreeLayout()
         {
             legend = new List<Line>();
-            labels = new List<LabelAxis>();
+            labels = new List<LabelTL>();
             horizontal = new Line(new Vector3(0, -1, 0), new Vector3(25, -1, 0), Color.Purple, 0.005f);
 
             for (int i = 0; i < 25; i++)
@@ -30,7 +30,7 @@ namespace Brain3D
             if (!initialized)
             {
                 for (int i = 0; i < 25; i++)
-                    labels.Add(new LabelAxis(i * 10));
+                    labels.Add(new LabelTL(i * 10));
 
                 drawables.AddRange(labels);
                 initialized = true;

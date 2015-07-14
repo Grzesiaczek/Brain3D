@@ -23,7 +23,7 @@ namespace Brain3D
         Animation animation;
         Creation creation;
         Charting charting;
-        Tree tree;
+        Response response;
 
         Presentation presentation;
 
@@ -55,7 +55,7 @@ namespace Brain3D
             animation = new Animation();
             creation = new Creation();
             charting = new Charting();
-            tree = new Tree();
+            response = new Response();
 
             display.setMargin(rightPanel.Width + 20);
             display.resize();
@@ -79,14 +79,15 @@ namespace Brain3D
             animation.animationStop += new EventHandler(animationStop);
             creation.animationStop += new EventHandler(animationStop);
 
+            Brain.simulationFinished += new EventHandler(simulationFinished);
+
             resize();
         }
 
         void simulate()
         {
-            tree.clear();
+            response.clear();
             animation.simulate(length);
-            charting.load();
             buttonSimulate.Enabled = false;
         }
 
@@ -330,7 +331,7 @@ namespace Brain3D
             if (!radioButtonTree.Checked)
                 return;
 
-            show(tree);
+            show(response);
         }
 
         void show(Presentation presentation)
@@ -380,6 +381,14 @@ namespace Brain3D
         private void Simulation_Close(object sender, EventArgs e)
         {
             presentation.hide();
+        }
+
+        private void simulationFinished(object sender, EventArgs e)
+        {
+            QuerySequence query = (QuerySequence)sender;
+            query.loadTiles();
+            charting.reload();
+            response.reload(query);
         }
 
         private void animationStop(object sender, EventArgs e)
@@ -451,8 +460,12 @@ namespace Brain3D
                 brain.addSentence(xn.InnerText.ToLower());
 
             Presentation.Brain = brain;
+
             simulate();
             show(presentation);
+
+            if (presentation is Graph)
+                animation.balance();
         }
 
         void saveData(String path)

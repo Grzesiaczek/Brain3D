@@ -237,7 +237,12 @@ namespace Brain3D
 
         public override void space()
         {
-            sequence.space();
+            if (insertion)
+                sequence.space();
+            else if (Started)
+                stop();
+            else
+                start();
         }
 
         public override void enter()

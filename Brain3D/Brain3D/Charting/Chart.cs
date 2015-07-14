@@ -20,10 +20,6 @@ namespace Brain3D
         int count;
         int vertex;
 
-        float value;
-        float previous;
-        float next;
-
         public Chart(Neuron neuron, Color color)
         {
             activity = neuron.Activity;
@@ -114,17 +110,18 @@ namespace Brain3D
 
             disks = new List<Tuple<Disk, int>>();
             drawables.Clear();
+            float ratio = 0.01f * scale;
 
             for (int i = 0; i < activity.Length; i++)
             {
                 Disk disk = null;
 
                 if (activity[i].Phase == ActivityPhase.Start)
-                    disk = new Disk(new Vector3(0.01f * (i + 1), 1, 0.001f), pattern, Color.LightSalmon, 0.04f);
+                    disk = new Disk(new Vector3(ratio * (i + 1), 1, 0.001f), pattern, Color.LightSalmon, 0.04f);
                 if (activity[i].Phase == ActivityPhase.Finish)
-                    disk = new Disk(new Vector3(0.01f * (i + 1), -1, 0.001f), pattern, Color.LightSkyBlue, 0.04f);
+                    disk = new Disk(new Vector3(ratio * (i + 1), -1, 0.001f), pattern, Color.LightSkyBlue, 0.04f);
                 if (activity[i].Phase == ActivityPhase.Break)
-                    disk = new Disk(new Vector3(0.01f * (i + 1), (float)activity[i].Value, 0.001f), pattern, color, 0.025f);
+                    disk = new Disk(new Vector3(ratio * (i + 1), (float)activity[i].Value, 0.001f), pattern, color, 0.025f);
 
                 if (disk == null)
                     continue;
@@ -137,6 +134,10 @@ namespace Brain3D
 
         void prepare()
         {
+            float value = 0;
+            float previous = 0;
+            float next = 0;
+
             float constant = 0;
             float ratio = scale * 0.01f;
 

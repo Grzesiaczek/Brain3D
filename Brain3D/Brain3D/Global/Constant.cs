@@ -147,7 +147,7 @@ namespace Brain3D
             box = balance + factor * shift;
         }
 
-        public static Tuple<Vector2, float, float> getDistance(Vector3 source, Vector3 target, Vector3 point)
+        public static Tuple<Vector2, float> getDistance(Vector3 source, Vector3 target, Vector3 point)
         {
             Vector3 vector = target - source;
             Vector3 position = point - source;
@@ -178,7 +178,7 @@ namespace Brain3D
                 y = a * eq;
             }
 
-            return new Tuple<Vector2, float, float>(new Vector2(position.X - x, position.Y - y), Math.Abs(b * position.Y - a * position.X) / vector.Length(), eq);
+            return new Tuple<Vector2, float>(new Vector2(position.X - x, position.Y - y), eq);
         }
 
         #region własciwości

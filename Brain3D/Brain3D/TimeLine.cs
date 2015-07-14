@@ -65,7 +65,7 @@ namespace Brain3D
 
         public override void tighten()
         {
-            if (scale <= 0.4f)
+            if (scale <= 0.3f)
                 return;
 
             rescale(scale - 0.1f);

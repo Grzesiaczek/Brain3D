@@ -24,7 +24,6 @@ namespace Brain3D
         Label3D label;
         Number3D number;
 
-        bool refraction; 
         double value;
         float radius;
 
@@ -75,39 +74,45 @@ namespace Brain3D
         void setData(NeuronActivity data)
         {
             value = data.Value;
-            
-            if (data.Phase == ActivityPhase.Active)
+
+            switch(data.Phase)
             {
-                if (!refraction)
-                {
-                    refraction = true;
+                case ActivityPhase.Normal:
+                    disk.changeValue((float)value);
+                    number.Value = (int)(Math.Abs(value) * 100);
+                    break;
+                case ActivityPhase.Start:
                     number.Value = 100;
                     disk.refract();
-                }
-                else
+                    break;
+                case ActivityPhase.Active:
+                    number.Value = 100;
+                    disk.setValue(0);
                     disk.refract((float)data.Refraction / 30);
-            }
-            else
-            {
-                if (refraction)
-                    refraction = false;
-
-                disk.changeValue((float)value);
-                number.Value = (int)(Math.Abs(value) * 100);
-            } 
+                    break;
+                case ActivityPhase.Finish:
+                    number.Value = 100;
+                    disk.setValue(0);
+                    break;
+            }      
         }
 
         public override void tick(double time)
         {
-            NeuronActivity data = neuron.Activity[(int)time];
-            NeuronActivity next = neuron.Activity[(int)time + 1];
+            int frame = (int)time;
 
-            double factor = time - (int)time;
+            if(frame + 1 == neuron.Activity.Length)
+            {
+                setData(neuron.Activity[frame]);
+                return;
+            }
+
+            NeuronActivity data = neuron.Activity[frame];
+            NeuronActivity next = neuron.Activity[frame + 1];
+
+            double factor = time - frame;
             double value = data.Value + factor * (next.Value - data.Value);
             double refraction = data.Refraction + factor * (next.Refraction - data.Refraction);
-
-            if (data.Refraction == 30)
-                refraction = 30;
 
             setData(new NeuronActivity(data.Phase, value, refraction));
         }
@@ -224,6 +229,18 @@ namespace Brain3D
                 label.Scale = scale * value / 1.2f;
                 number.Scale = scale * value / 1.2f;
 
+                rescale();
+            }
+        }
+
+        public override float Scale
+        {
+            set
+            {
+                scale = value;
+                disk.Scale = value;
+                label.Scale = value * radius / 1.2f;
+                number.Scale = value * radius / 1.2f;
                 rescale();
             }
         }

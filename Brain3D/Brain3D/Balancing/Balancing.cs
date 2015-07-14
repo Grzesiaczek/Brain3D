@@ -126,11 +126,6 @@ namespace Brain3D
             balance(animatedVectors, false);
         }
 
-        public void balance(List<Leaf> leafs, List<Branch> branches)
-        {
-
-        }
-
         void initialize(HashSet<AnimatedNeuron> neurons, HashSet<AnimatedVector> vectors)
         {
             this.neurons = new HashSet<BalancedNeuron>();
@@ -172,7 +167,7 @@ namespace Brain3D
             else
                 phase = Phase.Auto;
 
-            BalancedNeuron.K = 24;
+            BalancedNeuron.K = 32;
             Constant.setBox(phase);
 
             sw.Start();
@@ -214,7 +209,7 @@ namespace Brain3D
 
             if (phase == Phase.One && Math.Abs(delta) < 5)
             {
-                BalancedNeuron.K = 10;
+                BalancedNeuron.K = 32;
                 phase = Phase.Two;
 
                 if(regular)
@@ -282,7 +277,7 @@ namespace Brain3D
 
             foreach (BalancedNeuron other in neurons)
                 if (neuron != other)
-                    neuron.repulse(other.Position, false);
+                    neuron.repulse(other.Position);
 
             Interlocked.Increment(ref updated);
 

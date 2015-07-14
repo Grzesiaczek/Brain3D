@@ -91,12 +91,14 @@
     <Compile Include="Animation\AnimatedVector.cs" />
     <Compile Include="BalancedBranch.cs" />
     <Compile Include="BalancedLeaf.cs" />
+    <Compile Include="BalancedTree.cs" />
     <Compile Include="Balancing\BalancedSynapse.cs" />
     <Compile Include="Charting\ChartedTile.cs" />
     <Compile Include="Charting\Chart.cs" />
     <Compile Include="Charting\ChartLayout.cs" />
     <Compile Include="DottedLine.cs" />
     <Compile Include="Fonts.cs" />
+    <Compile Include="Response.cs" />
     <Compile Include="Tiles\CounterTile.cs" />
     <Compile Include="Creation\CreatedSynapse.cs" />
     <Compile Include="Tiles\CreationTile.cs" />
@@ -105,14 +107,14 @@
     <Compile Include="Tiles\QueryTile.cs" />
     <Compile Include="Primitives\Rect.cs" />
     <Compile Include="Elements\SpriteComposite.cs" />
-    <Compile Include="Text\LabelAxis.cs" />
+    <Compile Include="Text\LabelTL.cs" />
     <Compile Include="Primitives\Line.cs" />
     <Compile Include="TimeLine.cs" />
-    <Compile Include="Tree\TreeLayout.cs" />
-    <Compile Include="Tree\Branch.cs" />
+    <Compile Include="Response\TreeLayout.cs" />
+    <Compile Include="Response\Branch.cs" />
     <Compile Include="Elements\DrawableComposite.cs" />
     <Compile Include="Graphics\Controller.cs" />
-    <Compile Include="Tree\Leaf.cs" />
+    <Compile Include="Response\Leaf.cs" />
     <Compile Include="Main\Animation.cs" />
     <Compile Include="Balancing\BalancedNeuron.cs" />
     <Compile Include="Balancing\BalancedVector.cs" />
@@ -173,7 +175,7 @@
     <Compile Include="Brain\Synapse.cs" />
     <Compile Include="Text\Text2D.cs" />
     <Compile Include="Text\Text3D.cs" />
-    <Compile Include="Tree\Tree.cs" />
+    <Compile Include="Response\Tree.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Files\config.xml">
@@ -181,6 +183,7 @@
     </Content>
     <Content Include="Files\data.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Files\Game.ico" />
     <Content Include="Files\GameThumbnail.png">

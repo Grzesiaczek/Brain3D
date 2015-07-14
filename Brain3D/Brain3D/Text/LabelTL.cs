@@ -7,9 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class LabelAxis : Text3D
+    class LabelTL : Text3D
     {
-        public LabelAxis(int number)
+        public LabelTL(int number)
         {
             position = new Vector3(number * 0.1f, -1.2f, 0);
             ratio = 0.004f;
@@ -19,7 +19,7 @@ namespace Brain3D
             color = Color.DarkBlue;        
         }
 
-        public LabelAxis(Vector3 position, String word)
+        public LabelTL(Vector3 position, String word)
         {
             this.position = position;
             ratio = 0.0025f;

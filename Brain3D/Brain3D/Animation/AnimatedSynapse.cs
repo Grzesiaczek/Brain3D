@@ -35,7 +35,7 @@ namespace Brain3D
             this.synapse = synapse;
             this.vector = vector;
             this.duplex = duplex;
-            factor = 0.25f;
+            factor = 0.75f;
 
             disk = new StateDisk(position + shiftDisk, true);
             state = new BorderedDisk(position + shiftState);
@@ -129,6 +129,7 @@ namespace Brain3D
 
             disk.Position = position + shiftDisk;
             state.Position = position + shiftState;
+            signal.move();
         }
 
         public override void idle()
@@ -155,17 +156,17 @@ namespace Brain3D
             Vector3 end = device.Viewport.Project(vector.Target, effect.Projection, effect.View, effect.World);
             Vector3 vec = end - start;
 
-            Tuple<Vector2, float, float> tuple = Constant.getDistance(start, end, new Vector3(x, y, (start.Z + end.Z) / 2));
+            Tuple<Vector2, float> tuple = Constant.getDistance(start, end, new Vector3(x, y, (start.Z + end.Z) / 2));
 
             float min = 20 / vec.Length();
             float max = 1 - min;
 
-            if (tuple.Item3 < min)
+            if (tuple.Item2 < min)
                 factor = min;
-            else if (tuple.Item3 > max)
+            else if (tuple.Item2 > max)
                 factor = max;
             else
-                factor = tuple.Item3;
+                factor = tuple.Item2;
 
             if (duplex)
                 factor = 1 - factor;

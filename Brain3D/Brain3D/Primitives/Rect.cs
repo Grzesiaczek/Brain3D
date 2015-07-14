@@ -17,7 +17,6 @@ namespace Brain3D
             this.size = size;
             this.color = color;
 
-            //framework = new Vector3[points];
             vertices = new VertexPositionColor[4];
             indices = new int[6];
         }

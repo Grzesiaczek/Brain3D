@@ -9,6 +9,9 @@ namespace Brain3D
 {
     class QuerySequence : Sequence
     {
+        #region deklaracje
+
+        List<Tuple<Neuron, int>> activations;
         List<int> activity;
 
         CounterTile counter;
@@ -21,6 +24,8 @@ namespace Brain3D
 
         int index;
         int prev;
+
+        #endregion
 
         public QuerySequence(int length)
         {
@@ -78,6 +83,7 @@ namespace Brain3D
         {
             List<Neuron> neurons = new List<Neuron>(brain.Neurons.Keys);
             activity = new List<int>();
+            activations = new List<Tuple<Neuron, int>>();
 
             for (int i = 0; i < sequence.Count; i++)
             {
@@ -98,6 +104,21 @@ namespace Brain3D
         {
             foreach (QueryTile tile in sequence)
                 tile.load();
+        }
+
+        public void setFrame(int frame)
+        {
+            int time = 10 * frame;
+
+            foreach (QueryTile tile in sequence)
+                tile.tick(time);
+
+            counter.Value = activity[frame];
+
+            if (counter.Value == 0)
+                counter.activate();
+            else
+                counter.idle();
         }
 
         public void tick(double time)
@@ -152,14 +173,20 @@ namespace Brain3D
 
         void activate(object sender, EventArgs e)
         {
-            Neuron neuron = ((Tuple<Neuron, int>)sender).Item1;
+            Tuple<Neuron, int> tuple = (Tuple<Neuron, int>)sender;
+            Neuron neuron = tuple.Item1;
             count++;
+
+            if (sequence.Find(k => k.Word == neuron.Word) != null)
+                activations.Add(tuple);
         }
 
         protected override Tile createTile(BuiltTile builder)
         {
             return new QueryTile(builder, length);
         }
+
+        #region sterowanie
 
         public override bool execute()
         {
@@ -200,5 +227,27 @@ namespace Brain3D
 
             interval.activate();
         }
+
+        #endregion
+
+        #region właściwości
+
+        public List<Tuple<Neuron, int>> Activations
+        {
+            get
+            {
+                return activations;
+            }
+        }
+
+        public int Interval
+        {
+            get
+            {
+                return interval.Value * sequence.Count;
+            }
+        }
+
+        #endregion
     }
 }

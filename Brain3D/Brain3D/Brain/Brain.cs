@@ -35,6 +35,8 @@ namespace Brain3D
         int length;
         int sentences;
 
+        public static event EventHandler simulationFinished;
+
         #endregion
 
         public Brain()
@@ -83,6 +85,9 @@ namespace Brain3D
 
         public void simulate(int start)
         {
+            foreach (Neuron neuron in neurons)
+                neuron.neutralize();
+
             for (int i = start; i < length; i++)
             {
                 query.tick(i);
@@ -92,6 +97,7 @@ namespace Brain3D
             }
 
             query.loadTiles();
+            simulationFinished(query, null);
         }
 
         public void initialize()
@@ -163,7 +169,7 @@ namespace Brain3D
                     float factor = synapse.Factor + synapse.Change;
                     
                     eta = ((Neuron)synapse.Pre).Count;
-                    synapse.Weight = (float)(eta * factor * theta / (eta + (eta - 1) *factor));
+                    synapse.Weight = (float)(eta * factor * theta / (eta + (eta - 1) * factor));
 
                     CreationData data = new CreationData(mapSynapses[synapse].Item2, frame, new Change(start, synapse.Weight), new Change(synapse.Factor, factor));
                     mapSynapses[synapse].Item2.add(data);

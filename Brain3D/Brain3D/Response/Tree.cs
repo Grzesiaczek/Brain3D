@@ -2,83 +2,84 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Brain3D
 {
-    class Tree : TimeLine
+    class Tree : DrawableComposite
     {
-        List<Leaf> leafs;
-        List<Branch> branches;
+        HashSet<Leaf> leafs;
+        HashSet<Branch> branches;
 
-        Random random;
-        TreeLayout layout;
-
-        public Tree()
+        public Tree(HashSet<Leaf> leafs, HashSet<Synapse> synapses)
         {
-            leafs = new List<Leaf>();
-            branches = new List<Branch>();
-            layout = new TreeLayout();
+            this.leafs = leafs;
+            branches = new HashSet<Branch>();
 
-            random = new Random();
-            Neuron.activate += new EventHandler(activate);
+            foreach (Leaf leaf in leafs)
+                foreach (Leaf source in leafs)
+                {
+                    if (leaf == source)
+                        continue;
+
+                    Synapse synapse = synapses.FirstOrDefault(k => k.Pre == source.Neuron && k.Post == leaf.Neuron);
+
+                    if (synapse != null)
+                        branches.Add(new Branch(source, leaf));
+                }
+
+            drawables.AddRange(branches);
+            drawables.AddRange(leafs);
+
+            // ThreadPool.QueueUserWorkItem(balance);
+            balance(null);
         }
 
-        void activate(object sender, EventArgs e)
+        void balance(object state)
         {
-            Tuple<Neuron, int> tuple = (Tuple<Neuron, int>)sender;
-            Leaf leaf = new Leaf(tuple.Item1, tuple.Item2, (float)(2 * random.NextDouble() - 0.5));
-            List<Synapse> synapses = new List<Synapse>(brain.Vectors.Keys);
+            List<BalancedTree> wood = new List<BalancedTree>();
+            List<BalancedTree> forest = new List<BalancedTree>();
 
-            foreach (Leaf source in leafs)
+            for (int i = 0; i < 3; i++)
+                wood.Add(new BalancedTree(leafs, branches));
+
+            for(int i = 0; i < 200; i++)
             {
-                Synapse synapse = synapses.Find(k => k.Pre == source.Neuron && k.Post == leaf.Neuron);
+                for (int j = 0; j < wood.Count; j++)
+                    for (int k = 0; k < 4; k++)
+                        forest.Add(new BalancedTree(wood[j]));
 
-                if(synapse != null)
-                    branches.Add(new Branch(source, leaf));
+                foreach (BalancedTree tree in wood)
+                    tree.mutate();
+
+                if (forest[0] == forest[1])
+                    throw new Exception();
+
+                forest.AddRange(wood);
+                forest.Sort(new Comparer());
+
+                for (int j = 0; j < 3; j++)
+                    wood[j] = forest[j];
+
+                forest.Clear();
             }
 
-            leafs.Add(leaf);
-        }
-
-        public void clear()
-        {
-            branches.Clear();
-            leafs.Clear();
-        }
-
-        public override void show()
-        {
-            foreach (Branch branch in branches)
-                branch.show();
-
-            foreach (Leaf leaf in leafs)
-                leaf.show();
-
-            layout.show();
-            base.show();
-        }
-
-        public override void hide()
-        {
-            foreach (Branch branch in branches)
-                branch.hide();
-
-            foreach (Leaf leaf in leafs)
-                leaf.hide();
-
-            layout.hide();
-            base.hide();
-        }
-
-        protected override void rescale()
-        {
-            foreach (Leaf leaf in leafs)
-                leaf.Scale = scale;
+            wood[0].shift();
 
             foreach (Branch branch in branches)
                 branch.move();
+        }
 
-            layout.Scale = scale;
+        public override float Scale
+        {
+            set
+            {
+                foreach (Leaf leaf in leafs)
+                    leaf.Scale = value;
+
+                foreach (Branch branch in branches)
+                    branch.move();
+            }
         }
     }
 }

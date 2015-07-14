@@ -11,13 +11,13 @@ namespace Brain3D
     {
         List<Line> horizontals;
         List<Line> legend;
-        List<LabelAxis> labels;
+        List<LabelTL> labels;
 
         public ChartLayout()
         {
             horizontals = new List<Line>();
             legend = new List<Line>();
-            labels = new List<LabelAxis>();
+            labels = new List<LabelTL>();
 
             horizontals.Add(new Line(new Vector3(0, 1, 0), new Vector3(25, 1, 0), Color.Purple, 0.005f));
             horizontals.Add(new Line(new Vector3(0, 0, 0), new Vector3(25, 0, 0), Color.Purple, 0.005f));
@@ -39,10 +39,10 @@ namespace Brain3D
             if (!initialized)
             {
                 for (int i = 0; i < 25; i++)
-                    labels.Add(new LabelAxis(i * 10));
+                    labels.Add(new LabelTL(i * 10));
 
                 drawables.AddRange(labels);
-                drawables.Add(new LabelAxis(new Vector3(-0.28f, -1.18f, 0), "(t)"));
+                drawables.Add(new LabelTL(new Vector3(-0.28f, -1.18f, 0), "(t)"));
                 initialized = true;
             }
 

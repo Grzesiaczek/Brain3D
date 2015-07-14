@@ -64,6 +64,9 @@ namespace Brain3D
                 case Phase.Disactivate:
                     idle();
                     break;
+                case Phase.Idle:
+                    idle();
+                    break;
                 case Phase.Shot:
                     if(neuron == null)
                         texBackground = texturesShot.Item1;

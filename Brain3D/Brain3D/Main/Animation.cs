@@ -93,8 +93,6 @@ namespace Brain3D
                 frame = 1;
                 controller.changeFrame(1);
             }
-            else
-                time = frame * 10;
 
             base.start();
             AnimatedNeuron.Animation = true;
@@ -112,33 +110,35 @@ namespace Brain3D
         public override void back()
         {
             if (frame > 1)
-                frame--;
-
-            changeFrame();
+                changeFrame(frame - 1);
         }
 
         public override void forth()
         {
             if (frame < length)
-                frame++;
-
-            changeFrame();
+                changeFrame(frame + 1);
         }
 
-        void changeFrame()
+        public override void higher()
         {
-            foreach (AnimatedNeuron neuron in neurons)
-                neuron.setFrame(frame);
+            if (added == null)
+                query.intervalUp();
+            else
+                added.intervalUp();
+        }
 
-            foreach(AnimatedVector vector in vectors)
-                vector.setFrame(frame);
-
-            controller.changeFrame(frame);
+        public override void lower()
+        {
+            if (added == null)
+                query.intervalDown();
+            else
+                added.intervalDown();
         }
 
         public override void changeFrame(int frame)
         {
             this.frame = frame;
+            time = 10 * frame;
             changeFrame();
         }
 
@@ -181,7 +181,9 @@ namespace Brain3D
             loaded = true;
             length = value;
 
-            query = new QuerySequence("what is this monkey like", 10 * length + 1);
+            if(query == null)
+                query = new QuerySequence("what is this monkey like", 10 * length + 1);
+
             query.load(brain);
 
             brain.initialize();
@@ -207,6 +209,7 @@ namespace Brain3D
             if (!insertion)
             {
                 query.execute();
+                changeFrame(0);
                 intervalChanged(this, null);
                 return;
             }
@@ -218,16 +221,19 @@ namespace Brain3D
 
                 changeInsertion();
                 controller.changeFrame(0);
-                queryAccepted(this, null);
-
-                time = 0;
-                frame = 0;
+                queryAccepted(query, null);
+                changeFrame(0);
             }
         }
 
         public override void space()
         {
-            added.space();
+            if(insertion)
+                added.space();
+            else if (Started)
+                stop();
+            else
+                start();
         }
 
         public override void erase()
@@ -255,22 +261,6 @@ namespace Brain3D
         }
 
         #endregion
-
-        public override void higher()
-        {
-            if (added == null)
-                query.intervalUp();
-            else
-                added.intervalUp();
-        }
-
-        public override void lower()
-        {
-            if (added == null)
-                query.intervalDown();
-            else
-                added.intervalDown();
-        }
 
         #region takie tam
 
@@ -328,6 +318,18 @@ namespace Brain3D
                 vector.tick(time);
 
             query.tick(time);
+        }
+
+        void changeFrame()
+        {
+            foreach (AnimatedNeuron neuron in neurons)
+                neuron.setFrame(frame);
+
+            foreach (AnimatedVector vector in vectors)
+                vector.setFrame(frame);
+
+            controller.changeFrame(frame);
+            query.setFrame(frame);
         }
 
         #endregion

@@ -38,7 +38,7 @@ namespace Brain3D
             count *= count;
         }
 
-        public void repulse(Vector3 pos, bool connected)
+        public void repulse(Vector3 pos)
         {
             Vector3 delta = position - pos;
             float distance = delta.LengthSquared() * delta.Length();
@@ -46,13 +46,8 @@ namespace Brain3D
             if (distance < 1)
                 distance = 1;
 
-            if (connected)
-                delta = k3 * delta / (distance * delta.Length());
-            else
-                delta = k2 * delta / distance;
-
             lock (locker)
-                shift += delta;
+                shift += k2 * delta / distance;
         }
 
         public void repulse()
@@ -95,7 +90,7 @@ namespace Brain3D
 
         public void rotate()
         {
-            float factor = 1.6f * count;
+            float factor = 4.2f * count;
             Vector3 rotation = Vector3.Zero;
             
             foreach (AnimatedVector s1 in neuron.Input)
@@ -155,12 +150,12 @@ namespace Brain3D
             result.Y = vector.Y * t + source.Y;
             result.Z = vector.Z * t + source.Z;
 
-            Vector3 text = result * (float)Math.Pow(2 - vector.Length(), 2) / result.Length();
+            result *= (float)Math.Pow(2 - vector.Length(), 2) / result.Length();
 
-            if (float.IsNaN(text.Length()))
-                throw new Exception();
+            if (float.IsNaN(result.Length()))
+                return Vector3.Zero;
 
-            return result * (float)Math.Pow(2 - vector.Length(), 2) / result.Length();
+            return result;
         }
 
 

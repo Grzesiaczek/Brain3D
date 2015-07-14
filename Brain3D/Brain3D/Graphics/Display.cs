@@ -30,8 +30,8 @@ namespace Brain3D
         Sequence sequence;
         Controller controller;
 
-        List<AnimatedElement> elements;
-        List<SpriteElement> sprites;
+        HashSet<AnimatedElement> elements;
+        HashSet<SpriteElement> sprites;
 
         GraphicsBuffer buffer;
         GraphicsBuffer numbers;
@@ -56,8 +56,8 @@ namespace Brain3D
             camera = new Camera(10);
             DrawableElement.Camera = camera;
 
-            elements = new List<AnimatedElement>();
-            sprites = new List<SpriteElement>();
+            elements = new HashSet<AnimatedElement>();
+            sprites = new HashSet<SpriteElement>();
             comparer = new Comparer();
 
             ContentManager content = new ContentManager(Services, "Content");
@@ -112,14 +112,7 @@ namespace Brain3D
             Device.Clear(background);
             Device.DepthStencilState = DepthStencilState.Default;
 
-            effect.View = Matrix.CreateLookAt(camera.Position, camera.Target, camera.Up);
-
-            if(presentation is Graph)
-                effect.Projection = Matrix.CreatePerspectiveFieldOfView(viewArea, Device.Viewport.AspectRatio, 40, 100);
-            else
-                effect.Projection = Matrix.CreatePerspectiveFieldOfView(viewArea, Device.Viewport.AspectRatio, 4, 6);
-
-            effect2.Projection = Matrix.CreateOrthographicOffCenter(0, Device.Viewport.Width, Device.Viewport.Height, 0, 0, 2);
+            initializeEffect();
 
             if(Number3D.Change && presentation is Animation)
             {
@@ -142,6 +135,18 @@ namespace Brain3D
             batch.End();
         }
 
+        void initializeEffect()
+        {
+            effect.View = Matrix.CreateLookAt(camera.Position, camera.Target, camera.Up);
+
+            if (presentation is Graph)
+                effect.Projection = Matrix.CreatePerspectiveFieldOfView(viewArea, Device.Viewport.AspectRatio, 40, 100);
+            else
+                effect.Projection = Matrix.CreatePerspectiveFieldOfView(viewArea, Device.Viewport.AspectRatio, 4, 6);
+
+            effect2.Projection = Matrix.CreateOrthographicOffCenter(0, Device.Viewport.Width, Device.Viewport.Height, 0, 0, 2);
+        }
+
         #endregion
 
         #region funkcje podstawowe
@@ -160,6 +165,7 @@ namespace Brain3D
             
             DrawableElement.Camera = camera;
 
+            initializeEffect();
             initialize();
             show();
         }
@@ -226,7 +232,8 @@ namespace Brain3D
 
         void moving(object state)
         {
-            lock (elements)
+            HashSet<AnimatedElement> elements = new HashSet<AnimatedElement>(this.elements);
+
             foreach (AnimatedElement element in elements)
                 element.move();
 
@@ -240,7 +247,8 @@ namespace Brain3D
 
         void rotation(object state)
         {
-            lock(elements)
+            HashSet<AnimatedElement> elements = new HashSet<AnimatedElement>(this.elements);
+
             foreach (AnimatedElement element in elements)
                 element.rotate();
         }

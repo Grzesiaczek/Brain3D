@@ -28,7 +28,22 @@ namespace Brain3D
             pipe.Source = source.Position;
             pipe.Target = target.Position;
             pipe.move();
-            pipe.rotate();
+        }
+
+        public Leaf Source
+        {
+            get
+            {
+                return source;
+            }
+        }
+
+        public Leaf Target
+        {
+            get
+            {
+                return target;
+            }
         }
     }
 }

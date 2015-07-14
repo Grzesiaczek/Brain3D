@@ -5,14 +5,15 @@
     <sentence>saturn is a planet</sentence>
     <sentence>saturn is a big planet</sentence>
     <sentence>jupiter is a big planet</sentence>
-    <sentence>jupiter is a bigger planet than earth</sentence>
-    <sentence>saturn is smaller than jupiter</sentence>
     <sentence>saturn is bigger than earth</sentence>
     <sentence>mercury is small planet</sentence>
     <sentence>mercury is smaller than earth</sentence>
-    <sentence>mars is similar to earth</sentence>
     <sentence>earth is our planet</sentence>
     <sentence>earth is bigger than mercury</sentence>
     <sentence>each planet can have moons</sentence>
 	</sentences>
+  <queries>
+    <query>the jupiter</query>
+    <query>what is jupiter</query>
+  </queries>
 </data>

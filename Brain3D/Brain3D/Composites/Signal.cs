@@ -25,7 +25,7 @@ namespace Brain3D
             this.source = source;
             this.target = target;
 
-            pipe = new Pipe(source, source, 0.4f, 0.1f, 1);
+            pipe = new Pipe(source, source, 0.5f, 0.1f, 1);
             pipe.Color = Color.Khaki;
 
             shift();
@@ -53,7 +53,7 @@ namespace Brain3D
             bullet = vector;
             bullet.Normalize();
             bullet *= 1.6f;
-            vector -= bullet;
+            vector -= bullet / 2;
         }
 
         void activate()
@@ -66,9 +66,8 @@ namespace Brain3D
         public override void rotate()
         {
             shift();
-
-            pipe.Source = source + vector * (float)factor;
-            pipe.Target = pipe.Source + bullet;
+            pipe.Source = source + vector * (float)factor + new Vector3(0, 0, 0.05f);
+            pipe.Target = pipe.Source + bullet + new Vector3(0, 0, 0.05f);
             pipe.rotate();
         }
 
