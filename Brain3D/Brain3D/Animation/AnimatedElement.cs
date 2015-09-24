@@ -24,27 +24,27 @@ namespace Brain3D
 
         #region logika
 
-        public virtual void activate() { }
+        public virtual void Activate() { }
 
-        public virtual void idle() { }
+        public virtual void Idle() { }
 
-        public virtual void hover() { }
+        public virtual void Hover() { }
 
-        public virtual void tick(double time) { }
+        public virtual void Tick(double time) { }
 
-        public virtual void setFrame(int frame) { }
+        public virtual void SetFrame(int frame) { }
 
-        public virtual void click(int x, int y) { }
+        public virtual void Click(int x, int y) { }
 
-        public virtual void move(int x, int y) { }
+        public virtual void Move(int x, int y) { }
 
-        public void push(int x, int y)
+        public void Push(int x, int y)
         {
             shift = new Vector2(screen.X - x, screen.Y - y);
             start = new Point(x, y);
         }
 
-        public bool moved(int x, int y)
+        public bool Moved(int x, int y)
         {
             if (Math.Abs(start.X - x) > 1 || Math.Abs(start.Y - y) > 1)
                 return true;
@@ -52,22 +52,22 @@ namespace Brain3D
             return false;
         }
 
-        public override void show()
+        public override void Show()
         {
-            base.show();
+            base.Show();
 
             if (!added)
             {
-                display.add(this);
+                display.Add(this);
                 added = true;
             }
         }
 
-        public override void remove()
+        public override void Remove()
         {
             added = false;
             visible = added;
-            base.remove();
+            base.Remove();
         }
 
         #endregion

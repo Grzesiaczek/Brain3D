@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Brain3D
 {
-    class Comparer : IComparer<AnimatedElement>, IComparer<Neuron>, IComparer<BalancedTree>
+    class Comparer : IComparer<AnimatedElement>, IComparer<SimulatedNeuron>, IComparer<BalancedTree>
     {
         public int Compare(AnimatedElement x, AnimatedElement y)
         {
@@ -17,7 +17,7 @@ namespace Brain3D
             return 0;
         }
 
-        public int Compare(Neuron x, Neuron y)
+        public int Compare(SimulatedNeuron x, SimulatedNeuron y)
         {
             if (x.Ratio < y.Ratio)
                 return 1;

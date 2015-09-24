@@ -35,7 +35,7 @@ namespace Brain3D
             patterns[100] = getPattern("R");
         }
 
-        public override void initialize()
+        public override void Initialize()
         {
             pattern = patterns[number].Item1;
             int[] numbers = patterns[number].Item2;
@@ -56,7 +56,7 @@ namespace Brain3D
             for (int i = 0; i < index; i++)
                 indices[i] = numbers[i];
 
-            offset = buffer.add(vertices, indices);
+            offset = buffer.Add(vertices, indices);
             initialized = true;
         }
 

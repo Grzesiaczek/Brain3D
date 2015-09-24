@@ -89,7 +89,7 @@ namespace Brain3D
             Number3D.initializePatterns();
             Pipe.initializePalettes();
 
-            Chart.initializeAngles();                
+            Chart.InitializeAngles();                
             Tile.initializeTextures();
 
             controller = new Controller();
@@ -112,30 +112,30 @@ namespace Brain3D
             Device.Clear(background);
             Device.DepthStencilState = DepthStencilState.Default;
 
-            initializeEffect();
+            InitializeEffect();
 
             if(Number3D.Change && presentation is Animation)
             {
-                numbers.clear(false);
-                numbers.initialize();
+                numbers.Clear(false);
+                numbers.Initialize();
 
                 if(presentation is Animation)
-                    numbers.show();
+                    numbers.Show();
             }
 
-            buffer.draw();
-            numbers.draw();
-            test.draw();
+            buffer.Draw();
+            numbers.Draw();
+            test.Draw();
 
             batch.Begin();
 
             foreach (SpriteElement sprite in sprites)
-                sprite.draw();
+                sprite.Draw();
 
             batch.End();
         }
 
-        void initializeEffect()
+        void InitializeEffect()
         {
             effect.View = Matrix.CreateLookAt(camera.Position, camera.Target, camera.Up);
 
@@ -151,7 +151,7 @@ namespace Brain3D
 
         #region funkcje podstawowe
 
-        public void show(Presentation presentation)
+        public void Show(Presentation presentation)
         {
             this.presentation = presentation;
             viewArea = 0.84f;
@@ -165,44 +165,44 @@ namespace Brain3D
             
             DrawableElement.Camera = camera;
 
-            initializeEffect();
-            initialize();
-            show();
+            InitializeEffect();
+            InitializeBuffers();
+            ShowDisplay();
         }
 
-        void show()
+        void ShowDisplay()
         {
-            buffer.show();
-            numbers.show();
-            test.show();
+            buffer.Show();
+            numbers.Show();
+            test.Show();
         }
 
-        void initialize()
+        void InitializeBuffers()
         {
-            buffer.initialize();
-            numbers.initialize();
-            test.initialize();
+            buffer.Initialize();
+            numbers.Initialize();
+            test.Initialize();
             initialized = true;
         }
 
-        public void hide()
+        public void HideDisplay()
         {
-            buffer.hide();
-            numbers.hide();
-            test.hide();
+            buffer.Hide();
+            numbers.Hide();
+            test.Hide();
         }
 
-        public void clear()
+        public void Clear()
         {
             if (elements != null)
             {
-                Balancing.Instance.stop();
+                Balancing.Instance.Stop();
 
                 while (locked)
                     Thread.Sleep(2);
 
                 foreach (AnimatedElement element in elements)
-                    element.remove();
+                    element.Remove();
 
                 elements.Clear();
             }
@@ -210,9 +210,9 @@ namespace Brain3D
             if (sprites != null)
                 sprites.Clear();
 
-            buffer.clear();
-            numbers.clear();
-            test.clear();
+            buffer.Clear();
+            numbers.Clear();
+            test.Clear();
 
             initialized = false;
         }
@@ -221,39 +221,39 @@ namespace Brain3D
 
         #region funkcje odświeżające
 
-        public void move()
+        public void Moved()
         {
             if (locked || !initialized)
                 return;
 
             locked = true;
-            ThreadPool.QueueUserWorkItem(moving);
+            ThreadPool.QueueUserWorkItem(Moving);
         }
 
-        void moving(object state)
+        void Moving(object state)
         {
             HashSet<AnimatedElement> elements = new HashSet<AnimatedElement>(this.elements);
 
             foreach (AnimatedElement element in elements)
-                element.move();
+                element.Move();
 
             locked = false;
         }
 
-        public void rotate()
+        public void Rotate()
         {
-            ThreadPool.QueueUserWorkItem(rotation);
+            ThreadPool.QueueUserWorkItem(Rotation);
         }
 
-        void rotation(object state)
+        void Rotation(object state)
         {
             HashSet<AnimatedElement> elements = new HashSet<AnimatedElement>(this.elements);
 
             foreach (AnimatedElement element in elements)
-                element.rotate();
+                element.Rotate();
         }
 
-        public void resize()
+        public void ResizeWindow()
         {
             Width = Parent.Width - margin;
             Height = Parent.Height;
@@ -262,19 +262,19 @@ namespace Brain3D
                 controller.resize();
 
             if(presentation != null)
-                presentation.resize();
+                presentation.Resize();
         }
 
         #endregion
 
         #region funkcje dodatkowe
 
-        public void print(Presentation presentation)
+        public void Print(Presentation presentation)
         {
-            ThreadPool.QueueUserWorkItem(screen, presentation);
+            ThreadPool.QueueUserWorkItem(Screen, presentation);
         }
 
-        void screen(object state)
+        void Screen(object state)
         {
             String title = "";
 
@@ -298,13 +298,13 @@ namespace Brain3D
             Device.RasterizerState = RasterizerState.CullNone;
 
             effect.CurrentTechnique.Passes[0].Apply();
-            buffer.draw();
-            numbers.draw();
+            buffer.Draw();
+            numbers.Draw();
 
             batch.Begin();
 
             foreach (SpriteElement sprite in sprites)
-                sprite.draw();
+                sprite.Draw();
 
             batch.End();
             Device.SetRenderTarget(null);
@@ -317,7 +317,7 @@ namespace Brain3D
             stream.Close();
         }
 
-        public void setMargin(int value)
+        public void SetMargin(int value)
         {
             margin = value;
         }
@@ -328,77 +328,77 @@ namespace Brain3D
 
         void mouseClick(object sender, MouseEventArgs e)
         {
-            presentation.mouseClick(e.X, e.Y);
+            presentation.MouseClick(e.X, e.Y);
         }
 
         void mouseMove(object sender, MouseEventArgs e)
         {
-            presentation.mouseMove(e.X, e.Y);
+            presentation.MouseMove(e.X, e.Y);
         }
 
         void mouseDown(object sender, MouseEventArgs e)
         {
-            presentation.mouseDown(e.X, e.Y);
+            presentation.MouseDown(e.X, e.Y);
         }
 
         void mouseUp(object sender, MouseEventArgs e)
         {
-            presentation.mouseUp(e.X, e.Y);
+            presentation.MouseUp(e.X, e.Y);
         }
 
         #endregion
 
         #region sterowanie kamerą
 
-        public void moveX(float value)
+        public void MoveX(float value)
         {
-            camera.moveX(value);
-            rotate();
+            camera.MoveX(value);
+            Rotate();
         }
 
-        public void rescale(Vector2 factor)
+        public void Rescale(Vector2 factor)
         {
-            camera.rescale(factor);
-            rotate();
+            camera.Rescale(factor);
+            Rotate();
         }
 
-        public void left()
+        public void MoveLeft()
         {
-            camera.moveLeft();
-            rotate();
+            camera.MoveLeft();
+            Rotate();
         }
 
-        public void right()
+        public void MoveRight()
         {
-            camera.moveRight();
-            rotate();
+            camera.MoveRight();
+            Rotate();
         }
 
-        public void up()
+        public void Up()
         {
-            camera.moveUp();
-            rotate();
+            camera.MoveUp();
+            Rotate();
         }
 
-        public void down()
+        public void Down()
         {
-            camera.moveDown();
-            rotate();
+            camera.MoveDown();
+            Rotate();
         }
 
-        public void closer()
+        public void Closer()
         {
-            camera.closer();
-            rotate();
+            camera.Closer();
+            Rotate();
         }
 
-        public void farther()
+        public void Farther()
         {
-            camera.farther();
-            rotate();
+            camera.Farther();
+            Rotate();
         }
 
-        public void broaden()
+        public void Broaden()
         {
             if (viewArea >= 2.0f)
                 return;
@@ -406,7 +406,7 @@ namespace Brain3D
             viewArea += 0.01f;
         }
 
-        public void tighten()
+        public void Tighten()
         {
             if (viewArea <= 0.4f)
                 return;
@@ -418,7 +418,12 @@ namespace Brain3D
 
         #region sterowanie zawartością
 
-        public void add(DrawableElement element)
+        public void Add(AnimatedElement element)
+        {
+            elements.Add(element);
+        }
+
+        public void Add(DrawableElement element)
         {
             if (element is Number3D)
                 element.Buffer = numbers;
@@ -426,31 +431,27 @@ namespace Brain3D
                 element.Buffer = buffer;
         }
 
-        public void add(SpriteElement element)
+        public void Add(SpriteElement element)
         {
             sprites.Add(element);
         }
 
-        public void remove(SpriteElement element)
+        public void Remove(SpriteElement element)
         {
             sprites.Remove(element);
         }
 
-        public void add(AnimatedElement element)
-        {
-            elements.Add(element);
-        }
-
-        public void show(Sequence sequence)
+        public void Show(Sequence sequence)
         {
             if (this.sequence != null)
-                this.sequence.hide();
+                this.sequence.Hide();
 
             this.sequence = sequence;
-            sequence.show();
+            presentation.Refresh();
+            sequence.Show();
         }
 
-        public GraphicsBuffer show(CreationHistory history)
+        public GraphicsBuffer Show(CreationHistory history)
         {
             return test;
         }

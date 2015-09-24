@@ -30,7 +30,7 @@ namespace Brain3D
             indices = new int[3 * points];
         }
 
-        public override void initialize()
+        public override void Initialize()
         {
             vertices[points] = new VertexPositionColor(position, color);
 
@@ -52,11 +52,11 @@ namespace Brain3D
                 indices[index + 2] = i;
             }
 
-            offset = buffer.add(vertices, indices);
+            offset = buffer.Add(vertices, indices);
             initialized = true;
         }
 
-        public override void move()
+        public override void Move()
         {
             if (!initialized)
                 return;
@@ -78,12 +78,12 @@ namespace Brain3D
                 buffer.Vertices[j++].Color = color;
         }
 
-        public override void rescale()
+        public override void Rescale()
         {
             for (int i = 0; i < points; i++)
                 framework[i] = pattern.Data[i] * radius * scale;
 
-            move();
+            Move();
         }
 
         public float Radius

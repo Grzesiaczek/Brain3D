@@ -38,7 +38,7 @@ namespace Brain3D
             phase = Phase.Zero;
         }
 
-        public void create()
+        public void Create()
         {
             if (!neuron.Created)
             {
@@ -53,42 +53,42 @@ namespace Brain3D
             }
 
             foreach (CreationData cd in data)
-                cd.execute();
+                cd.Execute();
         }
 
-        public void activate()
+        public void Activate()
         {
             tile.activate();
             neuron.activate();
         }
 
-        public void idle()
+        public void Idle()
         {
             tile.idle();
-            neuron.idle();
+            neuron.Idle();
         }
 
-        public void undo()
+        public void Undo()
         {
-            idle();
+            Idle();
 
             if(neuron.Frame == frame)
-                neuron.hide();
+                neuron.Hide();
 
             foreach (CreatedVector vector in vectors)
-                vector.hide();
+                vector.Hide();
 
             foreach (CreationData cd in data)
-                cd.undo();
+                cd.Undo();
         }
 
-        public void execute()
+        public void Execute()
         {
             foreach (CreationData cd in data)
-                cd.execute();
+                cd.Execute();
         }
 
-        public bool tick(double interval)
+        public bool Tick(double interval)
         {
             time += interval;
             float scale = (float)(time / 20);
@@ -110,7 +110,7 @@ namespace Brain3D
                     break;
                 case Phase.Three:
                     foreach (CreationData cd in data)
-                        cd.tick(scale);
+                        cd.Tick(scale);
 
                     break;
             }
@@ -162,12 +162,12 @@ namespace Brain3D
             return false;
         }
 
-        public void add(CreationData data)
+        public void Add(CreationData data)
         {
             this.data.Add(data);
         }
 
-        public void add(CreatedVector synapse)
+        public void Add(CreatedVector synapse)
         {
             vectors.Add(synapse);
         }

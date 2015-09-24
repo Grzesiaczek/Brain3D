@@ -50,25 +50,25 @@ namespace Brain3D
 
         #region logika
 
-        public void tick(float scale)
+        public void Tick(float scale)
         {
             state.setChange(value.Start, value.Start + value.Value * scale);
             state.setFactor(factor.Start + factor.Value * scale);
         }
 
-        public void set()
+        public void Set()
         {
             state.setChange(value.Start, value.Finish);
             state.setFactor(factor.Finish);
         }
 
-        public void execute()
+        public void Execute()
         {
             state.setValue(value.Finish);
             state.setFactor(factor.Finish);
         }
 
-        public void undo()
+        public void Undo()
         {
             state.setValue(value.Start);
             state.setFactor(factor.Start);
@@ -78,7 +78,7 @@ namespace Brain3D
 
         #region wyświetlanie
 
-        public void show(GraphicsBuffer buffer)
+        public void Show(GraphicsBuffer buffer)
         {
             before.Scale = 1;
             after.Scale = 1;
@@ -86,22 +86,22 @@ namespace Brain3D
             before.Buffer = buffer;
             after.Buffer = buffer;
 
-            display.add(number);
-            display.add(change);
+            display.Add(number);
+            display.Add(change);
 
             visible = true;
         }
 
-        public void hide()
+        public void Hide()
         {
             if (!visible)
                 return;
 
-            before.remove();
-            after.remove();
+            before.Remove();
+            after.Remove();
 
-            number.hide();
-            change.hide();
+            number.Hide();
+            change.Hide();
         }
 
         #endregion

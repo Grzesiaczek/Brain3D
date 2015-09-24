@@ -35,7 +35,7 @@ namespace Brain3D
         {
             if(factor == -1)
             {
-                hide();
+                Hide();
                 return;
             }
 
@@ -43,8 +43,8 @@ namespace Brain3D
                 activate();
 
             this.factor = factor;
-            rotate();
-            pipe.move();
+            Rotate();
+            pipe.Move();
         }
 
         void shift()
@@ -59,27 +59,27 @@ namespace Brain3D
         void activate()
         {
             pipe.Scale = 1;
-            pipe.show();
+            pipe.Show();
             active = true;
         }
 
-        public override void rotate()
+        public override void Rotate()
         {
             shift();
             pipe.Source = source + vector * (float)factor + new Vector3(0, 0, 0.05f);
             pipe.Target = pipe.Source + bullet + new Vector3(0, 0, 0.05f);
-            pipe.rotate();
+            pipe.Rotate();
         }
 
-        public override void show()
+        public override void Show()
         {
             pipe.add();
         }
 
-        public override void hide()
+        public override void Hide()
         {
-            pipe.hide();
-            pipe.move();
+            pipe.Hide();
+            pipe.Move();
             active = false;
         }
 

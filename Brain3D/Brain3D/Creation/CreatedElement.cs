@@ -12,50 +12,50 @@ namespace Brain3D
 
         public virtual void show()
         {
-            element.show();
+            element.Show();
         }
 
-        public virtual void hide()
+        public virtual void Hide()
         {
             created = false;
-            element.hide();
+            element.Hide();
         }
 
-        public void hover()
+        public void Hover()
         {
-            element.hover();
+            element.Hover();
         }
 
         public void activate()
         {
-            element.activate();
+            element.Activate();
         }
 
-        public void idle()
+        public void Idle()
         {
-            element.idle();
+            element.Idle();
         }
 
-        public virtual void click(int x, int y) { }
+        public virtual void Click(int x, int y) { }
 
-        public void move(int x, int y)
+        public void Move(int x, int y)
         {
-            element.move(x, y);
+            element.Move(x, y);
         }
 
-        public void push(int x, int y)
+        public void Push(int x, int y)
         {
-            element.push(x, y);
+            element.Push(x, y);
         }
 
-        public bool cursor(int x, int y)
+        public bool Cursor(int x, int y)
         {
-            return element.cursor(x, y);
+            return element.Cursor(x, y);
         }
 
-        public bool moved(int x, int y)
+        public bool Moved(int x, int y)
         {
-            return element.moved(x, y);
+            return element.Moved(x, y);
         }
     }
 }

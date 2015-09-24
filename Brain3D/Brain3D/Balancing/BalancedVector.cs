@@ -44,7 +44,7 @@ namespace Brain3D
                 return;
 
             Vector3 shift = Vector3.Zero;
-            Tuple<Vector2, float> tuple = Constant.getDistance(synapse.Pre.Position, synapse.Post.Position, neuron.Position);
+            Tuple<Vector2, float> tuple = Constant.GetDistance(synapse.Pre.Position, synapse.Post.Position, neuron.Position);
 
             float distance = tuple.Item1.Length();
             float eq = tuple.Item2;

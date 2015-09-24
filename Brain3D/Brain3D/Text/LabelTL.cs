@@ -29,7 +29,7 @@ namespace Brain3D
             color = Color.DarkBlue;        
         }
 
-        public override void initialize()
+        public override void Initialize()
         {
             int vertex = text.Vertices.Length;
             int index = text.Indices.Length;
@@ -47,7 +47,7 @@ namespace Brain3D
             for (int i = 0; i < index; i++)
                 indices[i] = text.Indices[i];
 
-            offset = buffer.add(vertices, indices);
+            offset = buffer.Add(vertices, indices);
             initialized = true;
         }
     }

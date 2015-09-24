@@ -31,7 +31,7 @@ namespace Brain3D
                 corner.X += width - font.MeasureString(text).X / 2;
         }
 
-        public override void draw()
+        public override void Draw()
         {
             batch.DrawString(font, text, corner, color);
         }

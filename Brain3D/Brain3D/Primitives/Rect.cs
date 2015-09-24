@@ -21,7 +21,7 @@ namespace Brain3D
             indices = new int[6];
         }
 
-        public override void initialize()
+        public override void Initialize()
         {
             vertices[0] = new VertexPositionColor(position, color);
             vertices[1] = new VertexPositionColor(position + new Vector3(0, size.Y, 0), color);
@@ -35,11 +35,11 @@ namespace Brain3D
             indices[4] = 3;
             indices[5] = 2;
 
-            offset = buffer.add(vertices, indices);
+            offset = buffer.Add(vertices, indices);
             initialized = true;
         }
 
-        public override void move()
+        public override void Move()
         {
             buffer.Vertices[offset + 0].Position = position;
             buffer.Vertices[offset + 1].Position = position + new Vector3(0, size.Y, 0);

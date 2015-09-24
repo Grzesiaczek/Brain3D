@@ -31,7 +31,7 @@ namespace Brain3D
         public override void show()
         {
             Scale = 0;
-            synapse.show();
+            synapse.Show();
         }
 
         public void init()
@@ -41,7 +41,7 @@ namespace Brain3D
 
         public void create()
         {
-            synapse.create();
+            synapse.Create();
         }
 
         #region właściwości

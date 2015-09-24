@@ -20,7 +20,7 @@ namespace Brain3D
             else
                 builder = new BuiltTile(sequence.Last().Right + 10);
 
-            add(builder);
+            Add(builder);
         }
 
         public CreationSequence(List<CreationFrame> frames)
@@ -32,7 +32,7 @@ namespace Brain3D
             }
 
             this.frames = frames;
-            arrange();
+            Arrange();
         }
 
         public CreationFrame get(int index)

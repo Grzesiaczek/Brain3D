@@ -36,7 +36,7 @@ namespace Brain3D
             indices = new int[6 * count - 6];
         }
 
-        public static void initializeAngles()
+        public static void InitializeAngles()
         {
             double angle = Math.PI / 2 - 1.57;
             angles = new Vector2[314];
@@ -45,43 +45,43 @@ namespace Brain3D
                 angles[i] = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
         }
 
-        public void activate()
+        public void Activate()
         {
             for (int i = 0, j = offset; i < vertex; i++)
                 buffer.Vertices[j++].Position = active[i];
         }
 
-        public void idle()
+        public void Idle()
         {
             for (int i = 0, j = offset; i < vertex; i++)
                 buffer.Vertices[j++].Position = normal[i];
         }
 
-        public override void show()
+        public override void Show()
         {
-            prepareCircles();
+            PrepareCircles();
 
             if (buffer == null)
-                display.add(this);
+                display.Add(this);
             else
             {
-                buffer.show(indices);
-                base.show();
+                buffer.Show(indices);
+                base.Show();
             }
 
             visible = true;
         }
 
-        public override void hide()
+        public override void Hide()
         {
-            base.hide();
-            buffer.hide(indices);
+            base.Hide();
+            buffer.Hide(indices);
             visible = false;
         }
 
-        public override void initialize()
+        public override void Initialize()
         {
-            prepare();
+            Prepare();
 
             for (int i = 0; i < vertex; i++)
                 vertices[i] = new VertexPositionColor(normal[i], color);
@@ -98,15 +98,15 @@ namespace Brain3D
                 indices[j++] = index + 1;
             }
 
-            offset = buffer.add(vertices, indices);
+            offset = buffer.Add(vertices, indices);
             initialized = true;
         }
 
-        void prepareCircles()
+        void PrepareCircles()
         {
             Circle pattern = new Circle(1);
             pattern.Direction = new Vector3(0, 0, 1);
-            pattern.rotate();
+            pattern.Rotate();
 
             disks = new List<Tuple<Disk, int>>();
             drawables.Clear();
@@ -132,7 +132,7 @@ namespace Brain3D
             }
         }
 
-        void prepare()
+        void Prepare()
         {
             float value = 0;
             float previous = 0;
@@ -207,17 +207,17 @@ namespace Brain3D
             }
         }
 
-        public override void rescale()
+        public override void Rescale()
         {
-            prepare();
-            idle();
+            Prepare();
+            Idle();
 
             foreach (Tuple<Disk, int> tuple in disks)
             {
                 Vector3 position = tuple.Item1.Position;
                 position = new Vector3(0.01f * scale * tuple.Item2, position.Y, position.Z);
                 tuple.Item1.Position = position;
-                tuple.Item1.move();
+                tuple.Item1.Move();
             }
         }
 
@@ -229,7 +229,7 @@ namespace Brain3D
                 buffer = value;
 
                 if (buffer != null)
-                    buffer.add(this);
+                    buffer.Add(this);
             }
         }
 
@@ -238,7 +238,7 @@ namespace Brain3D
             set
             {
                 scale = value;
-                rescale(); 
+                Rescale(); 
             }
         }
     }

@@ -30,6 +30,7 @@ namespace Brain3D
         double time = 0;
         double interval = 0.4;
 
+        bool insertion;
         bool invitation;
 
         #endregion
@@ -59,7 +60,7 @@ namespace Brain3D
             count = 0;
         }
 
-        protected override void brainLoaded(object sender, EventArgs e)
+        protected override void BrainLoaded(object sender, EventArgs e)
         {
             clear();
 
@@ -88,7 +89,7 @@ namespace Brain3D
                 }
         }
 
-        public override void show()
+        public override void Show()
         {
             foreach (CreatedNeuron neuron in neurons)
                 neuron.show();
@@ -96,48 +97,48 @@ namespace Brain3D
             foreach (CreatedVector vector in vectors)
                 vector.show();
 
-            display.show(this);
-            display.hide();
+            display.Show(this);
+            display.HideDisplay();
 
             if (!balanced)
             {
-                balancing.stop();
+                balancing.Stop();
                 balancing.balance(neurons, vectors);
             }
 
             foreach (CreatedNeuron neuron in neurons)
-                neuron.hide();
+                neuron.Hide();
 
             foreach (CreatedVector vector in vectors)
-                vector.hide();
+                vector.Hide();
 
             for (int i = 0; i < count; i++)
-                frames[i].create();
+                frames[i].Create();
 
-            controller.changeState(count, frames.Count);
-            controller.show();
+            controller.ChangeState(count, frames.Count);
+            controller.Show();
 
             insertion = false;
             visible = true;
         }
 
-        public override void balanceSynapses()
+        public override void BalanceSynapses()
         {
             balancing.balance(vectors);
         }
         
-        protected override void tick()
+        protected override void Tick()
         {
             time += interval;
 
-            if (frame != null && frame.tick(interval))
+            if (frame != null && frame.Tick(interval))
             {
                 if (count < frames.Count)
                     setFrame(count + 1);
             }
         }
 
-        public override void mouseClick(int x, int y)
+        public override void MouseClick(int x, int y)
         {
             if (history != null)
             {
@@ -161,7 +162,7 @@ namespace Brain3D
 
         #region sterowanie
 
-        public override void start()
+        public override void Start()
         {
             if (Started)
                 return;
@@ -169,53 +170,53 @@ namespace Brain3D
             if (count < frames.Count - 1)
             {
                 if (count == 0)
-                    frames[0].activate();
+                    frames[0].Activate();
 
                 if (!paused)
                 {
                     frame = frames[count++];
-                    controller.changeFrame(count);
+                    controller.ChangeFrame(count);
                 }
 
                 if(sequence == null)
                 {
                     sequence = frame.Sequence;
-                    display.show(sequence);
+                    display.Show(sequence);
                 }
             }
 
-            base.start();
+            base.Start();
         }
 
-        public override void back()
+        public override void Back()
         {
             if (count == 0)
                 return;
 
             setFrame(count - 1);
-            controller.changeFrame(count);
+            controller.ChangeFrame(count);
         }
 
-        public override void forth()
+        public override void Forth()
         {
             if(frame != null)
-                frame.create();
+                frame.Create();
 
             if(count < frames.Count)
                 setFrame(++count);
         }
 
-        public override void changeFrame(int frame)
+        public override void ChangeFrame(int frame)
         {
             setFrame(frame);
         }
 
-        public override void changePace(int pace)
+        public override void ChangePace(int pace)
         {
             interval = (8 - Math.Log(116 - pace, 2)) / 8;
         }
 
-        public override void add(char key)
+        public override void Add(char key)
         {
             if (!insertion)
                 return;
@@ -227,25 +228,25 @@ namespace Brain3D
                 addSequence();
             }
 
-            sequence.add(key);
+            sequence.Add(key);
         }
         
-        public override void erase()
+        public override void Erase()
         {
-            sequence.erase();
+            sequence.Erase();
         }
 
-        public override void space()
+        public override void Space()
         {
             if (insertion)
-                sequence.space();
+                sequence.Space();
             else if (Started)
-                stop();
+                Stop();
             else
-                start();
+                Start();
         }
 
-        public override void enter()
+        public override void Enter()
         {
             if (!insertion)
                 return;
@@ -257,15 +258,13 @@ namespace Brain3D
             addSequence();
         }
 
-        public override void delete()
+        public override void Delete()
         {
-            controller.changeState(--count, frames.Count);
+            controller.ChangeState(--count, frames.Count);
         }
 
-        public override void changeInsertion()
+        public override void ChangeInsertion()
         {
-            base.changeInsertion();
-
             if(insertion)
             {
                 setFrame(frames.Count);
@@ -319,8 +318,8 @@ namespace Brain3D
             sequence = new CreationSequence();
             sequences.Add(sequence);
 
-            controller.changeState(count, frames.Count);
-            display.show(sequence);
+            controller.ChangeState(count, frames.Count);
+            display.Show(sequence);
         }
 
         #endregion
@@ -329,7 +328,7 @@ namespace Brain3D
 
         void setFrame(int index)
         {
-            controller.changeFrame(index);
+            controller.ChangeFrame(index);
             bool forward = true;
             paused = false;
 
@@ -339,21 +338,21 @@ namespace Brain3D
             if (forward)
             {
                 for (int i = count + 1; i < index; i++)
-                    frames[i - 1].create();
+                    frames[i - 1].Create();
             }
             else
             {
                 for (int i = count; i > index; i--)
-                    frames[i - 1].undo();
+                    frames[i - 1].Undo();
             }
 
             if (index == 0)
             {
                 if(frame != null)
-                    frame.idle();
+                    frame.Idle();
 
                 if (sequence != null)
-                    sequence.hide();
+                    sequence.Hide();
 
                 sequence = null;
                 frame = null;
@@ -363,25 +362,25 @@ namespace Brain3D
 
             if (frame != null)
             {
-                frame.idle();
+                frame.Idle();
 
                 if (Started)
-                    frame.execute();
+                    frame.Execute();
             }
 
             frame = frames[index - 1];
-            frame.activate();
+            frame.Activate();
 
             count = index;
 
             if (sequence != frame.Sequence)
             {
                 sequence = frame.Sequence;
-                display.show(sequence);
+                display.Show(sequence);
             }
 
             if(!Started && frame != null)
-                frame.create();
+                frame.Create();
         }
 
         #endregion

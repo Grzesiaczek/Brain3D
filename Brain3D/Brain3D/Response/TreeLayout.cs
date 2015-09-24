@@ -25,7 +25,7 @@ namespace Brain3D
             drawables.AddRange(legend);
         }
 
-        public override void show()
+        public override void Show()
         {
             if (!initialized)
             {
@@ -36,7 +36,7 @@ namespace Brain3D
                 initialized = true;
             }
 
-            base.show();
+            base.Show();
         }
 
         public override float Scale

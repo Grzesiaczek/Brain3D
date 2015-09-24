@@ -74,48 +74,57 @@ namespace Brain3D
 
         #region sterowanie
 
-        public void simulate(QuerySequence sequence, int length)
+        public void Simulate(QuerySequence sequence, int length)
         {
             this.query = sequence;
             this.length = length * 10 + 1;
 
-            sequence.initialize();
-            simulate(0);
+            Constant.Query = sequence;
+            sequence.Initialize();
+            Simulate(0);
         }
 
-        public void simulate(int start)
+        public void Simulate(int start)
         {
-            foreach (Neuron neuron in neurons)
-                neuron.neutralize();
+            List<SimulatedNeuron> data = neurons.Select(n => n.GetSimulated(query)).ToList();
+
+            foreach (SimulatedNeuron neuron in data)
+                neuron.Neutralize();
 
             for (int i = start; i < length; i++)
             {
-                query.tick(i);
+                query.Tick(i);
 
-                foreach (Neuron neuron in neurons)
-                    neuron.tick(i);
+                foreach (SimulatedNeuron neuron in data)
+                    neuron.Tick(i);
             }
 
-            query.loadTiles();
+            query.LoadTiles();
             simulationFinished(query, null);
         }
 
-        public void initialize()
+        public void Initialize(QuerySequence query)
         {
-            BrainElement.initialize(250);
+            SimulatedElement.Initialize(250);
 
             foreach (Neuron neuron in neurons)
-                neuron.initialize();
+                neuron.Initialize(query);
 
             foreach (Synapse synapse in synapses)
-                synapse.initialize();
+                synapse.Initialize(query);
+
+            foreach (Neuron neuron in neurons)
+                neuron.SetSimulated(query);
+
+            foreach (Synapse synapse in synapses)
+                synapse.SetSimulated(query);
         }
 
         #endregion
 
         #region uczenie
 
-        public void addSentence(String sentence)
+        public void AddSentence(String sentence)
         {
             List<CreationFrame> frames = new List<CreationFrame>();
             List<Neuron> sequence = new List<Neuron>();
@@ -126,12 +135,15 @@ namespace Brain3D
 
             foreach (String word in words)
             {
-                CreationFrame frame = create(word, ++sentences);
+                CreationFrame frame = Create(word, ++sentences);
                 Neuron neuron = frame.Neuron.Neuron.Neuron;
                 eta = neuron.Count;
 
                 for (int i = 0; i < index; i++)
                 {
+                    if (sequence[i] == neuron)
+                        continue;
+
                     Synapse synapse = neuron.Input.Find(k => k.Pre.Equals(sequence[i]));
 
                     if (synapse == null)
@@ -141,7 +153,7 @@ namespace Brain3D
 
                         neuron.Input.Add(synapse);
                         sequence[i].Output.Add(synapse);
-                        frame.add(create(synapse));
+                        frame.Add(Create(synapse));
                     }
 
                     synapse.Change += floats[index - i];
@@ -157,7 +169,7 @@ namespace Brain3D
 
                     CreationData data = new CreationData(mapSynapses[synapse].Item2, frame, new Change(start, synapse.Weight), new Change(synapse.Factor));
                     mapSynapses[synapse].Item2.add(data);
-                    frame.add(data);
+                    frame.Add(data);
                 }
 
                 foreach (Synapse synapse in neuron.Input)
@@ -173,7 +185,7 @@ namespace Brain3D
 
                     CreationData data = new CreationData(mapSynapses[synapse].Item2, frame, new Change(start, synapse.Weight), new Change(synapse.Factor, factor));
                     mapSynapses[synapse].Item2.add(data);
-                    frame.add(data);
+                    frame.Add(data);
 
                     synapse.Change = 0;
                     synapse.Factor = factor;
@@ -189,15 +201,15 @@ namespace Brain3D
             sequences.Add(new CreationSequence(frames));
         }
 
-        CreatedNeuron create(Neuron neuron)
+        CreatedNeuron Create(Neuron neuron)
         {
-            AnimatedNeuron animated = new AnimatedNeuron(neuron, Constant.randomPoint());
+            AnimatedNeuron animated = new AnimatedNeuron(neuron, Constant.RandomPoint());
             CreatedNeuron created = new CreatedNeuron(animated);
             mapNeurons.Add(neuron, new Tuple<AnimatedNeuron,CreatedNeuron>(animated, created));
             return created;
         }
 
-        CreatedVector create(Synapse synapse)
+        CreatedVector Create(Synapse synapse)
         {
             AnimatedNeuron pre = mapNeurons[synapse.Pre].Item1;
             AnimatedNeuron post = mapNeurons[synapse.Post].Item1;
@@ -226,7 +238,7 @@ namespace Brain3D
             return created;
         }
 
-        CreationFrame create(String word, int frame)
+        CreationFrame Create(String word, int frame)
         {
             Neuron neuron = neurons.FirstOrDefault(k => k.Word == word); 
             CreatedNeuron created = null;
@@ -235,7 +247,7 @@ namespace Brain3D
             {
                 neuron = new Neuron(word);
                 neurons.Add(neuron);
-                created = create(neuron);
+                created = Create(neuron);
             }
             else
                 created = mapNeurons[neuron].Item2;
@@ -245,9 +257,9 @@ namespace Brain3D
         }
 
         //do przebudowy
-        public CreationFrame add(CreationSequence sequence, BuiltTile element, int frame)
+        public CreationFrame Add(CreationSequence sequence, BuiltTile element, int frame)
         {
-            CreationFrame result = create(element.Word, frame);
+            CreationFrame result = Create(element.Word, frame);
             Neuron neuron = result.Neuron.Neuron.Neuron;
 
             frames.Insert(result.Frame, result);

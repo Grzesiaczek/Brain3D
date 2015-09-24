@@ -55,7 +55,7 @@ namespace Brain3D
             Constant.spaceChanged += new EventHandler(spaceChanged);
         }
 
-        public void balance(HashSet<AnimatedNeuron> neurons, HashSet<AnimatedVector> vectors, int steps)
+        public void Balance(HashSet<AnimatedNeuron> neurons, HashSet<AnimatedVector> vectors, int steps)
         {
             while (pause)
                 Thread.Sleep(10);
@@ -88,7 +88,7 @@ namespace Brain3D
             ThreadPool.QueueUserWorkItem(balance);
         }
 
-        public void balance(HashSet<AnimatedVector> vectors, bool regular = true)
+        public void Balance(HashSet<AnimatedVector> vectors, bool regular = true)
         {
             if (action)
                 return;
@@ -123,7 +123,7 @@ namespace Brain3D
             foreach (CreatedVector vector in vectors)
                 animatedVectors.Add(vector.Synapse);
 
-            balance(animatedVectors, false);
+            Balance(animatedVectors, false);
         }
 
         void initialize(HashSet<AnimatedNeuron> neurons, HashSet<AnimatedVector> vectors)
@@ -168,7 +168,7 @@ namespace Brain3D
                 phase = Phase.Auto;
 
             BalancedNeuron.K = 32;
-            Constant.setBox(phase);
+            Constant.SetBox(phase);
 
             sw.Start();
             ThreadPool.QueueUserWorkItem(timer);
@@ -225,10 +225,10 @@ namespace Brain3D
                 if (++count == 200)
                 {
                     phase = Phase.Three;
-                    Constant.setBox(phase);
+                    Constant.SetBox(phase);
                 }
                 else
-                    Constant.setBox((float)count / 200);
+                    Constant.SetBox((float)count / 200);
             }
 
             if (Math.Abs(delta) < treshold)
@@ -365,7 +365,7 @@ namespace Brain3D
             balanceEnded(finished, null);
         }
 
-        public void stop()
+        public void Stop()
         {
             if (!action)
                 return;

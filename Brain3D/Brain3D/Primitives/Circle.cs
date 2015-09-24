@@ -30,11 +30,11 @@ namespace Brain3D
             for (int i = 0, j = 0; i < points; i++, j += factor)
                 circle[i] = new Vector3(Constant.Circle[j], 0);
 
-            rotate();
+            Rotate();
         }
 
 
-        public override void rotate()
+        public override void Rotate()
         {
             if (direction.Length() == 0)
                 for (int i = 0; i < points; i++)

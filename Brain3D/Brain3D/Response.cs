@@ -7,37 +7,65 @@ namespace Brain3D
 {
     class Response : TimeLine
     {
-        List<Leaf> leafs;
         List<Tree> wood;
 
-        Dictionary<Tuple<Neuron, int>, Leaf> map;
+        Dictionary<QuerySequence, Tree> forrest;
+        Dictionary<QuerySequence, List<Leaf>> map;
+
         TreeLayout layout;
         Tree tree;
+
+        Dictionary<QuerySequence, ResponseSequence> sequence;
 
         int index;
 
         public Response()
         {
-            leafs = new List<Leaf>();
             wood = new List<Tree>();
 
             layout = new TreeLayout();
-            map = new Dictionary<Tuple<Neuron, int>, Leaf>();
-            Neuron.activate += new EventHandler(activate);
+            forrest = new Dictionary <QuerySequence, Tree>();
+            sequence = new Dictionary<QuerySequence, ResponseSequence>();
+
+            map = new Dictionary<QuerySequence, List<Leaf>>();
+            SimulatedNeuron.Activate += new EventHandler(Activate);
         }
 
-        void activate(object sender, EventArgs e)
+        public void Play(Player player)
+        {
+            sequence[container.Query].Play(player);
+        }
+
+        void Activate(object sender, EventArgs e)
         {
             Tuple<Neuron, int> tuple = (Tuple<Neuron, int>)sender;
-            Leaf leaf = new Leaf(tuple.Item1, tuple.Item2);
-            leafs.Add(leaf);
-            map.Add(tuple, leaf);
+
+            if (!map.ContainsKey(Constant.Query))
+                map.Add(Constant.Query, new List<Leaf>());
+
+            map[Constant.Query].Add(new Leaf(tuple.Item1, tuple.Item2));
         }
 
-        public void reload(QuerySequence query)
+        public void Reload()
         {
-            wood.Clear();
+            HashSet<Synapse> synapses = new HashSet<Synapse>(brain.Synapses.Keys);
+            sequence.Clear();
 
+            foreach (QuerySequence query in map.Keys)
+            {
+                forrest.Add(query, new Tree(new HashSet<Leaf>(map[query]), synapses));
+                sequence.Add(query, new ResponseSequence());
+
+                foreach (Leaf leaf in map[query])
+                    sequence[query].Add(new SequenceTile(leaf.Neuron.Word));
+
+                sequence[query].Reload();
+            }
+
+            /*
+            wood.Clear();
+            wood.Add(new Tree(new HashSet<Leaf>(leafs), new HashSet<Synapse>(brain.Synapses.Keys)));
+            /*
             foreach(Tuple<Neuron, int> tuple in query.Activations)
             {
                 HashSet<Leaf> bush = new HashSet<Leaf>();
@@ -60,38 +88,43 @@ namespace Brain3D
                 wood.Add(new Tree(bush, new HashSet<Synapse>(brain.Synapses.Keys)));
             }
 
-            tree = wood[0];
+            sequence.Reload();
+            tree = wood[0];*/
         }
 
-        public void clear()
+        public void Clear()
         {
-            leafs.Clear();
-            wood.Clear();
+            sequence[container.Query].Clear();
             map.Clear();
         }
 
-        public override void show()
+        public override void Show()
         {
             foreach (Tree bush in wood)
-                bush.show();
+                bush.Show();
 
-            layout.show();
-            base.show();
+            layout.Show();
+            base.Show();
 
             foreach (Tree bush in wood)
-                bush.hide();
+                bush.Hide();
 
-            tree.show();
+            tree.Show();
         }
 
-        public override void hide()
+        public override void Hide()
         {
-            tree.hide();
-            layout.hide();
-            base.hide();
+            tree.Hide();
+            layout.Hide();
+            base.Hide();
         }
 
-        protected override void rescale()
+        public override void Refresh()
+        {
+            
+        }
+
+        protected override void Rescale()
         {
             foreach (Tree tree in wood)
                 tree.Scale = scale;
@@ -99,23 +132,23 @@ namespace Brain3D
             layout.Scale = scale;
         }
 
-        public override void up()
+        public override void Up()
         {
             if(index + 1 < wood.Count)
             {
-                tree.hide();
+                tree.Hide();
                 tree = wood[++index];
-                tree.show();
+                tree.Show();
             }
         }
 
-        public override void down()
+        public override void Down()
         {
             if(index > 0)
             {
-                tree.hide();
+                tree.Hide();
                 tree = wood[--index];
-                tree.show();
+                tree.Show();
             }
         }
     }

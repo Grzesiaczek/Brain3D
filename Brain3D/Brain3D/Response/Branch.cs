@@ -23,11 +23,11 @@ namespace Brain3D
             pipe.Scale = 1;
         }
 
-        public override void move()
+        public override void Move()
         {
             pipe.Source = source.Position;
             pipe.Target = target.Position;
-            pipe.move();
+            pipe.Move();
         }
 
         public Leaf Source

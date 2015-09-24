@@ -42,7 +42,7 @@ namespace Brain3D
             return new Tuple<Vector3[],int[]>(vertices, indices);
         }
 
-        public override void rotate()
+        public override void Rotate()
         {
             if (!initialized)
                 return;
@@ -50,12 +50,12 @@ namespace Brain3D
             for (int i = 0; i < vertices.Length; i++)
                 framework[i] = Vector3.Transform(pattern[i], camera.Rotation) * scale;
 
-            move();
+            Move();
         }
 
-        public override void rescale()
+        public override void Rescale()
         {
-            rotate();
+            Rotate();
         }
     }
 }

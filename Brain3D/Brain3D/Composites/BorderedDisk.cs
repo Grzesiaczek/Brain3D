@@ -36,10 +36,10 @@ namespace Brain3D
         public static void initializeCircle()
         {
             pattern = new Circle(1);
-            pattern.rotate();
+            pattern.Rotate();
         }
 
-        public override bool cursor(int x, int y)
+        public override bool Cursor(int x, int y)
         {
             if (!visible)
                 return false;

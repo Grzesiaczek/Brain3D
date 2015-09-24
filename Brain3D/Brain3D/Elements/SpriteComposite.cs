@@ -16,22 +16,22 @@ namespace Brain3D
             sprites = new List<SpriteElement>();
         }
 
-        public override void draw()
+        public override void Draw()
         {
             foreach (SpriteElement sprite in sprites)
-                sprite.draw();
+                sprite.Draw();
         }
 
-        public override void show()
+        public override void Show()
         {
             foreach (SpriteElement sprite in sprites)
-                sprite.show();
+                sprite.Show();
         }
 
-        public override void hide()
+        public override void Hide()
         {
             foreach (SpriteElement sprite in sprites)
-                sprite.hide();
+                sprite.Hide();
         }
     }
 }

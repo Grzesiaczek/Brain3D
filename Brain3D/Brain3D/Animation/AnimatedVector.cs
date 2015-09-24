@@ -36,7 +36,7 @@ namespace Brain3D
 
             duplex = null;
 
-            pipe = new Pipe(pre.pointVector(-angle), post.pointVector(angle), 0.1f, 0.1f, 0);
+            pipe = new Pipe(pre.PointVector(-angle), post.PointVector(angle), 0.1f, 0.1f, 0);
             state = new AnimatedSynapse(synapse, this);
 
             drawables.Add(pipe);
@@ -52,7 +52,7 @@ namespace Brain3D
 
         #region rysowanie
 
-        public override void tick(double time)
+        public override void Tick(double time)
         {
             int frame = (int)time;
             double rest = time - frame;
@@ -63,23 +63,23 @@ namespace Brain3D
                 duplex.tick(frame, rest);
         }
 
-        public override void move()
+        public override void Move()
         {
-            rotate();
-            base.move();
+            Rotate();
+            base.Move();
         }
 
-        public override void rotate()
+        public override void Rotate()
         {
             refreshAngle();
-            pipe.Source = pre.pointVector(-angle);
-            pipe.Target = post.pointVector(angle);
+            pipe.Source = pre.PointVector(-angle);
+            pipe.Target = post.PointVector(angle);
 
-            pipe.rotate();
-            state.rotate();
+            pipe.Rotate();
+            state.Rotate();
 
             if(duplex != null)
-                duplex.rotate();
+                duplex.Rotate();
         }
 
         void refreshAngle()
@@ -95,7 +95,7 @@ namespace Brain3D
             direction.Normalize();
         }
 
-        public override void setFrame(int frame)
+        public override void SetFrame(int frame)
         {
             frame *= 10;
             state.tick(frame, 0);
@@ -104,19 +104,19 @@ namespace Brain3D
                 duplex.tick(frame, 0);
         }
 
-        public override bool cursor(int x, int y)
+        public override bool Cursor(int x, int y)
         {
             if (!visible)
                 return false;
 
-            return base.cursor(x, y);
+            return base.Cursor(x, y);
         }
 
         #endregion
 
         #region sterowanie
 
-        public void create()
+        public void Create()
         {
             pipe.Scale = 1;
             state.create();
@@ -133,7 +133,7 @@ namespace Brain3D
                 duplex.setValue(0);
 
             Scale = 0;
-            show();
+            Show();
         }
 
         public void setDuplex(Synapse synapse)

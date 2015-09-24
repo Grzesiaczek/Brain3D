@@ -11,50 +11,50 @@ namespace Brain3D
 {
     class ChartedNeuron : DrawableComposite
     {
-        Neuron neuron;
+        SimulatedNeuron neuron;
         ChartedTile tile;
         Chart chart;
 
         bool active = false;
 
-        public ChartedNeuron(Neuron neuron, Point corner, Color color)
+        public ChartedNeuron(SimulatedNeuron neuron, Point corner, Color color)
         {
-            chart = new Chart(neuron, color);
-            tile = new ChartedTile(neuron.Word, corner, color);
+            chart = new Chart(neuron.Neuron, color);
+            tile = new ChartedTile(neuron.Neuron.Word, corner, color);
 
             this.neuron = neuron;
             visible = true;
         }
 
-        public override void show()
+        public override void Show()
         {
-            chart.show();
+            chart.Show();
             tile.activate();
-            tile.show();
+            tile.Show();
             visible = true;
         }
 
-        public override void hide()
+        public override void Hide()
         {
-            chart.hide();
+            chart.Hide();
             visible = false;
         }
 
-        public void change()
+        public void Change()
         {
             if(visible)
             {
-                chart.hide();
+                chart.Hide();
                 visible = false;
             }
             else
             {
-                chart.show();
+                chart.Show();
                 visible = true;
             }
         }
 
-        public void hover()
+        public void Hover()
         {
             if(active)
             {
@@ -63,20 +63,20 @@ namespace Brain3D
                 else
                     tile.idle();
 
-                chart.idle();
+                chart.Idle();
                 active = false;
             }
             else
             {
-                chart.activate();
+                chart.Activate();
                 tile.hover();
                 active = true;
             }
         }
 
-        public override bool cursor(int x, int y)
+        public override bool Cursor(int x, int y)
         {
-            return tile.cursor(x, y);
+            return tile.Cursor(x, y);
         }
 
         public int Top

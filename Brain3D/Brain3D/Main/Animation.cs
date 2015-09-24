@@ -17,9 +17,6 @@ namespace Brain3D
     {
         #region deklaracje
 
-        QuerySequence added;
-        QuerySequence query;
-
         HashSet<AnimatedNeuron> neurons;
         HashSet<AnimatedVector> vectors;
         HashSet<AnimatedSynapse> synapses;
@@ -30,16 +27,16 @@ namespace Brain3D
         double time = 0;
         double interval = 0.4;
 
-        public event EventHandler balanceFinished;
-        public event EventHandler intervalChanged;
+        public event EventHandler BalanceFinished;
+        public event EventHandler IntervalChanged;
         public event EventHandler queryAccepted;
 
         #endregion
 
         public Animation()
         {
-            balancing.balanceEnded += balanceEnded;
-            balancing.balanceUpdate += balanceUpdate;
+            balancing.balanceEnded += BalanceEnded;
+            balancing.balanceUpdate += BalanceUpdate;
 
             neurons = new HashSet<AnimatedNeuron>();
             vectors = new HashSet<AnimatedVector>();
@@ -59,6 +56,7 @@ namespace Brain3D
         public void reload()
         {
             clear();
+            loaded = true;
             balanced = false;
 
             foreach (Tuple<AnimatedNeuron, CreatedNeuron> tuple in brain.Neurons.Values)
@@ -74,7 +72,7 @@ namespace Brain3D
             mouses.AddRange(synapses);
         }
 
-        protected override void brainLoaded(object sender, EventArgs e)
+        protected override void BrainLoaded(object sender, EventArgs e)
         {
             reload();            
         }
@@ -83,7 +81,7 @@ namespace Brain3D
 
         #region funkcje sterujące
 
-        public override void start()
+        public override void Start()
         {
             if (Started)
                 return;
@@ -91,58 +89,42 @@ namespace Brain3D
             if (frame == 0)
             {
                 frame = 1;
-                controller.changeFrame(1);
+                controller.ChangeFrame(1);
             }
 
-            base.start();
+            base.Start();
             AnimatedNeuron.Animation = true;
         }
 
-        public override void stop()
+        public override void Stop()
         {
             if (!Started)
                 return;
 
-            base.stop();
+            base.Stop();
             AnimatedNeuron.Animation = false;
         }
 
-        public override void back()
+        public override void Back()
         {
             if (frame > 1)
-                changeFrame(frame - 1);
+                ChangeFrame(frame - 1);
         }
 
-        public override void forth()
+        public override void Forth()
         {
             if (frame < length)
-                changeFrame(frame + 1);
+                ChangeFrame(frame + 1);
         }
 
-        public override void higher()
-        {
-            if (added == null)
-                query.intervalUp();
-            else
-                added.intervalUp();
-        }
-
-        public override void lower()
-        {
-            if (added == null)
-                query.intervalDown();
-            else
-                added.intervalDown();
-        }
-
-        public override void changeFrame(int frame)
+        public override void ChangeFrame(int frame)
         {
             this.frame = frame;
             time = 10 * frame;
-            changeFrame();
+            ChangeFrame();
         }
 
-        public override void changePace(int pace)
+        public override void ChangePace(int pace)
         {
             interval = (8 - Math.Log(116 - pace, 2)) / 8;
         }
@@ -151,147 +133,115 @@ namespace Brain3D
 
         #region balansowanie grafu
 
-        public override void balanceSynapses()
+        public override void BalanceSynapses()
         {
-            balancing.balance(vectors);
+            balancing.Balance(vectors);
         }
 
-        public void balance()
+        public void Balance()
         {
-            balancing.stop();
-            balancing.balance(neurons, vectors, 32);
+            balancing.Stop();
+            balancing.Balance(neurons, vectors, 32);
         }
 
-        private void balanceUpdate(object sender, EventArgs e)
+        private void BalanceUpdate(object sender, EventArgs e)
         {
-            display.move();
+            display.Moved();
         }
 
-        private void balanceEnded(object sender, EventArgs e)
+        private void BalanceEnded(object sender, EventArgs e)
         {
             balanced = true;
-            controller.idle();
-            balanceFinished(this, new EventArgs());
+            controller.Idle();
+            BalanceFinished(this, new EventArgs());
         }
 
         #endregion
 
-        public void simulate(int value)
-        {
-            loaded = true;
-            length = value;
-
-            if(query == null)
-                query = new QuerySequence("what is this monkey like", 10 * length + 1);
-
-            query.load(brain);
-
-            brain.initialize();
-            brain.simulate(query, value);
-        }
-
-        public override void mouseClick(int x, int y)
+        public override void MouseClick(int x, int y)
         {
             if (active == null)
                 return;
 
-            if (Started && active is AnimatedNeuron && !active.moved(x, y))
+            if (Started && active is AnimatedNeuron && !active.Moved(x, y))
             {
-                ((AnimatedNeuron)active).Neuron.shot(time);
-                brain.simulate((int)time + 1);
+                //shot na simulatedneuron
+                //((AnimatedNeuron)active).Neuron.shot(time);
+                brain.Simulate((int)time + 1);
             }
         }
 
         #region obsługa zapytań
 
-        public override void enter()
+        public override void Enter()
         {
-            if (!insertion)
+            if (!container.Insertion)
             {
-                query.execute();
-                changeFrame(0);
-                intervalChanged(this, null);
+                container.Execute();
+                ChangeFrame(0);
+                IntervalChanged(this, null);
                 return;
             }
 
-            if (added.execute())
+            if (container.Execute())
             {
-                query = added;
-                query.load(brain);
+                //query = added;
+                //query.Load(brain);
 
-                changeInsertion();
-                controller.changeFrame(0);
-                queryAccepted(query, null);
-                changeFrame(0);
+                ChangeInsertion();
+                controller.ChangeFrame(0);
+                //queryAccepted(null, null);
+                ChangeFrame(0);
             }
         }
 
-        public override void space()
+        public override void Space()
         {
-            if(insertion)
-                added.space();
+            if(container.Insertion)
+                container.Space();
             else if (Started)
-                stop();
+                Stop();
             else
-                start();
-        }
-
-        public override void erase()
-        {
-            added.erase();
-        }
-
-        public override void changeInsertion()
-        {
-            base.changeInsertion();
-
-            if (insertion)
-            {
-                added = new QuerySequence(10 * length + 1);
-                display.show(added);
-            }
-            else
-                display.show(query);
-        }
-
-        public override void add(char key)
-        {
-            if(insertion)
-                added.add(key);
+                Start();
         }
 
         #endregion
 
         #region takie tam
 
-        public override void show()
+        public override void Show()
         {
             foreach (AnimatedNeuron neuron in neurons)
-                neuron.show();
+                neuron.Show();
 
             foreach (AnimatedVector vector in vectors)
             {
-                vector.show();
-                vector.create();
+                vector.Show();
+                vector.Create();
             }
 
-            display.show(this);
-            display.show(query);
+            display.Show(this);
 
-            controller.changeState(frame, length);
-            controller.show();
+            controller.ChangeState(frame, length);
+            controller.Show();
 
             foreach (AnimatedNeuron neuron in neurons)
                 neuron.Scale = 1;
 
             if(!balanced)
-                balance();
+                Balance();
 
-            insertion = false;
+            container.Insertion = false;
             visible = true;
         }
 
-        protected override void tick()
+        public override void Refresh()
+        {
+            if (!Started)
+                ChangeFrame();
+        }
+
+        protected override void Tick()
         {
             if (!loaded || frame == 0)
                 return;
@@ -302,34 +252,34 @@ namespace Brain3D
             if(step > frame)
             {
                 frame = step;
-                changeFrame();
+                ChangeFrame();
             }
 
             if (frame == length && Started)
             {
-                base.stop();
+                base.Stop();
                 return;
             }
 
             foreach (AnimatedNeuron neuron in neurons)
-                neuron.tick(time);
+                neuron.Tick(time);
 
             foreach (AnimatedVector vector in vectors)
-                vector.tick(time);
+                vector.Tick(time);
 
-            query.tick(time);
+            container.Tick(time);
         }
 
-        void changeFrame()
+        void ChangeFrame()
         {
             foreach (AnimatedNeuron neuron in neurons)
-                neuron.setFrame(frame);
+                neuron.SetFrame(frame);
 
             foreach (AnimatedVector vector in vectors)
-                vector.setFrame(frame);
+                vector.SetFrame(frame);
 
-            controller.changeFrame(frame);
-            query.setFrame(frame);
+            controller.ChangeFrame(frame);
+            container.SetFrame(frame);
         }
 
         #endregion

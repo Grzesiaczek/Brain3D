@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Brain3D
 {
-    abstract class BrainElement
+    abstract class SimulatedElement
     {
         protected static double tmax;
         protected static double omega;
@@ -15,11 +15,11 @@ namespace Brain3D
 
         public static void initialize(double omega, double tmax)
         {
-            BrainElement.tmax = tmax * 10;
-            BrainElement.omega = omega * 10;
+            SimulatedElement.tmax = tmax * 10;
+            SimulatedElement.omega = omega * 10;
         }
 
-        public static void initialize(int value)
+        public static void Initialize(int value)
         {
             length = value;
             size = 10 * length + 1;

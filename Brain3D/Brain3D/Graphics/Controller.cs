@@ -45,7 +45,7 @@ namespace Brain3D
             sprites.Add(counter);
         }
 
-        public override void draw()
+        public override void Draw()
         {
             times.Add(DateTime.Now);
 
@@ -62,36 +62,36 @@ namespace Brain3D
                 fps.Text = "FPS: " + (int)(1000 * count / span);
             }
 
-            base.draw();
+            base.Draw();
             count++;
         }
 
-        public void changeFrame(int frame)
+        public void ChangeFrame(int frame)
         {
             this.frame = frame;
             trackBar.Invoke(updateFrame, frame);
             counter.Value = frame;
         }
 
-        public void changeState(int frame, int frames)
+        public void ChangeState(int frame, int frames)
         {
             this.frames = frames;
             trackBar.Maximum = frames;
-            changeFrame(frame);
+            ChangeFrame(frame);
         }
 
-        public override void show()
+        public override void Show()
         {
-            display.add(this);
+            display.Add(this);
             insertion = false;
         }
 
-        public void add(TrackBar trackBar)
+        public void Add(TrackBar trackBar)
         {
             this.trackBar = trackBar;
         }
 
-        public void idle()
+        public void Idle()
         {
             status.Text = normal;
         }

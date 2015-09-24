@@ -25,7 +25,7 @@ namespace Brain3D
             indices = new int[6];
         }
 
-        public override void initialize()
+        public override void Initialize()
         {
             Vector3 vector = target - source;
             double angle = Math.Atan(vector.Y / vector.X);
@@ -43,7 +43,7 @@ namespace Brain3D
             indices[4] = 3;
             indices[5] = 2;
 
-            offset = buffer.add(vertices, indices);
+            offset = buffer.Add(vertices, indices);
             initialized = true;
         }
 

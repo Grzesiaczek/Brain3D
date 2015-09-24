@@ -97,7 +97,7 @@ namespace Brain3D
             }
 
             resize();
-            rescale();
+            Rescale();
         }
 
         public void setValue(float value)
@@ -108,8 +108,8 @@ namespace Brain3D
             r2 = value;
 
             resize();
-            disk.rescale();
-            outer.rescale();
+            disk.Rescale();
+            outer.Rescale();
         }
 
         public void changeValue(float value)
@@ -127,7 +127,7 @@ namespace Brain3D
                 outer.Color = Color.LightGreen;
             }
 
-            rescale();
+            Rescale();
         }
 
         public void refract()

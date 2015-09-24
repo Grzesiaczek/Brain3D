@@ -14,16 +14,16 @@ namespace Brain3D
         protected Color color;
         protected Point position;
 
-        public virtual void draw() { }
+        public virtual void Draw() { }
 
-        public virtual void show()
+        public virtual void Show()
         {
-            display.add(this);
+            display.Add(this);
         }
 
-        public virtual void hide()
+        public virtual void Hide()
         {
-            display.remove(this);
+            display.Remove(this);
         }
 
         public static SpriteBatch Batch

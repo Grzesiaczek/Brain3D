@@ -38,8 +38,8 @@ namespace Brain3D
             int size = 4;
             int size2 = 2 * size;
 
-            GraphicsBuffer buffer = display.show(this);
-            buffer.clear();
+            GraphicsBuffer buffer = display.Show(this);
+            buffer.Clear();
 
             position = new Vector3(x, y, -0.2f);
 
@@ -49,7 +49,7 @@ namespace Brain3D
                     break;
 
                 data.Position = position + new Vector3(0, height, 0.1f);
-                data.show(buffer);
+                data.Show(buffer);
                 height += interval;
             }
 
@@ -67,17 +67,17 @@ namespace Brain3D
             border = new Rect(position, new Vector3(160, height, -0.3f), Color.MediumPurple);
             border.Buffer = buffer;
 
-            buffer.initialize();
-            buffer.show();
+            buffer.Initialize();
+            buffer.Show();
         }
 
         public void hide()
         {
             foreach (CreationData data in history)
-                data.hide();
+                data.Hide();
 
-            background.hide();
-            border.hide();
+            background.Hide();
+            border.Hide();
         }
     }
 }

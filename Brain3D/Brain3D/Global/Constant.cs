@@ -16,6 +16,7 @@ namespace Brain3D
 
         static Random random;
         static String path;
+        static QuerySequence query;
 
         static Vector3 box;
         static Vector3 balance;
@@ -32,7 +33,7 @@ namespace Brain3D
 
         #endregion
 
-        public static void load()
+        public static void Load()
         {
             StreamReader reader;
             random = new Random();
@@ -53,7 +54,7 @@ namespace Brain3D
             }
             catch(Exception)
             {
-                loadDefault();
+                LoadDefault();
             }
 
             pi2 = (float)Math.PI / 2;
@@ -81,7 +82,7 @@ namespace Brain3D
                 circle[i] = new Vector2((float)Math.Cos(interval * i), (float)Math.Sin(interval * i));
         }
 
-        public static void save()
+        public static void Save()
         {
             StreamReader reader = new StreamReader(File.Open("Files\\config.xml", FileMode.Open));
             XmlDocument xml = new XmlDocument();
@@ -94,10 +95,10 @@ namespace Brain3D
             writer.Close();
         }
 
-        static void changePath(String path)
+        static void ChangePath(String path)
         {
             Constant.path = path;
-            Constant.save();
+            Constant.Save();
 
             if (File.Exists(System.IO.Path.Combine(path, "data.xml")))
                 return;
@@ -110,12 +111,12 @@ namespace Brain3D
             Directory.CreateDirectory(System.IO.Path.Combine(path, "Simulation"));
         }
 
-        static void loadDefault()
+        static void LoadDefault()
         {
-            changePath(System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Files"));
+            ChangePath(System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Files"));
         }
 
-        public static Vector3 randomPoint()
+        public static Vector3 RandomPoint()
         {
             Vector3 area;
 
@@ -134,7 +135,7 @@ namespace Brain3D
             return new Vector3(x, y, z);
         }
 
-        public static void setBox(Balancing.Phase phase)
+        public static void SetBox(Balancing.Phase phase)
         {
             if (phase == Balancing.Phase.Three)
                 box = normal;
@@ -142,12 +143,12 @@ namespace Brain3D
                 box = balance;
         }
 
-        public static void setBox(float factor)
+        public static void SetBox(float factor)
         {
             box = balance + factor * shift;
         }
 
-        public static Tuple<Vector2, float> getDistance(Vector3 source, Vector3 target, Vector3 point)
+        public static Tuple<Vector2, float> GetDistance(Vector3 source, Vector3 target, Vector3 point)
         {
             Vector3 vector = target - source;
             Vector3 position = point - source;
@@ -196,6 +197,18 @@ namespace Brain3D
             get
             {
                 return path;
+            }
+        }
+
+        public static QuerySequence Query
+        {
+            get
+            {
+                return query;
+            }
+            set
+            {
+                query = value;
             }
         }
 

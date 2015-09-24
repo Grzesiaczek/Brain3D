@@ -103,7 +103,7 @@ namespace Brain3D
             }
         }
 
-        public override void rotate()
+        public override void Rotate()
         {
             Vector3 pre = device.Viewport.Project(vector.Source, effect.Projection, effect.View, effect.World);
             Vector3 post = device.Viewport.Project(vector.Target, effect.Projection, effect.View, effect.World);
@@ -129,10 +129,10 @@ namespace Brain3D
 
             disk.Position = position + shiftDisk;
             state.Position = position + shiftState;
-            signal.move();
+            signal.Move();
         }
 
-        public override void idle()
+        public override void Idle()
         {
             if (active)
                 state.Color = Color.IndianRed;
@@ -140,23 +140,23 @@ namespace Brain3D
                 state.Color = color;
         }
 
-        public override void hover()
+        public override void Hover()
         {
             state.Color = Color.Orange;
         }
 
-        public override bool cursor(int x, int y)
+        public override bool Cursor(int x, int y)
         {
-            return disk.cursor(x, y);
+            return disk.Cursor(x, y);
         }
 
-        public override void move(int x, int y)
+        public override void Move(int x, int y)
         {
             Vector3 start = device.Viewport.Project(vector.Source, effect.Projection, effect.View, effect.World);
             Vector3 end = device.Viewport.Project(vector.Target, effect.Projection, effect.View, effect.World);
             Vector3 vec = end - start;
 
-            Tuple<Vector2, float> tuple = Constant.getDistance(start, end, new Vector3(x, y, (start.Z + end.Z) / 2));
+            Tuple<Vector2, float> tuple = Constant.GetDistance(start, end, new Vector3(x, y, (start.Z + end.Z) / 2));
 
             float min = 20 / vec.Length();
             float max = 1 - min;
@@ -171,8 +171,8 @@ namespace Brain3D
             if (duplex)
                 factor = 1 - factor;
 
-            rotate();
-            move();
+            Rotate();
+            Move();
         }
 
         #endregion

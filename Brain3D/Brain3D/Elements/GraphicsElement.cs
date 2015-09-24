@@ -17,11 +17,11 @@ namespace Brain3D
         protected static Display display;
         protected static BasicEffect effect;
 
-        public virtual void move() { }
+        public virtual void Move() { }
 
-        public virtual void rotate() { }
+        public virtual void Rotate() { }
 
-        public virtual bool cursor(int x, int y) { return false; }
+        public virtual bool Cursor(int x, int y) { return false; }
 
         public static Camera Camera
         {

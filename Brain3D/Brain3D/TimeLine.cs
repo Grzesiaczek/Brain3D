@@ -16,46 +16,46 @@ namespace Brain3D
             scale = 1;
         }
 
-        public override void show()
+        public override void Show()
         {
-            display.show(this);
-            changeFrame(frame);
-            controller.changeState(frame, length);
+            display.Show(this);
+            ChangeFrame(frame);
+            controller.ChangeState(frame, length);
         }
 
-        public override void hide()
+        public override void Hide()
         {
-            balancing.stop();
-            display.clear();
+            balancing.Stop();
+            display.Clear();
         }
 
-        public override void left()
+        public override void Left()
         {
-            back();
+            Back();
         }
 
-        public override void right()
+        public override void Right()
         {
-            forth();
+            Forth();
         }
 
-        public override void back()
+        public override void Back()
         {
             if (frame > 0)
-                changeFrame(--frame);
+                ChangeFrame(--frame);
 
-            controller.changeFrame(frame);
+            controller.ChangeFrame(frame);
         }
 
-        public override void forth()
+        public override void Forth()
         {
             if(frame < length)
-                changeFrame(++frame);
+                ChangeFrame(++frame);
 
-            controller.changeFrame(frame);
+            controller.ChangeFrame(frame);
         }
 
-        public override void broaden()
+        public override void Broaden()
         {
             if (scale >= 2)
                 return;
@@ -63,7 +63,7 @@ namespace Brain3D
             rescale(scale + 0.1f);
         }
 
-        public override void tighten()
+        public override void Tighten()
         {
             if (scale <= 0.3f)
                 return;
@@ -71,24 +71,24 @@ namespace Brain3D
             rescale(scale - 0.1f);
         }
 
-        public override void center()
+        public override void Center()
         {
             frame = (int)(30 / scale);
-            changeFrame(frame);
+            ChangeFrame(frame);
         }
 
         void rescale(float value)
         {
             scale = value;
-            rescale();
-            changeFrame(frame);
+            Rescale();
+            ChangeFrame(frame);
         }
 
-        protected virtual void rescale() { }
+        protected virtual void Rescale() { }
 
-        public override void changeFrame(int frame)
+        public override void ChangeFrame(int frame)
         {
-            display.moveX(0.1f * scale * frame);
+            display.MoveX(0.1f * scale * frame);
             this.frame = frame;
         }
     }

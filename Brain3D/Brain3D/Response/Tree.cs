@@ -31,8 +31,8 @@ namespace Brain3D
             drawables.AddRange(branches);
             drawables.AddRange(leafs);
 
-            // ThreadPool.QueueUserWorkItem(balance);
-            balance(null);
+            //ThreadPool.QueueUserWorkItem(balance);
+            //balance(null);
         }
 
         void balance(object state)
@@ -67,7 +67,7 @@ namespace Brain3D
             wood[0].shift();
 
             foreach (Branch branch in branches)
-                branch.move();
+                branch.Move();
         }
 
         public override float Scale
@@ -78,7 +78,7 @@ namespace Brain3D
                     leaf.Scale = value;
 
                 foreach (Branch branch in branches)
-                    branch.move();
+                    branch.Move();
             }
         }
     }

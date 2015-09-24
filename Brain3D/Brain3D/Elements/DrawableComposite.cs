@@ -15,52 +15,52 @@ namespace Brain3D
             drawables = new List<DrawableElement>();
         }
 
-        public override void initialize()
+        public override void Initialize()
         {
             foreach (DrawableElement drawable in drawables)
-                drawable.initialize();
+                drawable.Initialize();
         }
 
-        public override void move()
+        public override void Move()
         {
             foreach (DrawableElement drawable in drawables)
-                drawable.move();
+                drawable.Move();
         }
 
-        public override void rescale()
+        public override void Rescale()
         {
             foreach (DrawableElement drawable in drawables)
-                drawable.rescale();
+                drawable.Rescale();
         }
 
-        public override void rotate()
+        public override void Rotate()
         {
-            base.rotate();
+            base.Rotate();
 
             foreach (DrawableElement drawable in drawables)
-                drawable.rotate();
+                drawable.Rotate();
         }
 
-        public override void show()
+        public override void Show()
         {
             foreach (DrawableElement drawable in drawables)
-                drawable.show();
+                drawable.Show();
 
             visible = true;
         }
 
-        public override void hide()
+        public override void Hide()
         {
             foreach (DrawableElement drawable in drawables)
-                drawable.hide();
+                drawable.Hide();
 
             visible = false;
         }
 
-        public override void remove()
+        public override void Remove()
         {
             foreach (DrawableElement drawable in drawables)
-                drawable.remove();
+                drawable.Remove();
         }
 
         public override void moveX(float x)

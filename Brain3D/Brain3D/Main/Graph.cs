@@ -9,51 +9,51 @@ namespace Brain3D
     {
         protected static bool balanced;
 
-        public override void hide()
+        public override void Hide()
         {
             visible = false;
-            display.clear();
-            stop();
+            display.Clear();
+            Stop();
         }
 
-        public override void left()
+        public override void Left()
         {
-            display.left();
+            display.MoveLeft();
         }
 
-        public override void right()
+        public override void Right()
         {
-            display.right();
+            display.MoveRight();
         }
 
-        public override void up()
+        public override void Up()
         {
-            display.up();
+            display.Up();
         }
 
-        public override void down()
+        public override void Down()
         {
-            display.down();
+            display.Down();
         }
 
-        public override void closer()
+        public override void Closer()
         {
-            display.closer();
+            display.Closer();
         }
 
-        public override void farther()
+        public override void Farther()
         {
-            display.farther();
+            display.Farther();
         }
 
-        public override void broaden()
+        public override void Broaden()
         {
-            display.broaden();
+            display.Broaden();
         }
 
-        public override void tighten()
+        public override void Tighten()
         {
-            display.tighten();
+            display.Tighten();
         }
     }
 }

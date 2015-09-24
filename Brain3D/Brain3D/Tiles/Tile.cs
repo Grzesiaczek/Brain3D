@@ -108,7 +108,7 @@ namespace Brain3D
             normal = texturesNormal;
         }
 
-        public override bool cursor(int x, int y)
+        public override bool Cursor(int x, int y)
         {
             if (x < Left)
                 return false;
@@ -125,7 +125,7 @@ namespace Brain3D
             return true;
         }
 
-        public override void draw()
+        public override void Draw()
         {
             batch.Draw(texBorder, recBorder, Color.White);
             batch.Draw(texBackground, recBackground, Color.White);
@@ -183,22 +183,6 @@ namespace Brain3D
             get
             {
                 return recBorder.Bottom;
-            }
-        }
-
-        public int X
-        {
-            get
-            {
-                return recBorder.Center.X;
-            }
-        }
-
-        public int Y
-        {
-            get
-            {
-                return recBorder.Center.Y;
             }
         }
 

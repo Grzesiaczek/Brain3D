@@ -7,18 +7,18 @@ namespace Brain3D
 {
     interface Mouse
     {
-        void hover();
+        void Hover();
 
-        void idle();
+        void Idle();
 
-        void click(int x, int y);
+        void Click(int x, int y);
 
-        void move(int x, int y);
+        void Move(int x, int y);
 
-        void push(int x, int y);
+        void Push(int x, int y);
 
-        bool cursor(int x, int y);
+        bool Cursor(int x, int y);
 
-        bool moved(int x, int y);
+        bool Moved(int x, int y);
     }
 }

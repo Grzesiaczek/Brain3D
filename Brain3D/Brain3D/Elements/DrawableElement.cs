@@ -24,13 +24,13 @@ namespace Brain3D
         protected bool initialized;
         protected bool visible;
 
-        public virtual void initialize() { }
+        public virtual void Initialize() { }
 
         public virtual void repaint() { }
 
-        public virtual void rescale() { }
+        public virtual void Rescale() { }
 
-        public override void move()
+        public override void Move()
         {
             lock (buffer.Vertices)
             {
@@ -43,37 +43,37 @@ namespace Brain3D
         {
             if (initialized)
             {
-                move();
+                Move();
                 repaint();
             }
         }
 
-        public virtual void remove()
+        public virtual void Remove()
         {
-            hide();
+            Hide();
             initialized = false;
         }
 
-        public virtual void show()
+        public virtual void Show()
         {
             if (buffer == null)
-                display.add(this);
+                display.Add(this);
             else
-                buffer.show(indices);
+                buffer.Show(indices);
 
             visible = true;
         }
 
-        public virtual void hide()
+        public virtual void Hide()
         {
-            buffer.hide(indices);
+            buffer.Hide(indices);
             visible = false;
         }
 
         public virtual void moveX(float x)
         {
             position = new Vector3(x, position.Y, position.Z);
-            move();
+            Move();
         }
 
         public virtual void moveY(float y)
@@ -88,7 +88,7 @@ namespace Brain3D
                 buffer = value;
 
                 if (buffer != null)
-                    buffer.add(this);
+                    buffer.Add(this);
             }
         }
 
@@ -122,7 +122,7 @@ namespace Brain3D
                 scale = value;
 
                 if (initialized)
-                    rescale();
+                    Rescale();
             }
         }
     }    

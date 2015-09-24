@@ -91,10 +91,10 @@ namespace Brain3D
             }
         }
 
-        public void shot(int time)
+        public void Shot(int time)
         {
             if (neuron != null)
-                neuron.shot(time);
+                neuron.GetSimulated().Shot(time);
 
             activity[time] = Phase.Shot;
             activity[time + 10] = Phase.Disactivate;

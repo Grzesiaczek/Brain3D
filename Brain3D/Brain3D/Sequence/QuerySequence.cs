@@ -32,7 +32,7 @@ namespace Brain3D
             builder = new BuiltTile();
             sequence.Add(builder);
             this.length = length;
-            prepare();
+            Prepare();
         }
 
         public QuerySequence(String sentence, int length)
@@ -43,19 +43,19 @@ namespace Brain3D
             foreach (String word in words)
                 sequence.Add(new QueryTile(word, length));
 
-            prepare();
+            Prepare();
         }
 
-        void prepare()
+        void Prepare()
         {
             counter = new CounterTile(new Point(20, 8), 0);
-            interval = new CounterTile(new Point(100, 8), 15);
+            interval = new CounterTile(new Point(100, 8), 20);
 
-            Neuron.activate += new EventHandler(activate);
-            arrange();
+            SimulatedNeuron.Activate += new EventHandler(Activate);
+            Arrange();
         }
 
-        protected override void arrange()
+        protected override void Arrange()
         {
             int position = 200;
 
@@ -67,7 +67,7 @@ namespace Brain3D
             }
         }
 
-        public void initialize()
+        public void Initialize()
         {
             activity.Clear();
             counter.Value = 5;
@@ -79,7 +79,7 @@ namespace Brain3D
             prev = -1;
         }
 
-        public void load(Brain brain)
+        public void Load(Brain brain)
         {
             List<Neuron> neurons = new List<Neuron>(brain.Neurons.Keys);
             activity = new List<int>();
@@ -96,17 +96,18 @@ namespace Brain3D
                 }
             }
 
-            arrange();
-            initialize();
+            Arrange();
+            Initialize();
+            brain.Initialize(this);
         }
 
-        public void loadTiles()
+        public void LoadTiles()
         {
             foreach (QueryTile tile in sequence)
                 tile.load();
         }
 
-        public void setFrame(int frame)
+        public void SetFrame(int frame)
         {
             int time = 10 * frame;
 
@@ -121,7 +122,7 @@ namespace Brain3D
                 counter.idle();
         }
 
-        public void tick(double time)
+        public void Tick(double time)
         {
             int frame = (int)time;
 
@@ -136,7 +137,7 @@ namespace Brain3D
                 counter.idle();
         }
 
-        public void tick(int time)
+        public void Tick(int time)
         {
             if (count > treshold)
             {
@@ -156,7 +157,7 @@ namespace Brain3D
 
             if (ticks == interval.Value)
             {
-                ((QueryTile)sequence[index]).shot(time);
+                ((QueryTile)sequence[index]).Shot(time);
                 activity.Add(0);
 
                 prev = index;
@@ -171,7 +172,7 @@ namespace Brain3D
                 activity.Add(ticks);
         }
 
-        void activate(object sender, EventArgs e)
+        void Activate(object sender, EventArgs e)
         {
             Tuple<Neuron, int> tuple = (Tuple<Neuron, int>)sender;
             Neuron neuron = tuple.Item1;
@@ -181,38 +182,38 @@ namespace Brain3D
                 activations.Add(tuple);
         }
 
-        protected override Tile createTile(BuiltTile builder)
+        protected override Tile CreateTile(BuiltTile builder)
         {
             return new QueryTile(builder, length);
         }
 
         #region sterowanie
 
-        public override bool execute()
+        public override bool Execute()
         {
             interval.idle();
 
             if (builder == null)
                 return true;
 
-            return base.execute();
+            return base.Execute();
         }
 
-        public override void show()
+        public override void Show()
         {
-            base.show();
-            counter.show();
-            interval.show();
+            base.Show();
+            counter.Show();
+            interval.Show();
         }
 
-        public override void hide()
+        public override void Hide()
         {
-            base.hide();
-            counter.hide();
-            interval.hide();
+            base.Hide();
+            counter.Hide();
+            interval.Hide();
         }
 
-        public void intervalUp()
+        public void IntervalUp()
         {
             if (interval.Value < 40)
                 interval.Value++;
@@ -220,7 +221,7 @@ namespace Brain3D
             interval.activate();
         }
 
-        public void intervalDown()
+        public void IntervalDown()
         {
             if (interval.Value > 5)
                 interval.Value--;

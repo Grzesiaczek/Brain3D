@@ -25,7 +25,7 @@ namespace Brain3D
             shift = new Vector3(-text.Width * ratio / 2, -0.7f, -0.01f);
         }
 
-        public override void initialize()
+        public override void Initialize()
         {
             int vertex = text.Vertices.Length;
             int index = text.Indices.Length;
@@ -46,7 +46,7 @@ namespace Brain3D
             for (int i = 0; i < index; i++)
                 indices[i] = text.Indices[i];
 
-            offset = buffer.add(vertices, indices);
+            offset = buffer.Add(vertices, indices);
             initialized = true;
         }
     }

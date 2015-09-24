@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Brain3D
 {
-    class Synapse : BrainElement
+    class Synapse
     {
         #region deklaracje
 
@@ -19,7 +19,8 @@ namespace Brain3D
         float weight;
 
         List<CreationData> history;
-        Tuple<bool, double>[] activity;
+        
+        Dictionary<QuerySequence, SimulatedSynapse> data;
 
         #endregion
 
@@ -31,28 +32,42 @@ namespace Brain3D
             this.post = post;
 
             change = 0;
-            initialize();
+            data = new Dictionary<QuerySequence, SimulatedSynapse>();
         }
 
         #endregion
 
-        public void impulse(int time)
+        public void Initialize(QuerySequence query)
         {
-            post.impulse(weight, time + 20);
+            SimulatedSynapse synapse = new SimulatedSynapse(this);
 
-            for (int i = 0, j = time; i < 20 && j < activity.Length; i++, j++)
-                activity[j] = new Tuple<bool, double>(true, (double)i / 20);
+            if (data.ContainsKey(query))
+                data[query] = synapse;
+            else
+                data.Add(query, synapse);
         }
 
-        public void initialize()
+        public SimulatedSynapse GetSimulated(QuerySequence query)
         {
-            activity = new Tuple<bool, double>[size];
+            return data[query];
+        }
 
-            for (int i = 0; i < size; i++)
-                activity[i] = new Tuple<bool, double>(false, 0);
+        public void SetSimulated(QuerySequence query)
+        {
+            SimulatedSynapse synapse = data[query];
+            synapse.Pre = pre.GetSimulated(query);
+            synapse.Post = post.GetSimulated(query);
         }
 
         #region właściwości
+
+        public Tuple<bool, double>[] Activity
+        {
+            get
+            {
+                return data[Constant.Query].Activity;
+            }
+        }
 
         public Neuron Pre
         {
@@ -67,14 +82,6 @@ namespace Brain3D
             get
             {
                 return post;
-            }
-        }
-        
-        public Tuple<bool, double>[] Activity
-        {
-            get
-            {
-                return activity;
             }
         }
 

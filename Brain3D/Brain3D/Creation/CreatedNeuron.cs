@@ -27,7 +27,7 @@ namespace Brain3D
 
         public override void show()
         {
-            neuron.create();
+            neuron.Create();
         }
 
         #region właściwości

@@ -15,3 +15,9 @@ C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\
 C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\VectorCalibri.xnb
 C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\SpriteCalibri.xnb
 C:\Users\Grzesiek\documents\visual studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Content\SpriteArial.xnb
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Files\GMBank.bank
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Sanford.Multimedia.dll
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Sanford.Multimedia.Midi.dll
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Sanford.Collections.dll
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Sanford.Multimedia.Timers.dll
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Sanford.Threading.dll

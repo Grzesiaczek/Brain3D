@@ -56,22 +56,22 @@ namespace Brain3D
 
         #region logika
 
-        public override void move()
+        public override void Move()
         {
             foreach (DrawableElement drawable in drawables)
                 drawable.Position = position;
 
             screen = device.Viewport.Project(position, effect.Projection, effect.View, effect.World);
-            base.move();
+            base.Move();
         }
 
-        public override void rotate()
+        public override void Rotate()
         {
-            base.rotate();
+            base.Rotate();
             screen = device.Viewport.Project(position, effect.Projection, effect.View, effect.World);
         }
 
-        void setData(NeuronActivity data)
+        void SetData(NeuronActivity data)
         {
             value = data.Value;
 
@@ -81,15 +81,18 @@ namespace Brain3D
                     disk.changeValue((float)value);
                     number.Value = (int)(Math.Abs(value) * 100);
                     break;
+
                 case ActivityPhase.Start:
                     number.Value = 100;
                     disk.refract();
                     break;
+
                 case ActivityPhase.Active:
                     number.Value = 100;
                     disk.setValue(0);
                     disk.refract((float)data.Refraction / 30);
                     break;
+
                 case ActivityPhase.Finish:
                     number.Value = 100;
                     disk.setValue(0);
@@ -97,13 +100,13 @@ namespace Brain3D
             }      
         }
 
-        public override void tick(double time)
+        public override void Tick(double time)
         {
             int frame = (int)time;
 
             if(frame + 1 == neuron.Activity.Length)
             {
-                setData(neuron.Activity[frame]);
+                SetData(neuron.Activity[frame]);
                 return;
             }
 
@@ -114,16 +117,16 @@ namespace Brain3D
             double value = data.Value + factor * (next.Value - data.Value);
             double refraction = data.Refraction + factor * (next.Refraction - data.Refraction);
 
-            setData(new NeuronActivity(data.Phase, value, refraction));
+            SetData(new NeuronActivity(data.Phase, value, refraction));
         }
 
-        public override void setFrame(int frame)
+        public override void SetFrame(int frame)
         {
             NeuronActivity data = neuron.Activity[frame * 10];
-            setData(data);
+            SetData(data);
         }
 
-        public Vector3 pointVector(Vector2 direction)
+        public Vector3 PointVector(Vector2 direction)
         {
             double angle = Math.Acos(direction.X);
             float rad = radius * 1.1f;
@@ -134,49 +137,49 @@ namespace Brain3D
             return Vector3.Transform(new Vector3((float)Math.Cos(angle) * rad,(float)Math.Sin(angle) * rad, 0), camera.Rotation) + position;
         }
 
-        public override void move(int x, int y)
+        public override void Move(int x, int y)
         {
             position = device.Viewport.Unproject(new Vector3(shift.X + x, shift.Y + y, screen.Z), effect.Projection, effect.View, effect.World);
-            move();
+            Move();
 
             foreach (AnimatedVector synapse in input)
-                synapse.move();
+                synapse.Move();
 
             foreach (AnimatedVector synapse in output)
-                synapse.move();
+                synapse.Move();
         }
 
-        public override bool cursor(int x, int y)
+        public override bool Cursor(int x, int y)
         {
-            return disk.cursor(x, y);
+            return disk.Cursor(x, y);
         }
 
-        public override void activate()
+        public override void Activate()
         {
             disk.activate();
         }
 
-        public override void idle()
+        public override void Idle()
         {
             disk.idle();
         }
 
-        public override void hover()
+        public override void Hover()
         {
             disk.hover();
         }
 
-        public override void show()
+        public override void Show()
         {
-            base.show();
+            base.Show();
             disk.setFactor((float)(neuron.Count - 1) / 4);
         }
 
-        public void create()
+        public void Create()
         {
             disk.setValue(0);
             number.Value = 0;
-            show();
+            Show();
         }
 
         #endregion
@@ -229,7 +232,7 @@ namespace Brain3D
                 label.Scale = scale * value / 1.2f;
                 number.Scale = scale * value / 1.2f;
 
-                rescale();
+                Rescale();
             }
         }
 
@@ -241,7 +244,7 @@ namespace Brain3D
                 disk.Scale = value;
                 label.Scale = value * radius / 1.2f;
                 number.Scale = value * radius / 1.2f;
-                rescale();
+                Rescale();
             }
         }
 

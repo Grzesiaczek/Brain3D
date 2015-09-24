@@ -50,10 +50,10 @@ namespace Brain3D
             index = 0;
         }
 
-        public void initialize()
+        public void Initialize()
         {
-                foreach (DrawableElement element in elements)
-                    element.initialize();
+            foreach (DrawableElement element in elements)
+                element.Initialize();
 
             vdata = new VertexPositionColor[vertex];
             
@@ -72,7 +72,7 @@ namespace Brain3D
             initialized = true;
         }
 
-        public void clear(bool all = true)
+        public void Clear(bool all = true)
         {
             vertices.Clear();
             indices.Clear();
@@ -92,7 +92,7 @@ namespace Brain3D
             initialized = false;
         }
 
-        public void draw()
+        public void Draw()
         {
             if (!initialized || !refreshed)
                 return;
@@ -146,7 +146,7 @@ namespace Brain3D
             refreshed = true;
         }
 
-        public int add(VertexPositionColor[] vertices, int[] indices)
+        public int Add(VertexPositionColor[] vertices, int[] indices)
         {
             this.vertices.Add(vertices);
             this.indices.Add(indices, false);
@@ -162,12 +162,12 @@ namespace Brain3D
             return result;
         }
 
-        public void add(DrawableElement element)
+        public void Add(DrawableElement element)
         {
             elements.Add(element);
         }
 
-        public void show(int[] data)
+        public void Show(int[] data)
         {
             lock (locker)
             {
@@ -180,7 +180,7 @@ namespace Brain3D
             }
         }
 
-        public void hide(int[] data)
+        public void Hide(int[] data)
         {
             lock (locker)
             {
@@ -193,7 +193,7 @@ namespace Brain3D
             }
         }
 
-        public void show()
+        public void Show()
         {
             lock (locker)
             {
@@ -212,7 +212,7 @@ namespace Brain3D
             }
         }
 
-        public void hide()
+        public void Hide()
         {
             lock (locker)
             {
@@ -223,7 +223,7 @@ namespace Brain3D
             }
         }
 
-        public void block(int[] item)
+        public void Block(int[] item)
         {
             blocked.Add(item);
         }

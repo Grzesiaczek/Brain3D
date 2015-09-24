@@ -1,0 +1,15 @@
+N:\C#Synth v1.2\Source\Synthesizer\bin\Debug\Synthesizer.dll
+N:\C#Synth v1.2\Source\Synthesizer\bin\Debug\Synthesizer.pdb
+N:\C#Synth v1.2\Source\Synthesizer\bin\Debug\AudioSynthesis.dll
+N:\C#Synth v1.2\Source\Synthesizer\bin\Debug\NAudio.dll
+N:\C#Synth v1.2\Source\Synthesizer\bin\Debug\NAudio.xml
+N:\C#Synth v1.2\Source\Synthesizer\obj\Debug\Synthesizer.csprojResolveAssemblyReference.cache
+N:\C#Synth v1.2\Source\Synthesizer\obj\Debug\Synthesizer.dll
+N:\C#Synth v1.2\Source\Synthesizer\obj\Debug\Synthesizer.pdb
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Synthesizer\bin\Debug\Synthesizer.dll
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Synthesizer\bin\Debug\Synthesizer.pdb
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Synthesizer\bin\Debug\AudioSynthesis.dll
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Synthesizer\bin\Debug\NAudio.dll
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Synthesizer\obj\Debug\Synthesizer.csprojResolveAssemblyReference.cache
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Synthesizer\obj\Debug\Synthesizer.dll
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Synthesizer\obj\Debug\Synthesizer.pdb

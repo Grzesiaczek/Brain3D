@@ -59,6 +59,9 @@
     <PlatformTarget>x86</PlatformTarget>
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Brain3D.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
@@ -73,6 +76,21 @@
     </Reference>
     <Reference Include="Nuclex.Graphics">
       <HintPath>..\Libraries\Nuclex.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="Sanford.Collections">
+      <HintPath>..\Libraries\Sanford.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Sanford.Multimedia">
+      <HintPath>..\Libraries\Sanford.Multimedia.dll</HintPath>
+    </Reference>
+    <Reference Include="Sanford.Multimedia.Midi">
+      <HintPath>..\Libraries\Sanford.Multimedia.Midi.dll</HintPath>
+    </Reference>
+    <Reference Include="Sanford.Multimedia.Timers">
+      <HintPath>..\Libraries\Sanford.Multimedia.Timers.dll</HintPath>
+    </Reference>
+    <Reference Include="Sanford.Threading">
+      <HintPath>..\Libraries\Sanford.Threading.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -96,9 +114,16 @@
     <Compile Include="Charting\ChartedTile.cs" />
     <Compile Include="Charting\Chart.cs" />
     <Compile Include="Charting\ChartLayout.cs" />
-    <Compile Include="DottedLine.cs" />
-    <Compile Include="Fonts.cs" />
+    <Compile Include="Composites\DottedLine.cs" />
+    <Compile Include="Global\Fonts.cs" />
+    <Compile Include="QueryContainer.cs" />
+    <Compile Include="Sound\Melody.cs" />
+    <Compile Include="Sound\Player.cs" />
     <Compile Include="Response.cs" />
+    <Compile Include="Sequence\ResponseSequence.cs" />
+    <Compile Include="SimulatedNeuron.cs" />
+    <Compile Include="SimulatedSynapse.cs" />
+    <Compile Include="Sound\Sound.cs" />
     <Compile Include="Tiles\CounterTile.cs" />
     <Compile Include="Creation\CreatedSynapse.cs" />
     <Compile Include="Tiles\CreationTile.cs" />
@@ -223,7 +248,11 @@
       <DependentUpon>Simulation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Files\GMBank.bank">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

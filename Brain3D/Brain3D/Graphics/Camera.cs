@@ -21,39 +21,39 @@ namespace Brain3D
         {
             this.position = position;
             target = new Vector3(position.X, position.Y, 0);
-            initialize();
+            Initialize();
         }
 
         public Camera(float radius)
         {
             position = new Vector3(0, 0, radius);
             target = Vector3.Zero;
-            initialize();
+            Initialize();
         }
 
-        void initialize()
+        void Initialize()
         {
             up = Vector3.Up;
 
             spherical = new Spherical(position);
             rotation = Matrix.CreateFromYawPitchRoll(-spherical.Longitude - Constant.PI2, spherical.Latitude, 0);
 
-            Constant.spaceChanged += new EventHandler(spaceChanged);
+            Constant.spaceChanged += new EventHandler(SpaceChanged);
         }
 
-        void refresh()
+        void Refresh()
         {
             position = spherical.getVector();
             rotation = Matrix.CreateFromYawPitchRoll(-spherical.Longitude - Constant.PI2, spherical.Latitude, 0);
         }
 
-        public void moveX(float value)
+        public void MoveX(float value)
         {
             position.X = value;
             target.X = value;
         }
 
-        public void rescale(Vector2 factor)
+        public void Rescale(Vector2 factor)
         {
             position.X *= factor.X;
             target.X *= factor.X;
@@ -62,7 +62,7 @@ namespace Brain3D
             target.Y *= factor.Y;
         }
 
-        public void moveLeft()
+        public void MoveLeft()
         {
             if (Constant.Space == SpaceMode.Box)
             {
@@ -76,11 +76,11 @@ namespace Brain3D
             else
             {
                 spherical.Longitude += 0.025f;
-                refresh();
+                Refresh();
             }
         }
 
-        public void moveRight()
+        public void MoveRight()
         {
             if (Constant.Space == SpaceMode.Box)
             {
@@ -94,11 +94,11 @@ namespace Brain3D
             else
             {
                 spherical.Longitude -= 0.025f;
-                refresh();
+                Refresh();
             }
         }
 
-        public void moveUp()
+        public void MoveUp()
         {
             if (Constant.Space == SpaceMode.Box)
             {
@@ -112,11 +112,11 @@ namespace Brain3D
             else
             {
                 spherical.Latitude += 0.025f;
-                refresh();
+                Refresh();
             }
         }
 
-        public void moveDown()
+        public void MoveDown()
         {
             if (Constant.Space == SpaceMode.Box)
             {
@@ -130,16 +130,16 @@ namespace Brain3D
             else
             {
                 spherical.Latitude -= 0.025f;
-                refresh();
+                Refresh();
             }
         }
 
-        public void farther()
+        public void Farther()
         {
             if(Constant.Space == SpaceMode.Sphere)
             {
                 spherical.Radius += 0.25f;
-                refresh();
+                Refresh();
             }
             else
             {
@@ -156,12 +156,12 @@ namespace Brain3D
             }
         }
 
-        public void closer()
+        public void Closer()
         {
             if (Constant.Space == SpaceMode.Sphere)
             {
                 spherical.Radius -= 0.25f;
-                refresh();
+                Refresh();
             }
             else
             {
@@ -178,7 +178,7 @@ namespace Brain3D
             }
         }
 
-        void spaceChanged(object sender, EventArgs e)
+        void SpaceChanged(object sender, EventArgs e)
         {
             if (Constant.Space == SpaceMode.Sphere)
                 spherical = new Spherical(position);

@@ -38,7 +38,7 @@ namespace Brain3D
 
             palette = palettes[mode];
             vector = target - source;
-            rotate();
+            Rotate();
         }
 
         public static void initializePalettes()
@@ -49,9 +49,9 @@ namespace Brain3D
             palettes.Add(new Tuple<Color, Color>(Color.IndianRed, Color.Orange));
         }
 
-        public override void initialize()
+        public override void Initialize()
         {
-            rotate();
+            Rotate();
 
             for (int i = 0; i < 6; i++)
                 vertices[i] = new VertexPositionColor(framework[i], palette.Item1);
@@ -72,22 +72,22 @@ namespace Brain3D
             indices[10] = 5;
             indices[11] = 3;
 
-            offset = buffer.add(vertices, indices);
+            offset = buffer.Add(vertices, indices);
             initialized = true;
         }
 
-        public override void move()
+        public override void Move()
         {
             if (!initialized || buffer == null)
                 return;
 
-            rotate();
+            Rotate();
 
             for (int i = 0, j = offset; i < 6; i++)
                 buffer.Vertices[j++].Position = framework[i];
         }
 
-        public override void rotate()
+        public override void Rotate()
         {
             Vector3 start = device.Viewport.Project(source, effect.Projection, effect.View, effect.World);
             Vector3 end = device.Viewport.Project(target, effect.Projection, effect.View, effect.World);
@@ -109,15 +109,15 @@ namespace Brain3D
             framework[5] = v3 + v2;
         }
 
-        public override void rescale()
+        public override void Rescale()
         {
-            move();
+            Move();
         }
 
         public void add()
         {
-            display.add(this);
-            buffer.block(indices);
+            display.Add(this);
+            buffer.Block(indices);
         }
 
         public Vector3 Source

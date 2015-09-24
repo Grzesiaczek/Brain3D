@@ -21,31 +21,31 @@ namespace Brain3D
 
         #region logika
 
-        public void add(Tile element)
+        public void Add(Tile element)
         {
             sequence.Add(element);
-            element.show();
+            element.Show();
         }
 
-        public void remove(Tile element)
+        public void Remove(Tile element)
         {
             sequence.Remove(element);
-            element.hide();
+            element.Hide();
         }
 
-        public override void show()
+        public override void Show()
         {
             foreach (Tile tile in sequence)
-                tile.show();
+                tile.Show();
         }
 
-        public override void hide()
+        public override void Hide()
         {
             foreach (Tile tile in sequence)
-                tile.hide();
+                tile.Hide();
         }
 
-        protected virtual void arrange()
+        protected virtual void Arrange()
         {
             int position = 10;
 
@@ -61,7 +61,7 @@ namespace Brain3D
 
         #region budowa
 
-        public void add(char key)
+        public void Add(char key)
         {
             if (builder == null)
                 return;
@@ -69,19 +69,19 @@ namespace Brain3D
             builder.add(key);
         }
 
-        public virtual void space()
+        public virtual void Space()
         {
             if (builder.Word.Length == 0)
                 return;
 
-            remove(builder);
-            add(createTile(builder));
+            Remove(builder);
+            Add(CreateTile(builder));
 
             builder = new BuiltTile(builder.Right + 10);
-            add(builder);
+            Add(builder);
         }
 
-        public bool erase()
+        public bool Erase()
         {
             if (!builder.erase())
                 return false;
@@ -89,30 +89,30 @@ namespace Brain3D
             if (sequence.Count == 1)
                 return true;
 
-            remove(builder);
+            Remove(builder);
 
             Tile last = sequence.Last();
-            remove(last);
+            Remove(last);
 
             builder = new BuiltTile(last);
-            add(builder);
+            Add(builder);
 
             return false;
         }
 
-        public virtual bool execute()
+        public virtual bool Execute()
         {
             if (sequence.Count == 1 && builder.Word.Length == 0)
                 return false;
 
-            remove(builder);
-            add(createTile(builder));
+            Remove(builder);
+            Add(CreateTile(builder));
             builder = null;
 
             return true;
         }
 
-        protected virtual Tile createTile(BuiltTile builder)
+        protected virtual Tile CreateTile(BuiltTile builder)
         {
             return new SequenceTile(builder);
         }
