@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -42,19 +40,25 @@ namespace Brain3D
             angles = new Vector2[314];
 
             for (int i = 0; i < 314; i++, angle += 0.01)
+            {
                 angles[i] = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+            }
         }
 
         public void Activate()
         {
             for (int i = 0, j = offset; i < vertex; i++)
+            {
                 buffer.Vertices[j++].Position = active[i];
+            }
         }
 
         public void Idle()
         {
             for (int i = 0, j = offset; i < vertex; i++)
+            {
                 buffer.Vertices[j++].Position = normal[i];
+            }
         }
 
         public override void Show()
@@ -62,7 +66,9 @@ namespace Brain3D
             PrepareCircles();
 
             if (buffer == null)
+            {
                 display.Add(this);
+            }
             else
             {
                 buffer.Show(indices);
@@ -75,7 +81,12 @@ namespace Brain3D
         public override void Hide()
         {
             base.Hide();
-            buffer.Hide(indices);
+
+            if (buffer != null)
+            {
+                buffer.Hide(indices);
+            }
+
             visible = false;
         }
 
@@ -84,7 +95,9 @@ namespace Brain3D
             Prepare();
 
             for (int i = 0; i < vertex; i++)
+            {
                 vertices[i] = new VertexPositionColor(normal[i], color);
+            }
 
             for (int i = 1, j = 0; i < count; i++)
             {
@@ -117,14 +130,22 @@ namespace Brain3D
                 Disk disk = null;
 
                 if (activity[i].Phase == ActivityPhase.Start)
+                {
                     disk = new Disk(new Vector3(ratio * (i + 1), 1, 0.001f), pattern, Color.LightSalmon, 0.04f);
+                }
                 if (activity[i].Phase == ActivityPhase.Finish)
+                {
                     disk = new Disk(new Vector3(ratio * (i + 1), -1, 0.001f), pattern, Color.LightSkyBlue, 0.04f);
+                }
                 if (activity[i].Phase == ActivityPhase.Break)
+                {
                     disk = new Disk(new Vector3(ratio * (i + 1), (float)activity[i].Value, 0.001f), pattern, color, 0.025f);
+                }
 
                 if (disk == null)
+                {
                     continue;
+                }
 
                 disk.Scale = 1;
                 drawables.Add(disk);
@@ -184,13 +205,17 @@ namespace Brain3D
                 double ad = an - a1;
 
                 if (ad < 0)
+                {
                     ad = -ad;
+                }
 
                 int index = (int)(157 + an * 100);
                 float factor = (float)(thin / Math.Cos(ad));
 
                 if (factor > 0.02f)
+                {
                     factor = 0.02f;
+                }
 
                 Vector2 angle = angles[index] * factor;
 
@@ -229,7 +254,9 @@ namespace Brain3D
                 buffer = value;
 
                 if (buffer != null)
+                {
                     buffer.Add(this);
+                }
             }
         }
 

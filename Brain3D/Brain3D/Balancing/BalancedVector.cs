@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
@@ -29,19 +25,21 @@ namespace Brain3D
             factor = k / (factor * (1 + synapse.Weight));
         }
 
-        public void attract()
+        public void Attract()
         {
             Vector3 delta = target.Position - source.Position;
             Vector3 shift = delta * delta * delta / factor;
             
-            source.move(shift);
-            target.move(-shift);
+            source.Move(shift);
+            target.Move(-shift);
         }
 
-        public void repulse(BalancedNeuron neuron)
+        public void Repulse(BalancedNeuron neuron)
         {
             if (neuron == source || neuron == target)
+            {
                 return;
+            }
 
             Vector3 shift = Vector3.Zero;
             Tuple<Vector2, float> tuple = Constant.GetDistance(synapse.Pre.Position, synapse.Post.Position, neuron.Position);
@@ -78,21 +76,21 @@ namespace Brain3D
                 factor *= (1 - eq) * 4;
             }
 
-            if (distance == 0)
-                return;
+            if (distance != 0)
+            {
+                force = factor * (1.56f - (float)Math.Atan(distance - 2));
+                shift = new Vector3(tuple.Item1, 0);
+                shift.Normalize();
+                shift *= force;
 
-            force = factor * (1.56f - (float)Math.Atan(distance - 2));
-            shift = new Vector3(tuple.Item1, 0);
-            shift.Normalize();
-            shift *= force;
+                neuron.Move(shift);
 
-            neuron.move(shift);
-            
-            eq = - eq;
-            target.move(shift * eq);
+                eq = -eq;
+                target.Move(shift * eq);
 
-            eq = -1 - eq;
-            source.move(shift * eq);
+                eq = -1 - eq;
+                source.Move(shift * eq);
+            }
         }
 
         public static Dictionary<AnimatedNeuron, BalancedNeuron> Map

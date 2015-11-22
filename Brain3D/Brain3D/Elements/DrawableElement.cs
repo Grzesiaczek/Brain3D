@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
@@ -26,7 +21,7 @@ namespace Brain3D
 
         public virtual void Initialize() { }
 
-        public virtual void repaint() { }
+        public virtual void Repaint() { }
 
         public virtual void Rescale() { }
 
@@ -35,7 +30,9 @@ namespace Brain3D
             lock (buffer.Vertices)
             {
                 for (int i = 0, j = offset; i < vertices.Length; i++, j++)
+                {
                     buffer.Vertices[j].Position = framework[i] + position;
+                }
             }
         }
 
@@ -44,7 +41,7 @@ namespace Brain3D
             if (initialized)
             {
                 Move();
-                repaint();
+                Repaint();
             }
         }
 
@@ -57,20 +54,31 @@ namespace Brain3D
         public virtual void Show()
         {
             if (buffer == null)
+            {
                 display.Add(this);
+            }
             else
+            {
                 buffer.Show(indices);
+            }
 
             visible = true;
         }
 
         public virtual void Hide()
         {
-            buffer.Hide(indices);
-            visible = false;
+            if (visible)
+            {
+                if (buffer != null)
+                {
+                    buffer.Hide(indices);
+                }
+
+                visible = false;
+            }
         }
 
-        public virtual void moveX(float x)
+        public virtual void MoveX(float x)
         {
             position = new Vector3(x, position.Y, position.Z);
             Move();
@@ -88,7 +96,9 @@ namespace Brain3D
                 buffer = value;
 
                 if (buffer != null)
+                {
                     buffer.Add(this);
+                }
             }
         }
 
@@ -99,7 +109,9 @@ namespace Brain3D
                 color = value;
 
                 if (initialized)
-                    repaint();
+                {
+                    Repaint();
+                }
             }
         }
 
@@ -122,7 +134,9 @@ namespace Brain3D
                 scale = value;
 
                 if (initialized)
+                {
                     Rescale();
+                }
             }
         }
     }    

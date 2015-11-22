@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
@@ -38,7 +33,7 @@ namespace Brain3D
             spherical = new Spherical(position);
             rotation = Matrix.CreateFromYawPitchRoll(-spherical.Longitude - Constant.PI2, spherical.Latitude, 0);
 
-            Constant.spaceChanged += new EventHandler(SpaceChanged);
+            Constant.SpaceChanged += new EventHandler(SpaceChanged);
         }
 
         void Refresh()
@@ -69,7 +64,9 @@ namespace Brain3D
                 position.X -= 0.25f;
 
                 if (position.X + Constant.Box.X < 0)
+                {
                     position.X = -Constant.Box.X;
+                }
 
                 target.X = position.X;
             }
@@ -87,7 +84,9 @@ namespace Brain3D
                 position.X += 0.25f;
 
                 if (position.X > Constant.Box.X)
+                {
                     position.X = Constant.Box.X;
+                }
 
                 target.X = position.X;
             }
@@ -105,7 +104,9 @@ namespace Brain3D
                 position.Y += 0.25f;
 
                 if (position.Y > Constant.Box.Y)
+                {
                     position.Y = Constant.Box.Y;
+                }
 
                 target.Y = position.Y;
             }
@@ -123,7 +124,9 @@ namespace Brain3D
                 position.Y -= 0.25f;
 
                 if (position.Y + Constant.Box.Y < 0)
+                {
                     position.Y = -Constant.Box.Y;
+                }
 
                 target.Y = position.Y;
             }
@@ -136,7 +139,7 @@ namespace Brain3D
 
         public void Farther()
         {
-            if(Constant.Space == SpaceMode.Sphere)
+            if (Constant.Space == SpaceMode.Sphere)
             {
                 spherical.Radius += 0.25f;
                 Refresh();
@@ -146,12 +149,16 @@ namespace Brain3D
                 float border = 100;
 
                 if (Constant.Space == SpaceMode.Chart)
+                {
                     border = 5;
+                }
 
                 position.Z += 0.25f;
 
                 if (position.Z > border)
+                {
                     position.Z = border;
+                }
 
             }
         }
@@ -168,12 +175,16 @@ namespace Brain3D
                 float border = 10;
 
                 if (Constant.Space == SpaceMode.Chart)
+                {
                     border = 1;
+                }
 
                 position.Z -= 0.25f;
 
                 if (position.Z < border)
+                {
                     position.Z = border;
+                }
 
             }
         }
@@ -181,7 +192,9 @@ namespace Brain3D
         void SpaceChanged(object sender, EventArgs e)
         {
             if (Constant.Space == SpaceMode.Sphere)
+            {
                 spherical = new Spherical(position);
+            }
         }
 
         #region właściwości

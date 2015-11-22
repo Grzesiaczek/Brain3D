@@ -1,14 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
@@ -16,80 +7,51 @@ namespace Brain3D
     {
         #region deklaracje
 
-        protected static Brain brain;
-        protected static QueryContainer container;
+        protected static BrainContainer container;
         protected static Controller controller;
         protected static Display display;
-        protected static Int32 length;
+        protected static int length;
 
         protected Balancing balancing;
 
+        protected bool started;
         protected bool visible;
-        protected bool paused;
 
         protected List<Mouse> mouses;
 
         protected Mouse active;
         protected Mouse shifted;
 
-        Stopwatch stopwatch;
-        bool started;
-
-        public event EventHandler animationStop;
-        public static event EventHandler loadBrain;
+        public static event EventHandler IntervalChanged;
+        public static event EventHandler LoadBrain;
+        public static event EventHandler QueryAccepted;
 
         #endregion
 
         public Presentation()
         {
             mouses = new List<Mouse>();
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
 
-            loadBrain += BrainLoaded;
+            LoadBrain += BrainLoaded;
             balancing = Balancing.Instance;
+        }
+
+        public static void Reload()
+        {
+            LoadBrain(null, null);
         }
 
         protected virtual void BrainLoaded(object sender, EventArgs e) { }
 
-        void Timer(object state)
-        {
-            while (started)
-            {
-                if (stopwatch.Elapsed.TotalMilliseconds > 20)
-                {
-                    stopwatch.Restart();
-                    Tick();
-                }
-
-                Thread.Sleep(2);
-            }
-        }
-
         public virtual void ChangeInsertion()
         {
-            container.ChangeInsertion();
-            controller.Insertion = container.Insertion;
+            QueryContainer.ChangeInsertion();
+            controller.Insertion = QueryContainer.Insertion;
         }
 
-        public virtual void Start()
-        {
-            started = true;
-            paused = false;
-            ThreadPool.QueueUserWorkItem(Timer);
-        }
+        public virtual void Start() { }
 
-        public virtual void Stop()
-        {
-            if (started)
-            {
-                started = false;
-                paused = true;
-                animationStop(this, null);
-            }
-        }
-
-        protected virtual void Tick() { }
+        public virtual void Stop() { }
 
         public virtual void Resize() { }
 
@@ -110,11 +72,13 @@ namespace Brain3D
             Mouse hover = null;
 
             foreach (Mouse mouse in mouses)
+            {
                 if (mouse.Cursor(x, y))
                 {
                     hover = mouse;
                     break;
                 }
+            }
 
             if (active != null && active != hover)
             {
@@ -141,21 +105,93 @@ namespace Brain3D
         public virtual void MouseUp(int x, int y)
         {
             if (shifted != null)
+            {
                 shifted = null;
+            }
         }
 
         #endregion
 
         #region funkcje obsługi kontenera zapytań
 
+
+        public virtual void Enter()
+        {
+            if (!QueryContainer.Insertion)
+            {
+                QueryContainer.Execute();
+                IntervalChanged(this, null);
+            }
+            else if (QueryContainer.Execute())
+            {
+                ChangeInsertion();
+            }
+        }
+
+        public virtual void Space()
+        {
+            if (QueryContainer.Insertion)
+            {
+                QueryContainer.Space();
+            }
+        }
+
         public virtual void Add(char key)
         {
-            container.Add(key);
+            QueryContainer.Add(key);
         }
 
         public virtual void Erase()
         {
-            container.Erase();
+            QueryContainer.Erase();
+        }
+
+        public virtual void Higher()
+        {
+            QueryContainer.Higher();
+        }
+
+        public virtual void Lower()
+        {
+            QueryContainer.Lower();
+        }
+
+        public virtual void NextQuery()
+        {
+            QueryContainer.Next();
+        }
+
+        public virtual void PreviousQuery()
+        {
+            QueryContainer.Previous();
+        }
+
+        public virtual void NextBrain()
+        {
+            Hide();
+            container.NextBrain();
+            Show();
+            ShowQuery();
+        }
+
+        public virtual void PreviousBrain()
+        {
+            Hide();
+            container.PreviousBrain();
+            Show();
+            ShowQuery();
+        }
+
+        public virtual void ShowQuery()
+        {
+            if (this is Creation)
+            {
+                QueryContainer.Visible = false;
+            }
+            else
+            {
+                QueryContainer.Visible = true;
+            }
         }
 
         #endregion
@@ -166,17 +202,9 @@ namespace Brain3D
 
         public virtual void Forth() { }
 
-        public virtual void Higher() { }
-
-        public virtual void Lower() { }
-
         public virtual void ChangeFrame(int frame) { }
 
         public virtual void ChangePace(int pace) { }
-
-        public virtual void Enter() { }
-
-        public virtual void Space() { }
 
         public virtual void Delete() { }
 
@@ -208,20 +236,35 @@ namespace Brain3D
 
         #region właściwości
 
-        public static Brain Brain
+        protected static Brain Brain
         {
-            set
+            get
             {
-                brain = value;
-                loadBrain(null, null);
+                return container.Brain;
             }
         }
 
-        public static QueryContainer Container
+        public static BrainContainer BrainContainer
         {
             set
             {
                 container = value;
+            }
+        }
+
+        public static QueryContainer QueryContainer
+        {
+            get
+            {
+                return container.QueryContainer;
+            }
+        }
+
+        public QuerySequence CurrentQuery
+        {
+            get
+            {
+                return QueryContainer.Query;
             }
         }
 
@@ -239,6 +282,10 @@ namespace Brain3D
 
         public static Display Display
         {
+            get
+            {
+                return display;
+            }
             set
             {
                 display = value;

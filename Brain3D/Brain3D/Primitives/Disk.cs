@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
@@ -58,30 +53,36 @@ namespace Brain3D
 
         public override void Move()
         {
-            if (!initialized)
-                return;
+            if (initialized)
+            {
+                buffer.Vertices[offset + points].Position = position;
 
-            buffer.Vertices[offset + points].Position = position;
-
-            for (int i = 0, j = offset; i < points; i++)
-                buffer.Vertices[j++].Position = framework[i] + position;
+                for (int i = 0, j = offset; i < points; i++)
+                {
+                    buffer.Vertices[j++].Position = framework[i] + position;
+                }
+            }
         }
 
-        public override void repaint()
+        public override void Repaint()
         {
-            if (!initialized)
-                return;
+            if (initialized)
+            {
+                buffer.Vertices[offset + points].Color = color;
 
-            buffer.Vertices[offset + points].Color = color;
-
-            for (int i = 0, j = offset; i < points; i++)
-                buffer.Vertices[j++].Color = color;
+                for (int i = 0, j = offset; i < points; i++)
+                {
+                    buffer.Vertices[j++].Color = color;
+                }
+            }
         }
 
         public override void Rescale()
         {
             for (int i = 0; i < points; i++)
+            {
                 framework[i] = pattern.Data[i] * radius * scale;
+            }
 
             Move();
         }

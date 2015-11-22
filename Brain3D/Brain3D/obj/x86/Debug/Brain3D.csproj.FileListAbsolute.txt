@@ -21,3 +21,15 @@ C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Sanford.Collections.dll
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Sanford.Multimedia.Timers.dll
 C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Sanford.Threading.dll
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Microsoft.Xna.Framework.dll
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Microsoft.Xna.Framework.Game.dll
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Microsoft.Xna.Framework.GamerServices.dll
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Microsoft.Xna.Framework.Graphics.dll
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Microsoft.Xna.Framework.Input.Touch.dll
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Microsoft.Xna.Framework.xml
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Microsoft.Xna.Framework.Game.xml
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Microsoft.Xna.Framework.Graphics.xml
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Microsoft.Xna.Framework.GamerServices.xml
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Microsoft.Xna.Framework.Input.Touch.xml
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\obj\x86\Debug\Brain3D.Help.resources
+C:\Users\Grzesiek\Documents\Visual Studio 2013\Projects\Brain3D\Brain3D\Brain3D\bin\x86\Debug\Files\help.xml

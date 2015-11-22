@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -13,13 +8,15 @@ namespace Brain3D
     {
         #region deklaracje
 
+        enum TileMode { Special, Standard }
+
         protected Rectangle recBackground;
         protected Rectangle recBorder;
 
         protected Texture2D texBackground;
         protected Texture2D texBorder;
 
-        protected String word;
+        protected string word;
         protected Vector2 text;
 
         protected Tuple<Texture2D, Texture2D> active;
@@ -29,98 +26,143 @@ namespace Brain3D
         protected int height;
 
         protected static Tuple<Texture2D, Texture2D> texturesActive;
-        protected static Tuple<Texture2D, Texture2D> texturesBuilt;
+        protected static Tuple<Texture2D, Texture2D> texturesBuild;
         protected static Tuple<Texture2D, Texture2D> texturesNeuron;
         protected static Tuple<Texture2D, Texture2D> texturesNormal;
         protected static Tuple<Texture2D, Texture2D> texturesRefract;
-        protected static Tuple<Texture2D, Texture2D> texturesShot;
+        protected static Tuple<Texture2D, Texture2D> texturesShoot;
+        protected static Tuple<Texture2D, Texture2D> texturesActive2;
+        protected static Tuple<Texture2D, Texture2D> texturesNormal2;
+
+        TileMode mode;
 
         #endregion
 
-        public Tile() { }
-
-        public Tile(String name)
+        public Tile()
         {
-            this.word = name;
-            prepare();            
+            mode = TileMode.Standard;
         }
 
-        protected void prepare()
+        public Tile(string name)
+        {
+            word = name;
+            Prepare();            
+        }
+
+        protected void Prepare()
         {
             Vector2 size = Fonts.SpriteVerdana.MeasureString(word);
+            mode = TileMode.Standard;
 
             width = 20 + (int)size.X;
             height = 12 + (int)size.Y;
             text = new Vector2(10, 11);
 
             if (word.Length == 0)
+            {
                 height += (int)Fonts.SpriteVerdana.MeasureString("0").Y;
+            }
 
             recBorder = new Rectangle(0, 0, width, height);
             recBackground = new Rectangle(0, 0, width - 6, height - 6);
 
-            initialize();
-            idle();
+            Initialize();
+            Idle();
         }
 
-        public static void initializeTextures()
+        public static void InitializeTextures()
         {
-            texturesActive = getTextures(Color.RosyBrown, Color.IndianRed);
-            texturesBuilt = getTextures(Color.GreenYellow, Color.Purple);
-            texturesNeuron = getTextures(Color.LightGreen, Color.DarkGoldenrod);
-            texturesNormal = getTextures(Color.LightYellow, Color.DarkSlateBlue);
-            texturesRefract = getTextures(Color.MediumVioletRed, Color.SkyBlue);
-            texturesShot = getTextures(Color.Azure, Color.IndianRed);
+            texturesActive = GetTextures(Color.RosyBrown, Color.IndianRed);
+            texturesBuild = GetTextures(Color.GreenYellow, Color.Purple);
+            texturesNeuron = GetTextures(Color.LightGreen, Color.DarkGoldenrod);
+            texturesNormal = GetTextures(Color.LightYellow, Color.DarkSlateBlue);
+            texturesRefract = GetTextures(Color.MediumVioletRed, Color.SkyBlue);
+            texturesShoot = GetTextures(Color.Azure, Color.IndianRed);
+            texturesActive2 = GetTextures(Color.MediumPurple, Color.IndianRed);
+            texturesNormal2 = GetTextures(Color.LightGreen, Color.DarkSlateBlue);
         }
 
-        protected static Tuple<Texture2D, Texture2D> getTextures(Color backgroundColor, Color borderColor)
+        protected static Tuple<Texture2D, Texture2D> GetTextures(Color backgroundColor, Color borderColor)
         {
-            Color[] color = new Color[1];
-            Texture2D background;
-            Texture2D border;
-
-            color[0] = backgroundColor;
-            background = new Texture2D(device, 1, 1);
-            background.SetData<Color>(color);
-
-            color[0] = borderColor;
-            border = new Texture2D(device, 1, 1);
-            border.SetData<Color>(color);
+            Texture2D background = GetTexture(backgroundColor);
+            Texture2D border = GetTexture(borderColor);
 
             return new Tuple<Texture2D, Texture2D>(background, border);
         }
 
-        public void activate()
+        static Texture2D GetTexture(Color color)
+        {
+            Texture2D texture;
+            Color[] colors = new Color[1];
+            colors[0] = color;
+
+            texture = new Texture2D(device, 1, 1);
+            texture.SetData(colors);
+            return texture;
+        }
+
+        public void Activate()
         {
             texBackground = active.Item1;
             texBorder = active.Item2;
         }
 
-        public void idle()
+        public void Idle()
         {
             texBackground = normal.Item1;
             texBorder = normal.Item2;
         }
 
-        public virtual void initialize()
+        public void Switch()
         {
-            active = texturesActive;
-            normal = texturesNormal;
+            if (mode == TileMode.Standard)
+            {
+                mode = TileMode.Special;
+            }
+            else
+            {
+                mode = TileMode.Special;
+            }
+
+            Initialize();
+            Activate();
+        }
+
+        public virtual void Initialize()
+        {
+            if (mode == TileMode.Standard)
+            {
+                active = texturesActive;
+                normal = texturesNormal;
+            }
+            else
+            {
+                active = texturesActive2;
+                normal = texturesNormal2;
+            }
         }
 
         public override bool Cursor(int x, int y)
         {
             if (x < Left)
+            {
                 return false;
+            }
 
             if (x > Right)
+            {
                 return false;
+            }
 
             if (y < Top)
+            {
                 return false;
+            }
 
             if (y > Bottom)
+            {
                 return false;
+            }
 
             return true;
         }
@@ -134,7 +176,7 @@ namespace Brain3D
 
         #region właściwości
 
-        public String Word
+        public string Word
         {
             get
             {

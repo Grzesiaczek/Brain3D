@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-
+﻿
 namespace Brain3D
 {
     #region enumeratory
@@ -84,6 +76,13 @@ namespace Brain3D
             this.phase = phase;
             this.value = value;
             this.refraction = refraction;
+        }
+
+        public void Zero()
+        {
+            phase = ActivityPhase.Normal;
+            value = 0;
+            refraction = 0;
         }
 
         #endregion

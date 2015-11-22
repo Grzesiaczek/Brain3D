@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 
 namespace Brain3D
 {
@@ -28,10 +23,10 @@ namespace Brain3D
             pipe = new Pipe(source, source, 0.5f, 0.1f, 1);
             pipe.Color = Color.Khaki;
 
-            shift();
+            Shift();
         }
 
-        public void setSignal(double factor)
+        public void SetSignal(double factor)
         {
             if(factor == -1)
             {
@@ -40,14 +35,16 @@ namespace Brain3D
             }
 
             if (!active)
-                activate();
+            {
+                Activate();
+            }
 
             this.factor = factor;
             Rotate();
             pipe.Move();
         }
 
-        void shift()
+        void Shift()
         {
             vector = target - source;
             bullet = vector;
@@ -56,24 +53,32 @@ namespace Brain3D
             vector -= bullet / 2;
         }
 
-        void activate()
+        void Activate()
         {
             pipe.Scale = 1;
             pipe.Show();
             active = true;
         }
 
+        public override void Move()
+        {
+            pipe.Move();
+        }
+
         public override void Rotate()
         {
-            shift();
-            pipe.Source = source + vector * (float)factor + new Vector3(0, 0, 0.05f);
-            pipe.Target = pipe.Source + bullet + new Vector3(0, 0, 0.05f);
-            pipe.Rotate();
+            if (active)
+            {
+                Shift();
+                pipe.Source = source + vector * (float)factor + new Vector3(0, 0, 0.05f);
+                pipe.Target = pipe.Source + bullet + new Vector3(0, 0, 0.05f);
+                pipe.Rotate();
+            }
         }
 
         public override void Show()
         {
-            pipe.add();
+            pipe.Add();
         }
 
         public override void Hide()

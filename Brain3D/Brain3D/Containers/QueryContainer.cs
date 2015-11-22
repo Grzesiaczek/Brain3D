@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Brain3D
 {
@@ -25,7 +22,7 @@ namespace Brain3D
             data = new List<QuerySequence>();
 
             this.brain = brain;
-            this.display = display;
+            this.display = Presentation.Display;
         }
 
         public void Add(QuerySequence query)
@@ -34,55 +31,73 @@ namespace Brain3D
             data.Add(query);
 
             if (this.query == null)
+            {
                 this.query = query;
+            }
         }
 
         public void Simulate(int length)
         {
             foreach (QuerySequence query in data)
+            {
                 brain.Simulate(query, length);
+            }
         }
 
         public void Show()
         {
             if (visible && query != null)
+            {
                 display.Show(query);
+            }
+
+            Presentation.Controller.UpdateQueries(index + 1, data.Count);
         }
 
         public void Next()
         {
             if (++index == data.Count)
+            {
                 index = 0;
+            }
 
             query = data[index];
-            Constant.Query = query;
             Show();
         }
 
-        public void Prev()
+        public void Previous()
         {
             if (index == 0)
+            {
                 index = data.Count;
+            }
 
             query = data[--index];
-            Constant.Query = query;
             Show();
         }
 
         public void Higher()
         {
             if (added == null)
+            {
                 query.IntervalUp();
+            }
             else
+            {
                 added.IntervalUp();
+            }
         }
 
         public void Lower()
         {
             if (added == null)
+            {
                 query.IntervalDown();
+            }
             else
+            {
                 added.IntervalDown();
+            }
         }
 
         public void ChangeInsertion()
@@ -92,25 +107,32 @@ namespace Brain3D
             if (insertion)
             {
                 //TODO
-                //added = new QuerySequence(10 * length + 1);
+                int length = 250;
+                added = new QuerySequence(10 * length + 1);
                 display.Show(added);
             }
             else
+            {
                 display.Show(query);
+            }
         }
 
         public bool Execute()
         {
-            if(insertion)
+            if (insertion)
+            {
                 return added.Execute();
+            }
 
             return query.Execute();
         }
 
         public void Add(char key)
         {
-            if(insertion)
+            if (insertion)
+            {
                 added.Add(key);
+            }
         }
 
         public void Erase()

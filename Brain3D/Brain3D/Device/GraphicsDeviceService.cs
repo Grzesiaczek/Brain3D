@@ -46,7 +46,9 @@ namespace Brain3D
                 if (disposing)
                 {
                     if (DeviceDisposing != null)
+                    {
                         DeviceDisposing(this, EventArgs.Empty);
+                    }
 
                     graphicsDevice.Dispose();
                 }
@@ -58,7 +60,9 @@ namespace Brain3D
         public void ResetDevice(int width, int height)
         {
             if (DeviceResetting != null)
+            {
                 DeviceResetting(this, EventArgs.Empty);
+            }
 
             parameters.BackBufferWidth = Math.Max(parameters.BackBufferWidth, width);
             parameters.BackBufferHeight = Math.Max(parameters.BackBufferHeight, height);
@@ -66,7 +70,9 @@ namespace Brain3D
             graphicsDevice.Reset(parameters);
 
             if (DeviceReset != null)
+            {
                 DeviceReset(this, EventArgs.Empty);
+            }
         }
 
         public GraphicsDevice GraphicsDevice

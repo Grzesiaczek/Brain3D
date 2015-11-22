@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -45,7 +42,9 @@ namespace Brain3D
             }
 
             for (int i = 0; i < index; i++)
+            {
                 indices[i] = text.Indices[i];
+            }
 
             offset = buffer.Add(vertices, indices);
             initialized = true;

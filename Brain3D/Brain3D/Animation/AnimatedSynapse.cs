@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
@@ -41,9 +36,13 @@ namespace Brain3D
             state = new BorderedDisk(position + shiftState);
 
             if (duplex)
-                signal = new Signal(vector.Target, vector.Source);                
+            {
+                signal = new Signal(vector.Target, vector.Source);
+            }
             else
+            {
                 signal = new Signal(vector.Source, vector.Target);
+            }
 
             drawables.Add(state);
             drawables.Add(disk);
@@ -52,20 +51,20 @@ namespace Brain3D
 
         #region sterowanie
 
-        public void create()
+        public void Create()
         {
             Scale = 1;
-            setFactor(synapse.Factor);
-            disk.setValue(synapse.Weight);
+            SetFactor(synapse.Factor);
+            disk.SetValue(synapse.Weight);
             weight = synapse.Weight;
         }
 
-        public void setChange(float source, float target)
+        public void SetChange(float source, float target)
         {
-            disk.setChange(source, target);
+            disk.SetChange(source, target);
         }
 
-        public void setFactor(float factor)
+        public void SetFactor(float factor)
         {
             color = Color.LightYellow;
             color.R -= (byte)(10 * factor);
@@ -76,30 +75,30 @@ namespace Brain3D
             state.Color = color;
         }
 
-        public void setValue(float weight)
+        public void SetValue(float weight)
         {
-            disk.changeValue(weight);
+            disk.ChangeValue(weight);
         }
 
-        public void tick(int frame, double rest)
+        public void Tick(int frame, double rest)
         {
             if (synapse.Activity[frame].Item1 && synapse.Activity[frame + 1].Item1)
             {
-                signal.setSignal(synapse.Activity[frame].Item2 + rest / 20);
+                signal.SetSignal(synapse.Activity[frame].Item2 + rest / 20);
 
                 if (!active)
                 {
                     active = true;
                     state.Color = Color.IndianRed;
-                    state.repaint();
+                    state.Repaint();
                 }
             }
             else if (active)
             {
                 active = false;
-                signal.setSignal(-1);
+                signal.SetSignal(-1);
                 state.Color = color;
-                state.repaint();
+                state.Repaint();
             }
         }
 
@@ -129,15 +128,19 @@ namespace Brain3D
 
             disk.Position = position + shiftDisk;
             state.Position = position + shiftState;
-            signal.Move();
+            signal.Rotate();
         }
 
         public override void Idle()
         {
             if (active)
+            {
                 state.Color = Color.IndianRed;
+            }
             else
+            {
                 state.Color = color;
+            }
         }
 
         public override void Hover()
@@ -162,14 +165,22 @@ namespace Brain3D
             float max = 1 - min;
 
             if (tuple.Item2 < min)
+            {
                 factor = min;
+            }
             else if (tuple.Item2 > max)
+            {
                 factor = max;
+            }
             else
+            {
                 factor = tuple.Item2;
+            }
 
             if (duplex)
+            {
                 factor = 1 - factor;
+            }
 
             Rotate();
             Move();

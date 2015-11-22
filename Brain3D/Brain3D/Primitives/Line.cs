@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -47,7 +44,7 @@ namespace Brain3D
             initialized = true;
         }
 
-        public void shift(Vector3 source, Vector3 target)
+        public void Shift(Vector3 source, Vector3 target)
         {
             Vector3 vector = target - source;
             double angle = Math.Atan(vector.Y / vector.X);
@@ -62,7 +59,7 @@ namespace Brain3D
             this.target = target;
         }
 
-        public override void moveX(float x)
+        public override void MoveX(float x)
         {
             source = new Vector3(x, source.Y, source.Z);
             target = new Vector3(x, target.Y, target.Z);

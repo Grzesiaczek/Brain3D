@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace Brain3D
 {
@@ -15,7 +11,9 @@ namespace Brain3D
             Vector3 position = source;
 
             for (int i = 0; i < segments; i++, position += interval)
+            {
                 drawables.Add(new Line(position, position + segment, color, size));
+            }
         }
     }
 }

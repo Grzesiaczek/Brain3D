@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 
 namespace Brain3D
 {
@@ -42,10 +36,14 @@ namespace Brain3D
 
             number = new Text2D(frame.Frame.ToString(), Fonts.SpriteVerdana, Vector2.Zero, Color.DarkSlateBlue, 10);
 
-            if(value.Value > 0)
+            if (value.Value > 0)
+            {
                 change = new Text2D(n.ToString(), Fonts.SpriteVerdana, Vector2.Zero, Color.Green, 10);
+            }
             else
+            {
                 change = new Text2D((-n).ToString(), Fonts.SpriteVerdana, Vector2.Zero, Color.Red, 10);
+            }
         }
 
         #region logika
@@ -94,14 +92,14 @@ namespace Brain3D
 
         public void Hide()
         {
-            if (!visible)
-                return;
+            if (visible)
+            {
+                before.Remove();
+                after.Remove();
 
-            before.Remove();
-            after.Remove();
-
-            number.Hide();
-            change.Hide();
+                number.Hide();
+                change.Hide();
+            }
         }
 
         #endregion

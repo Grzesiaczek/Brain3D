@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
 namespace Brain3D
@@ -26,11 +22,17 @@ namespace Brain3D
             latitude = (float)Math.Asin(vector.Y / radius);
 
             if (vector.Z != 0)
+            {
                 longitude = (float)Math.Acos(vector.X / Math.Sqrt(vector.X * vector.X + vector.Z * vector.Z)) * (vector.Z < 0 ? -1 : 1);
+            }
             else if (vector.X > 0)
+            {
                 longitude = 0;
+            }
             else
+            {
                 longitude = (float)Math.PI;
+            }
         }
 
         public Vector3 getVector()
@@ -82,10 +84,14 @@ namespace Brain3D
                 latitude = value;
 
                 if (latitude < -1.5f)
+                {
                     latitude = -1.5f;
+                }
 
                 if (latitude > 1.5f)
+                {
                     latitude = 1.5f;
+                }
             }
         }
     }

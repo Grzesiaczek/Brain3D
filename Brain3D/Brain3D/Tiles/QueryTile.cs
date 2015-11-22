@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace Brain3D
 {
     class QueryTile : SequenceTile
@@ -12,35 +8,37 @@ namespace Brain3D
         Neuron neuron;
         Phase[] activity;
 
-        public QueryTile(String word, int length)
+        public QueryTile(string word, int length)
         {
-            prepare(word, length);
+            Prepare(word, length);
         }
 
         public QueryTile(BuiltTile tile, int length)
         {
-            prepare(tile.Word, length);
+            Prepare(tile.Word, length);
             Left = tile.Left;
             Top = tile.Top;
         }
 
-        void prepare(String word, int length)
+        void Prepare(string word, int length)
         {
             activity = new Phase[length];
             this.word = word;
-            prepare();
+            Prepare();
 
             for (int i = 0; i < length; i++)
+            {
                 activity[i] = Phase.Idle;
+            }
         }
 
-        public void add(Neuron neuron)
+        public void Add(Neuron neuron)
         {
             this.neuron = neuron;
-            prepare();   
+            Prepare();   
         }
 
-        public override void initialize()
+        public override void Initialize()
         {
             if (neuron == null)
             {
@@ -54,47 +52,56 @@ namespace Brain3D
             }
         }
 
-        public void tick(int frame)
+        public void Tick(int frame)
         {
             switch(activity[frame])
             {
                 case Phase.Activate:
-                    activate();
+                    Activate();
                     break;
+
                 case Phase.Disactivate:
-                    idle();
+                    Idle();
                     break;
+
                 case Phase.Idle:
-                    idle();
+                    Idle();
                     break;
+
                 case Phase.Shot:
                     if(neuron == null)
-                        texBackground = texturesShot.Item1;
+                        texBackground = texturesShoot.Item1;
 
-                    texBorder = texturesShot.Item2;
+                    texBorder = texturesShoot.Item2;
                     break;
             }                
         }
 
-        public void load()
+        public void Load()
         {
-            if (neuron == null)
-                return;
-
-            for (int i = 0; i < activity.Length; i++)
+            if (neuron != null)
             {
-                if (neuron.Activity[i].Phase == ActivityPhase.Start)
-                    activity[i] = Phase.Activate;
+                for (int i = 0; i < activity.Length; i++)
+                {
+                    if (neuron.Activity[i].Phase == ActivityPhase.Start)
+                    {
+                        activity[i] = Phase.Activate;
+                    }
 
-                if (neuron.Activity[i].Phase == ActivityPhase.Finish)
-                    activity[i] = Phase.Disactivate;
+                    if (neuron.Activity[i].Phase == ActivityPhase.Finish)
+                    {
+                        activity[i] = Phase.Disactivate;
+                    }
+                }
             }
         }
 
         public void Shot(int time)
         {
             if (neuron != null)
+            {
                 neuron.GetSimulated().Shot(time);
+            }
 
             activity[time] = Phase.Shot;
             activity[time + 10] = Phase.Disactivate;

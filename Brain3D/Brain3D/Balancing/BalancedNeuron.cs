@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
@@ -21,7 +17,7 @@ namespace Brain3D
         static float k3 = k2 * k1;
         static float k0 = 250;
 
-        Object locker = new Object();
+        object locker = new object();
 
         int count;
 
@@ -38,27 +34,31 @@ namespace Brain3D
             count *= count;
         }
 
-        public void repulse(Vector3 pos)
+        public void Repulse(Vector3 pos)
         {
             Vector3 delta = position - pos;
             float distance = delta.LengthSquared() * delta.Length();
 
             if (distance < 1)
+            {
                 distance = 1;
+            }
 
             lock (locker)
+            {
                 shift += k2 * delta / distance;
+            }
         }
 
-        public void repulse()
+        public void Repulse()
         {
             Vector3 shift = Vector3.Zero;
 
             if (Constant.Space == SpaceMode.Box)
             {
-                shift.X += repulse(Constant.Box.X, position.X);
-                shift.Y += repulse(Constant.Box.Y, position.Y);
-                shift.Z += repulse(Constant.Box.Z, position.Z) * 4;
+                shift.X += Repulse(Constant.Box.X, position.X);
+                shift.Y += Repulse(Constant.Box.Y, position.Y);
+                shift.Z += Repulse(Constant.Box.Z, position.Z) * 4;
             }
             else
             {
@@ -67,28 +67,38 @@ namespace Brain3D
             }
 
             lock(locker)
+            {
                 this.shift += shift;
+            }
         }
 
-        float repulse(float box, float position)
+        float Repulse(float box, float position)
         {
             float plus = box - position;
             float minus = box + position;
 
             if (minus < 1)
+            {
                 minus = 400 - minus * 200;
+            }
             else
+            {
                 minus = k0 / minus;
+            }
 
             if (plus < 1)
+            {
                 plus = 400 - plus * 200;
+            }
             else
+            {
                 plus = k0 / plus;
+            }
 
             return minus - plus;
          }
 
-        public void rotate()
+        public void Rotate()
         {
             float factor = 4.2f * count;
             Vector3 rotation = Vector3.Zero;
@@ -102,14 +112,16 @@ namespace Brain3D
                     if (s1 == s2)
                         continue;
 
-                    shift += rotate(-s1.Direction, -s2.Direction) * 5;
+                    shift += Rotate(-s1.Direction, -s2.Direction) * 5;
                 }
 
                 foreach (AnimatedVector s2 in neuron.Output)
-                    shift += rotate(-s1.Direction, s2.Direction) * 2;
+                {
+                    shift += Rotate(-s1.Direction, s2.Direction) * 2;
+                }
 
                 shift *= s1.Length / factor;
-                map[s1].Pre.move(-shift);
+                map[s1].Pre.Move(-shift);
                 rotation += shift;
             }
 
@@ -122,22 +134,26 @@ namespace Brain3D
                     if (s1 == s2)
                         continue;
 
-                    shift += rotate(s1.Direction, s2.Direction);
+                    shift += Rotate(s1.Direction, s2.Direction);
                 }
 
                 foreach (AnimatedVector s2 in neuron.Input)
-                    shift += rotate(s1.Direction, -s2.Direction) * 2;
+                {
+                    shift += Rotate(s1.Direction, -s2.Direction) * 2;
+                }
 
                 shift *= s1.Length / factor;
-                map[s1].Post.move(-shift);
+                map[s1].Post.Move(-shift);
                 rotation += shift;
             }
 
             lock (locker)
+            {
                 shift += rotation;
+            }
         }
 
-        Vector3 rotate(Vector3 source, Vector3 target)
+        Vector3 Rotate(Vector3 source, Vector3 target)
         {
             Vector3 result = Vector3.Zero;
             Vector3 vector = target - source;
@@ -153,19 +169,22 @@ namespace Brain3D
             result *= (float)Math.Pow(2 - vector.Length(), 2) / result.Length();
 
             if (float.IsNaN(result.Length()))
+            {
                 return Vector3.Zero;
+            }
 
             return result;
         }
 
-
-        public float update(float factor)
+        public float Update(float factor)
         {
             float result = 0;
-            String name = neuron.Word;
+            string name = neuron.Word;
 
             if (float.IsNaN(shift.Length()))
+            {
                 shift = new Vector3(0.1f, 0.1f, 0.1f);
+            }
 
             if (shift.Length() > 1)
             {
@@ -173,7 +192,9 @@ namespace Brain3D
                 result = 1;
             }
             else
+            {
                 result = shift.Length();
+            }
 
             position += shift * factor;
             neuron.Position = position;
@@ -182,23 +203,25 @@ namespace Brain3D
             return result;
         }
 
-        public void move(Vector3 vector)
+        public void Move(Vector3 vector)
         {
             lock (locker)
+            {
                 shift += vector;
+            }
         }
 
-        public void rescale(float scale)
+        public void Rescale(float scale)
         {
             neuron.Radius = origin + (target - origin) * scale;
         }
 
-        public void rescale()
+        public void Rescale()
         {
             neuron.Radius = target;
         }
 
-        public void calculate(float max)
+        public void Calculate(float max)
         {
             origin = neuron.Radius;
             target = 1 + 0.4f * neuron.Neuron.Count / max;

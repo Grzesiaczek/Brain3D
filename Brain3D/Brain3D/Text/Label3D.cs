@@ -1,26 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Nuclex.Fonts;
-using Nuclex.Graphics;
 
 namespace Brain3D
 {
     class Label3D : Text3D
     {
-        public Label3D(String data, Vector3 position)
+        public Label3D(string data, Vector3 position)
         {
             this.position = position;
             text = Fonts.VectorArial.Fill(data);
             color = Color.DarkBlue;
 
             if (text.Width > 80)
+            {
                 ratio = 1.6f / text.Width;
+            }
             else
+            {
                 ratio = 0.02f;
+            }
             
             shift = new Vector3(-text.Width * ratio / 2, -0.7f, -0.01f);
         }
@@ -44,7 +42,9 @@ namespace Brain3D
             }
 
             for (int i = 0; i < index; i++)
+            {
                 indices[i] = text.Indices[i];
+            }
 
             offset = buffer.Add(vertices, indices);
             initialized = true;

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Brain3D
 {
@@ -28,13 +26,19 @@ namespace Brain3D
             }
 
             foreach (Branch branch in branches)
+            {
                 this.branches.Add(new BalancedBranch(branch, map));
+            }
 
             foreach (BalancedLeaf leaf in this.leafs)
-                leaf.load(this.leafs, this.branches);
+            {
+                leaf.Load(this.leafs, this.branches);
+            }
 
             foreach (BalancedBranch branch in this.branches)
-                branch.load(this.branches);
+            {
+                branch.Load(this.branches);
+            }
         }
 
         public BalancedTree(BalancedTree tree)
@@ -60,15 +64,19 @@ namespace Brain3D
             }
 
             foreach (BalancedLeaf leaf in leafs)
-                leaf.refresh(mapLeafs, mapBranches);
+            {
+                leaf.Refresh(mapLeafs, mapBranches);
+            }
 
             foreach (BalancedBranch branch in branches)
-                branch.refresh(mapLeafs, mapBranches);
+            {
+                branch.Refresh(mapLeafs, mapBranches);
+            }
 
-            mutate();
+            Mutate();
         }
 
-        public void mutate()
+        public void Mutate()
         {
             int count = random.Next(leafs.Count / 2 + 1) + 1;
             cost = 0;
@@ -76,17 +84,21 @@ namespace Brain3D
             for (int i = 0; i < count; i++)
             {
                 BalancedLeaf leaf = leafs[random.Next(leafs.Count)];
-                leaf.moveY((float)(2.4 * random.NextDouble() - 0.8));
+                leaf.MoveY((float)(2.4 * random.NextDouble() - 0.8));
             }
 
             foreach (BalancedLeaf leaf in leafs)
-                cost += leaf.getCost();
+            {
+                cost += leaf.GetCost();
+            }
         }
 
-        public void shift()
+        public void Shift()
         {
             foreach (BalancedLeaf leaf in leafs)
-                leaf.shift();
+            {
+                leaf.Shift();
+            }
         }
 
         public float Cost

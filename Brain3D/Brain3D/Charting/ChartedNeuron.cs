@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 
 namespace Brain3D
 {
@@ -29,7 +22,7 @@ namespace Brain3D
         public override void Show()
         {
             chart.Show();
-            tile.activate();
+            tile.Activate();
             tile.Show();
             visible = true;
         }
@@ -59,9 +52,13 @@ namespace Brain3D
             if(active)
             {
                 if (visible)
-                    tile.activate();
+                {
+                    tile.Activate();
+                }
                 else
-                    tile.idle();
+                {
+                    tile.Idle();
+                }
 
                 chart.Idle();
                 active = false;

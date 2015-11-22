@@ -15,13 +15,13 @@ namespace Brain3D
         public SequenceTile(String word)
         {
             this.word = word;
-            prepare();
+            Prepare();
         }
 
         public SequenceTile(BuiltTile tile)
         {
             word = tile.Word;
-            prepare();
+            Prepare();
 
             Left = tile.Left;
             Top = tile.Top;

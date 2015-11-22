@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
@@ -21,10 +15,14 @@ namespace Brain3D
 
         #region logika
 
-        public void Add(Tile element)
+        public void Add(Tile element, bool show = true)
         {
             sequence.Add(element);
-            element.Show();
+
+            if (show)
+            {
+                element.Show();
+            }
         }
 
         public void Remove(Tile element)
@@ -36,13 +34,17 @@ namespace Brain3D
         public override void Show()
         {
             foreach (Tile tile in sequence)
+            {
                 tile.Show();
+            }
         }
 
         public override void Hide()
         {
             foreach (Tile tile in sequence)
+            {
                 tile.Hide();
+            }
         }
 
         protected virtual void Arrange()
@@ -63,31 +65,35 @@ namespace Brain3D
 
         public void Add(char key)
         {
-            if (builder == null)
-                return;
-
-            builder.add(key);
+            if (builder != null)
+            {
+                builder.add(key);
+            }
         }
 
         public virtual void Space()
         {
-            if (builder.Word.Length == 0)
-                return;
+            if (builder.Word.Length != 0)
+            {
+                Remove(builder);
+                Add(CreateTile(builder));
 
-            Remove(builder);
-            Add(CreateTile(builder));
-
-            builder = new BuiltTile(builder.Right + 10);
-            Add(builder);
+                builder = new BuiltTile(builder.Right + 10);
+                Add(builder);
+            }
         }
 
         public bool Erase()
         {
             if (!builder.erase())
+            {
                 return false;
+            }
 
             if (sequence.Count == 1)
+            {
                 return true;
+            }
 
             Remove(builder);
 
@@ -103,7 +109,9 @@ namespace Brain3D
         public virtual bool Execute()
         {
             if (sequence.Count == 1 && builder.Word.Length == 0)
+            {
                 return false;
+            }
 
             Remove(builder);
             Add(CreateTile(builder));

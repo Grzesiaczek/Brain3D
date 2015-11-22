@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
-    class Leaf : DrawableComposite
+    class Leaf : DrawableComposite, Mouse
     {
         #region deklaracje
 
@@ -21,6 +17,11 @@ namespace Brain3D
 
         Vector3 size;
 
+        Vector3 screen;
+        Vector2 shift;
+
+        List<Branch> branches;
+
         int time;
 
         #endregion
@@ -29,19 +30,20 @@ namespace Brain3D
         {
             this.neuron = neuron;
             this.time = time;
-            prepare();
+            Prepare();
         }
 
         public Leaf(Leaf leaf)
         {
             neuron = leaf.neuron;
             time = leaf.time;
-            prepare();
+            Prepare();
         }
 
-        void prepare()
+        void Prepare()
         {
             Vector2 font = Fonts.SpriteArial.MeasureString(neuron.Word) * 0.005f;
+            branches = new List<Branch>();
 
             float width = 0.06f + font.X;
             float height = 0.04f + font.Y;
@@ -51,6 +53,8 @@ namespace Brain3D
 
             size = new Vector3(width, height, 0);
             position = corner + size / 2;
+            screen = device.Viewport.Project(position, effect.Projection, effect.View, effect.World);
+            Vector3 test = device.Viewport.Unproject(screen, effect.Projection, effect.View, effect.World);
 
             background = new Rect(corner + shift, size - 2 * shift, Color.LightYellow);
             border = new Rect(corner - new Vector3(0, 0, 0.001f), size, Color.Purple);
@@ -61,6 +65,67 @@ namespace Brain3D
             drawables.Add(border);
             drawables.Add(word);
             drawables.Add(line);
+        }
+
+        public void Add(Branch branch)
+        {
+            branches.Add(branch);
+        }
+
+        public void Hover()
+        {
+            background.Color = Color.Yellow;
+            screen = device.Viewport.Project(position, effect.Projection, effect.View, effect.World);
+        }
+
+        public void Idle()
+        {
+            background.Color = Color.LightYellow;
+        }
+
+        public void Move(int x, int y)
+        {
+            Position = device.Viewport.Unproject(new Vector3(screen.X, shift.Y + y, 0.6f), effect.Projection, effect.View, effect.World);
+            screen = device.Viewport.Project(position, effect.Projection, effect.View, effect.World);
+
+            background.Move();
+            border.Move();
+            word.Move();
+
+            foreach(Branch branch in branches)
+            {
+                branch.Move();
+            }
+        }
+
+        public void Push(int x, int y)
+        {
+            shift = new Vector2(screen.X - x, screen.Y - y);
+        }
+
+        public void Click(int x, int y) { }
+
+        public bool Moved(int x, int y)
+        {
+            return false;
+        }
+
+        public override bool Cursor(int x, int y)
+        {
+            Vector3 upperLeft = device.Viewport.Project(position - size / 2, effect.Projection, effect.View, effect.World);
+            Vector3 lowerRight = device.Viewport.Project(position + size / 2, effect.Projection, effect.View, effect.World);
+
+            if(x < upperLeft.X || x > lowerRight.X)
+            {
+                return false;
+            }
+
+            if (y > upperLeft.Y || y < lowerRight.Y)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         #region właściwości
@@ -92,7 +157,7 @@ namespace Brain3D
                 position = value;
                 background.moveY(value.Y - size.Y / 2 + 0.01f);
                 border.moveY(value.Y - size.Y / 2);
-                word.moveY(value.Y);
+                word.moveY(value.Y - 0.024f);
             }
         }
 
@@ -102,17 +167,17 @@ namespace Brain3D
             {
                 scale = value;
 
-                if (!visible)
-                    return;
+                if (visible)
+                {
+                    float x = 0.01f * time * scale;
+                    position = new Vector3(x + size.X / 2, position.Y, position.Z);
 
-                float x = 0.01f * time * scale;
-                position = new Vector3(x + size.X / 2, position.Y, position.Z);
+                    background.MoveX(x + 0.01f);
+                    word.MoveX(position.X);
 
-                background.moveX(x + 0.01f);
-                word.moveX(position.X);
-
-                border.moveX(x);
-                line.moveX(x);
+                    border.MoveX(x);
+                    line.MoveX(x);
+                }
             }
         }
 

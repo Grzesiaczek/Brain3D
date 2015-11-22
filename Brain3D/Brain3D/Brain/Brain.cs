@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
+using System.Xml;
 
 namespace Brain3D
 {
@@ -23,6 +24,7 @@ namespace Brain3D
         Dictionary<Synapse, Tuple<AnimatedSynapse, CreatedSynapse>> mapSynapses;
 
         QuerySequence query;
+        QueryContainer queryContainer;
 
         double tr;
         double ts;
@@ -35,7 +37,7 @@ namespace Brain3D
         int length;
         int sentences;
 
-        public static event EventHandler simulationFinished;
+        public static event EventHandler SimulationFinished;
 
         #endregion
 
@@ -69,7 +71,27 @@ namespace Brain3D
             double interval = (tmax + ts) / omega;
 
             for (int i = 1; i < 20; i++)
+            {
                 floats.Add((float)Math.Pow(1 / (1 + i * interval), gamma));
+            }
+        }
+
+        public void Load(XmlNode node, Display display)
+        {
+            XmlNode sentences = node.FirstChild;
+            XmlNode queries = sentences.NextSibling;
+            queryContainer = new QueryContainer(this, display);
+
+            foreach(XmlNode sentence in sentences)
+            {
+                AddSentence(sentence.InnerText);
+            }
+
+            foreach(XmlNode query in queries)
+            {
+                length = 250;
+                queryContainer.Add(new QuerySequence(query.InnerText, length * 10 + 1));
+            }
         }
 
         #region sterowanie
@@ -79,7 +101,7 @@ namespace Brain3D
             this.query = sequence;
             this.length = length * 10 + 1;
 
-            Constant.Query = sequence;
+            //Constant.Query = sequence;
             sequence.Initialize();
             Simulate(0);
         }
@@ -89,18 +111,22 @@ namespace Brain3D
             List<SimulatedNeuron> data = neurons.Select(n => n.GetSimulated(query)).ToList();
 
             foreach (SimulatedNeuron neuron in data)
+            {
                 neuron.Neutralize();
+            }
 
             for (int i = start; i < length; i++)
             {
                 query.Tick(i);
 
                 foreach (SimulatedNeuron neuron in data)
+                {
                     neuron.Tick(i);
+                }
             }
 
             query.LoadTiles();
-            simulationFinished(query, null);
+            SimulationFinished(query, null);
         }
 
         public void Initialize(QuerySequence query)
@@ -108,32 +134,40 @@ namespace Brain3D
             SimulatedElement.Initialize(250);
 
             foreach (Neuron neuron in neurons)
+            {
                 neuron.Initialize(query);
+            }
 
             foreach (Synapse synapse in synapses)
+            {
                 synapse.Initialize(query);
+            }
 
             foreach (Neuron neuron in neurons)
+            {
                 neuron.SetSimulated(query);
+            }
 
             foreach (Synapse synapse in synapses)
+            {
                 synapse.SetSimulated(query);
+            }
         }
 
         #endregion
 
         #region uczenie
 
-        public void AddSentence(String sentence)
+        public void AddSentence(string sentence)
         {
             List<CreationFrame> frames = new List<CreationFrame>();
             List<Neuron> sequence = new List<Neuron>();
-            String[] words = sentence.Split(' ');
+            string[] words = sentence.Split(' ');
 
             int index = 0;
             int eta = 0;
 
-            foreach (String word in words)
+            foreach (string word in words)
             {
                 CreationFrame frame = Create(word, ++sentences);
                 Neuron neuron = frame.Neuron.Neuron.Neuron;
@@ -148,7 +182,7 @@ namespace Brain3D
 
                     if (synapse == null)
                     {
-                        synapse = new Synapse(sequence[i], neuron);
+                        synapse = new Synapse(sequence[i], neuron, queryContainer);
                         synapses.Add(synapse);
 
                         neuron.Input.Add(synapse);
@@ -165,7 +199,9 @@ namespace Brain3D
                     synapse.Weight = (float)(eta * synapse.Factor * theta / (eta + (eta - 1) * synapse.Factor));
 
                     if (start == synapse.Weight)
+                    {
                         continue;
+                    }
 
                     CreationData data = new CreationData(mapSynapses[synapse].Item2, frame, new Change(start, synapse.Weight), new Change(synapse.Factor));
                     mapSynapses[synapse].Item2.add(data);
@@ -175,12 +211,14 @@ namespace Brain3D
                 foreach (Synapse synapse in neuron.Input)
                 {
                     if (synapse.Change == 0)
+                    {
                         continue;
+                    }
 
                     float start = synapse.Weight;
                     float factor = synapse.Factor + synapse.Change;
                     
-                    eta = ((Neuron)synapse.Pre).Count;
+                    eta = synapse.Pre.Count;
                     synapse.Weight = (float)(eta * factor * theta / (eta + (eta - 1) * factor));
 
                     CreationData data = new CreationData(mapSynapses[synapse].Item2, frame, new Change(start, synapse.Weight), new Change(synapse.Factor, factor));
@@ -245,7 +283,7 @@ namespace Brain3D
 
             if (neuron == null)
             {
-                neuron = new Neuron(word);
+                neuron = new Neuron(word, queryContainer);
                 neurons.Add(neuron);
                 created = Create(neuron);
             }
@@ -266,7 +304,7 @@ namespace Brain3D
             return result;
         }
 
-        public void remove(CreationFrame frame)
+        public void Remove(CreationFrame frame)
         {
 
         }
@@ -274,6 +312,14 @@ namespace Brain3D
         #endregion
 
         #region właściwości
+
+        public QueryContainer QueryContainer
+        {
+            get
+            {
+                return queryContainer;
+            }
+        }
 
         public List<CreationSequence> Sequences
         {

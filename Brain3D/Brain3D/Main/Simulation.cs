@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -18,16 +12,15 @@ namespace Brain3D
     {
         #region deklaracje
 
-        //Brain brain;
-
         Animation animation;
         Creation creation;
         Charting charting;
         Response response;
 
         Presentation presentation;
-        QueryContainer container;
+        BrainContainer brainContainer;
         Player player;
+        Help help;
 
         FormWindowState state;
 
@@ -51,6 +44,7 @@ namespace Brain3D
             Presentation.Display = display;
             Controls.Add(display);
             player = new Player();
+            help = new Help();
 
             SimulatedElement.initialize(100, 20);
             SimulatedNeuron.InitializeArrays();
@@ -66,35 +60,34 @@ namespace Brain3D
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             SetStyle(ControlStyles.Selectable, false);
 
-            trackBarDensity.KeyDown += keySuppress;
-            trackBarFrame.KeyDown += keySuppress;
-            trackBarLength.KeyDown += keySuppress;
-            trackBarPace.KeyDown += keySuppress;
+            trackBarDensity.KeyDown += KeySuppress;
+            trackBarFrame.KeyDown += KeySuppress;
+            trackBarLength.KeyDown += KeySuppress;
+            trackBarPace.KeyDown += KeySuppress;
 
             length = trackBarLength.Value * 10;
             Presentation.Length = length;
 
             animation.ChangePace(trackBarPace.Value);
 
-            animation.BalanceFinished += new EventHandler(BalanceFinished);
-            animation.IntervalChanged += new EventHandler(IntervalChanged);
-            animation.queryAccepted += new EventHandler(QueryAccepted);
+            Graph.AnimationStop += new EventHandler(AnimationStop);
+            Graph.BalanceFinished += new EventHandler(BalanceFinished);
 
-            animation.animationStop += new EventHandler(AnimationStop);
-            creation.animationStop += new EventHandler(AnimationStop);
+            Presentation.IntervalChanged += new EventHandler(IntervalChanged);
+            Presentation.QueryAccepted += new EventHandler(QueryAccepted);
 
-            Brain.simulationFinished += new EventHandler(SimulationFinished);
+            Brain.SimulationFinished += new EventHandler(SimulationFinished);
 
             resize();
         }
 
         void Simulate()
         {
-            container.Simulate(length);
+            brainContainer.Simulate(length);
             buttonSimulate.Enabled = false;
 
-            charting.Reload();
-            response.Reload();
+            charting.Load();
+            response.Load();
         }
 
         #endregion
@@ -106,20 +99,21 @@ namespace Brain3D
             if (presentation.Started)
             {
                 presentation.Stop();
-                return;
             }
+            else
+            {
+                buttonSimulate.Enabled = false;
+                buttonBack.Enabled = false;
+                buttonForth.Enabled = false;
 
-            buttonSimulate.Enabled = false;
-            buttonBack.Enabled = false;
-            buttonForth.Enabled = false;
+                buttonPlay.Text = "Stop";
 
-            buttonPlay.Text = "Stop";
-
-            presentation.ChangePace(trackBarPace.Value);
-            presentation.Start();
+                presentation.ChangePace(trackBarPace.Value);
+                presentation.Start();
+            }
         }
 
-        private void buttonSimulate_Click(object sender, EventArgs e)
+        private void ButtonSimulate_Click(object sender, EventArgs e)
         {
             Simulate();
         }
@@ -128,41 +122,49 @@ namespace Brain3D
 
         #region obsługa przycisków sterujących
 
-        private void buttonPaceUp_Click(object sender, EventArgs e)
+        private void ButtonPaceUp_Click(object sender, EventArgs e)
         {
             if (trackBarPace.Value != trackBarPace.Maximum)
+            {
                 trackBarPace.Value++;
+            }
         }
 
-        private void buttonPaceDown_Click(object sender, EventArgs e)
+        private void ButtonPaceDown_Click(object sender, EventArgs e)
         {
             if (trackBarPace.Value != trackBarPace.Minimum)
+            {
                 trackBarPace.Value--;
+            }
         }
 
-        private void buttonBack_Click(object sender, EventArgs e)
+        private void ButtonBack_Click(object sender, EventArgs e)
         {
             presentation.Back();
         }
 
-        private void buttonForth_Click(object sender, EventArgs e)
+        private void ButtonForth_Click(object sender, EventArgs e)
         {
             presentation.Forth();
         }
 
-        private void buttonLengthDown_Click(object sender, EventArgs e)
+        private void ButtonLengthDown_Click(object sender, EventArgs e)
         {
             if (length > 50)
+            {
                 length -= 10;
+            }
 
             labelLength.Text = length.ToString();
             trackBarLength.Value = length / 10;
         }
 
-        private void buttonLengthUp_Click(object sender, EventArgs e)
+        private void ButtonLengthUp_Click(object sender, EventArgs e)
         {
             if (length < 500)
+            {
                 length += 10;
+            }
 
             labelLength.Text = length.ToString();
             trackBarLength.Value = length / 10;
@@ -181,11 +183,11 @@ namespace Brain3D
                     break;
 
                 case Keys.F1:
-                    display.Print(presentation);
+                    help.Switch();
                     break;
 
                 case Keys.F4:
-
+                    display.Print(presentation);
                     break;
 
                 case Keys.F7:
@@ -194,15 +196,22 @@ namespace Brain3D
 
                 case Keys.F8:
                     if (checkBoxMusic.Checked)
+                    {
                         response.Play(player);
+                    }
+
+                    break;
+                    
+                case Keys.F9:
+                    presentation.BalanceSynapses();
                     break;
 
-                case Keys.F11:
-                    Balancing.Instance.phaseFour();
+                case Keys.F10:
+                    Balancing.Instance.PhaseFour();
                     break;
 
                 case Keys.F12:
-                    presentation.BalanceSynapses();
+                    presentation.CurrentQuery.Switch();
                     break;
 
                 case Keys.Insert:
@@ -274,12 +283,20 @@ namespace Brain3D
                     break;
 
                 case Keys.PageUp:
-                    container.Next();
+                    presentation.NextQuery();
                     break;
 
                 case Keys.PageDown:
-                    container.Prev();
+                    presentation.PreviousQuery();
                     break;
+
+                case (Keys.Control | Keys.PageUp):
+                    presentation.NextBrain();
+                    break;
+
+                case (Keys.Control | Keys.PageDown):
+                    presentation.PreviousBrain();
+                    break;                
                 
                 default:
 
@@ -288,18 +305,25 @@ namespace Brain3D
                     if (code > 64 && code < 91)
                     {
                         if ((keyData & Keys.Shift) != Keys.Shift)
+                        {
                             code += 32;
+                        }
 
                         presentation.Add((char)code);
                     }
+
                     break;
             }
 
-            display.Focus();
+            if (keyData != Keys.F1)
+            {
+                display.Focus();
+            }
+
             return false;
         }
 
-        void keySuppress(object sender, KeyEventArgs e)
+        void KeySuppress(object sender, KeyEventArgs e)
         {
             e.SuppressKeyPress = true;
         }
@@ -347,49 +371,46 @@ namespace Brain3D
 
         #region obsługa zmiany trybu pracy
 
-        private void radioButtonCreation_CheckedChanged(object sender, EventArgs e)
+        private void RadioButtonCreation_CheckedChanged(object sender, EventArgs e)
         {
-            if (!radioButtonCreation.Checked)
-                return;
-
-            Show(creation);
+            if (radioButtonCreation.Checked)
+            {
+                Show(creation);
+            }
         }
 
-        private void radioButtonChart_CheckedChanged(object sender, EventArgs e)
+        private void RadioButtonChart_CheckedChanged(object sender, EventArgs e)
         {
-            if (!radioButtonChart.Checked)
-                return;
-
-             Show(charting);
+            if (radioButtonChart.Checked)
+            {
+                Show(charting);
+            }
         }
 
-        private void radioButtonSimulation_CheckedChanged(object sender, EventArgs e)
+        private void RadioButtonSimulation_CheckedChanged(object sender, EventArgs e)
         {
-            if (!radioButtonSimulation.Checked)
-                return;
-
-            Show(animation);
+            if (radioButtonSimulation.Checked)
+            {
+                Show(animation);
+            }
         }
 
-        private void radioButtonTree_CheckedChanged(object sender, EventArgs e)
+        private void RadioButtonTree_CheckedChanged(object sender, EventArgs e)
         {
-            if (!radioButtonTree.Checked)
-                return;
-
-            Show(response);
+            if (radioButtonTree.Checked)
+            {
+                Show(response);
+            }
         }
 
         void Show(Presentation presentation)
         {
             this.presentation.Hide();
             this.presentation = presentation;
-            presentation.Show();
-            display.Focus();
 
-            if (presentation is Creation)
-                container.Visible = false;
-            else
-                container.Visible = true;
+            presentation.Show();
+            presentation.ShowQuery();
+            display.Focus();
         }
 
         #endregion
@@ -400,39 +421,13 @@ namespace Brain3D
         {
             /*
             brain.addSentence("type new sequence"));
-            sbrain.addSentence("or load from file"));*/
+            brain.addSentence("or load from file"));*/
 
-            Brain brain = new Brain();
-            container = new QueryContainer(brain, display);
-
-            /*
-            brain.addSentence("i have a monkey");
-            brain.addSentence("my monkey is very small");
-            brain.addSentence("it is very lovely");
-            brain.addSentence("it likes to sit on my head");
-            brain.addSentence("it can jump very quickly");
-            brain.addSentence("it is also very clever");
-            brain.addSentence("it learns quickly");
-            brain.addSentence("my monkey is lovely");
-            brain.addSentence("i have also a small dog");
-            */
-           
-
-            brain.AddSentence("G4N4 E4N4 E4N4 F4N4 D4N4 D4N4 C4N8 E4N8 G4N2");
-            brain.AddSentence("E5N8 Eb5N8 E5N8 Eb5N8 E5N8 H4N8 D5N8 C5N8 A4D4 C4N8 E4N8 A4N8 H4D4 E4N8 G#4N8 H4N8 C5D4");
-            brain.AddSentence("D4N2 G4N4 H4N2 A4N4 G4N2 F4N4 G4N4 F4N4 E4N4 D4N2 D4N4 H3N2 C4N4 D4D2");
-            brain.AddSentence("C4N4 D4N4 E4N4 F4N4 G4N4 A4N4 H4N4 C5N4");
-
-            //sequences.Add(brain.addSentence("this is"));
-
-            container.Add(new QuerySequence("C4N4 D4N4 E4N4", 10 * length + 1));
-            container.Add(new QuerySequence("C4N4 D4N4", 10 * length + 1));
-            container.Add(new QuerySequence("G4N4 E4N4 E4N4", 10 * length + 1));
-
-            Presentation.Brain = brain;
-            Presentation.Container = container;
+            brainContainer = new BrainContainer();
+            Presentation.BrainContainer = brainContainer;
             Presentation.Controller.Add(trackBarFrame);
 
+            brainContainer.Load();
             Simulate();
             Show(presentation);
             //radioButtonTree.Checked = true;
@@ -482,35 +477,35 @@ namespace Brain3D
 
         #region obsługa suwaków
 
-        private void trackBarPace_Scroll(object sender, EventArgs e)
+        private void TrackBarPace_Scroll(object sender, EventArgs e)
         {
             presentation.ChangePace(trackBarPace.Value);
             labelPace.Text = trackBarPace.Value.ToString();
         }
 
-        private void trackBarLength_Scroll(object sender, EventArgs e)
+        private void TrackBarLength_Scroll(object sender, EventArgs e)
         {
             length = trackBarLength.Value * 10;
             labelLength.Text = length.ToString();
         }
 
-        private void trackBarFrame_Scroll(object sender, EventArgs e)
+        private void TrackBarFrame_Scroll(object sender, EventArgs e)
         {
             presentation.ChangeFrame(trackBarFrame.Value);
         }
 
-        private void trackBarDensity_Scroll(object sender, EventArgs e)
+        private void TrackBarDensity_Scroll(object sender, EventArgs e)
         {
             
         }
 
         #endregion
 
-        void OpenData(String path)
+        void OpenData(string path)
         {
             Brain brain = new Brain();
             DateTime date = DateTime.Now;
-            String name = date.ToString("yyyyMMdd-HHmmss");
+            string name = date.ToString("yyyyMMdd-HHmmss");
 
             StreamReader reader = new StreamReader(File.Open(path, FileMode.Open));
             XmlDocument xml = new XmlDocument();
@@ -520,62 +515,64 @@ namespace Brain3D
             XmlNode node = xml.ChildNodes.Item(1).FirstChild;
 
             foreach (XmlNode xn in node.ChildNodes)
+            {
                 brain.AddSentence(xn.InnerText.ToLower());
-
-            Presentation.Brain = brain;
+            }
 
             Simulate();
             Show(presentation);
 
             if (presentation is Graph)
+            {
                 animation.Balance();
+            }
         }
 
-        private void openFile_FileOk(object sender, CancelEventArgs e)
+        private void OpenFile_FileOk(object sender, CancelEventArgs e)
         {
             OpenData(openFile.FileName);
         }
 
-        private void buttonLoad_Click(object sender, EventArgs e)
+        private void ButtonLoad_Click(object sender, EventArgs e)
         {
             openFile.DefaultExt = ".xml";
             openFile.InitialDirectory = Path.Combine(Directory.GetCurrentDirectory(), "Files");
             DialogResult test = openFile.ShowDialog();
         }
 
-        private void buttonBalance_Click(object sender, EventArgs e)
+        private void ButtonBalance_Click(object sender, EventArgs e)
         {
             animation.Balance();
             buttonPlay.Enabled = false;
         }
 
-        private void checkBoxState_CheckedChanged(object sender, EventArgs e)
+        private void CheckBoxState_CheckedChanged(object sender, EventArgs e)
         {
             Number3D.Visible = checkBoxState.Checked;
         }
 
         private void radioButtonBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (!radioButtonBox.Checked)
-                return;
-
-            Constant.Space = SpaceMode.Box;
+            if (radioButtonBox.Checked)
+            {
+                Constant.Space = SpaceMode.Box;
+            }
         }
 
-        private void radioButtonSphere_CheckedChanged(object sender, EventArgs e)
+        private void RadioButtonSphere_CheckedChanged(object sender, EventArgs e)
         {
-            if (!radioButtonSphere.Checked)
-                return;
-
-            Constant.Space = SpaceMode.Sphere;
+            if (radioButtonSphere.Checked)
+            {
+                Constant.Space = SpaceMode.Sphere;
+            }
         }
 
-        private void radioButtonSquare_CheckedChanged(object sender, EventArgs e)
+        private void RadioButtonSquare_CheckedChanged(object sender, EventArgs e)
         {
 
         }
 
-        private void checkBoxWhite_CheckedChanged(object sender, EventArgs e)
+        private void CheckBoxWhite_CheckedChanged(object sender, EventArgs e)
         {
             if(checkBoxWhite.Checked)
             {

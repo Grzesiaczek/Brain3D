@@ -1,19 +1,51 @@
 <?xml version='1.0'?>
 <data length='250'>
-	<sentences>
-    <sentence>jupiter is a planet</sentence>
-    <sentence>saturn is a planet</sentence>
-    <sentence>saturn is a big planet</sentence>
-    <sentence>jupiter is a big planet</sentence>
-    <sentence>saturn is bigger than earth</sentence>
-    <sentence>mercury is small planet</sentence>
-    <sentence>mercury is smaller than earth</sentence>
-    <sentence>earth is our planet</sentence>
-    <sentence>earth is bigger than mercury</sentence>
-    <sentence>each planet can have moons</sentence>
-	</sentences>
-  <queries>
-    <query>the jupiter</query>
-    <query>what is jupiter</query>
-  </queries>
+  <brain>
+    <sentences>
+      <sentence>i have a monkey</sentence>
+      <sentence>my monkey is very small</sentence>
+      <sentence>it is very lovely</sentence>
+      <sentence>it likes to sit on my head</sentence>
+      <sentence>it can jump very quickly</sentence>
+      <sentence>t is also very clever</sentence>
+      <sentence>it learns quickly</sentence>
+      <sentence>my monkey is lovely</sentence>
+      <sentence>i have also a small dog</sentence>
+    </sentences>
+    <queries>
+      <query interval='20'>what is this monkey like</query>
+      <query interval='15'>this is</query>
+    </queries>
+  </brain>
+  <brain>
+    <sentences>
+      <sentence>G4N4 E4N4 E4N4 F4N4 D4N4 D4N4 C4N8 E4N8 G4N2</sentence>
+      <sentence>E5N8 Eb5N8 E5N8 Eb5N8 E5N8 H4N8 D5N8 C5N8 A4D4 C4N8 E4N8 A4N8 H4D4 E4N8 G#4N8 H4N8 C5D4</sentence>
+      <sentence>D4N2 G4N4 H4N2 A4N4 G4N2 F4N4 G4N4 F4N4 E4N4 D4N2 D4N4 H3N2 C4N4 D4D2</sentence>
+      <sentence>C4N4 D4N4 E4N4 F4N4 G4N4 A4N4 H4N4 C5N4</sentence>
+    </sentences>
+    <queries>
+      <query>C4N4 D4N4 E4N4</query>
+      <query>C4N4 D4N4</query>
+      <query>G4N4 E4N4 E4N4</query>
+    </queries>
+  </brain>
+  <brain>
+	  <sentences>
+      <sentence>jupiter is a planet</sentence>
+      <sentence>saturn is a planet</sentence>
+      <sentence>saturn is a big planet</sentence>
+      <sentence>jupiter is a big planet</sentence>
+      <sentence>saturn is bigger than earth</sentence>
+      <sentence>mercury is small planet</sentence>
+      <sentence>mercury is smaller than earth</sentence>
+      <sentence>earth is our planet</sentence>
+      <sentence>earth is bigger than mercury</sentence>
+      <sentence>each planet can have moons</sentence>
+	  </sentences>
+    <queries>
+      <query>the jupiter</query>
+      <query>what is jupiter</query>
+    </queries>
+  </brain>
 </data>

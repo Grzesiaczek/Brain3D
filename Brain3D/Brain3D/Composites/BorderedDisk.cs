@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 
 namespace Brain3D
 {
@@ -21,7 +16,7 @@ namespace Brain3D
         public BorderedDisk(Vector3 position)
         {
             this.position = position;
-            this.radius = 0.5f;
+            radius = 0.5f;
 
             disk = new Disk(position, pattern, Color.LightYellow, radius);
             border = new Ring(position, pattern, Color.DarkSlateBlue);
@@ -33,7 +28,7 @@ namespace Brain3D
             drawables.Add(border);
         }
 
-        public static void initializeCircle()
+        public static void InitializeCircle()
         {
             pattern = new Circle(1);
             pattern.Rotate();
@@ -42,7 +37,9 @@ namespace Brain3D
         public override bool Cursor(int x, int y)
         {
             if (!visible)
+            {
                 return false;
+            }
 
             Vector3 near = device.Viewport.Unproject(new Vector3(x, y, 0), effect.Projection, effect.View, effect.World);
             Vector3 far = device.Viewport.Unproject(new Vector3(x, y, 1), effect.Projection, effect.View, effect.World);
@@ -51,7 +48,9 @@ namespace Brain3D
             direction.Normalize();
 
             if (new BoundingSphere(position, radius).Intersects(new Ray(near, direction)) == null)
+            {
                 return false;
+            }
 
             return true;
         }
@@ -62,7 +61,7 @@ namespace Brain3D
             {
                 color = value;
                 disk.Color = value;
-                disk.repaint();
+                disk.Repaint();
             }
         }
     }

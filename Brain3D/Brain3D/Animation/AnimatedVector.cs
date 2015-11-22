@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 
 namespace Brain3D
 {
@@ -45,7 +38,7 @@ namespace Brain3D
             pre.Output.Add(this);
             post.Input.Add(this);
 
-            refreshAngle();
+            RefreshAngle();
         }
 
         #endregion
@@ -57,10 +50,12 @@ namespace Brain3D
             int frame = (int)time;
             double rest = time - frame;
 
-            state.tick(frame, rest);
+            state.Tick(frame, rest);
 
             if (duplex != null)
-                duplex.tick(frame, rest);
+            {
+                duplex.Tick(frame, rest);
+            }
         }
 
         public override void Move()
@@ -71,18 +66,20 @@ namespace Brain3D
 
         public override void Rotate()
         {
-            refreshAngle();
+            RefreshAngle();
             pipe.Source = pre.PointVector(-angle);
             pipe.Target = post.PointVector(angle);
 
             pipe.Rotate();
             state.Rotate();
 
-            if(duplex != null)
+            if (duplex != null)
+            {
                 duplex.Rotate();
+            }
         }
 
-        void refreshAngle()
+        void RefreshAngle()
         {
             Vector3 v1 = pre.Screen;
             Vector3 v2 = post.Screen;
@@ -98,18 +95,22 @@ namespace Brain3D
         public override void SetFrame(int frame)
         {
             frame *= 10;
-            state.tick(frame, 0);
+            state.Tick(frame, 0);
 
             if (duplex != null)
-                duplex.tick(frame, 0);
+            {
+                duplex.Tick(frame, 0);
+            }
         }
 
         public override bool Cursor(int x, int y)
         {
-            if (!visible)
-                return false;
+            if (visible)
+            {
+                return base.Cursor(x, y);
+            }
 
-            return base.Cursor(x, y);
+            return false;
         }
 
         #endregion
@@ -119,24 +120,28 @@ namespace Brain3D
         public void Create()
         {
             pipe.Scale = 1;
-            state.create();
+            state.Create();
 
             if (duplex != null)
-                duplex.create();
+            {
+                duplex.Create();
+            }
         }
 
-        public void init()
+        public void Init()
         {
-            state.setValue(0);
+            state.SetValue(0);
 
             if (duplex != null)
-                duplex.setValue(0);
+            {
+                duplex.SetValue(0);
+            }
 
             Scale = 0;
             Show();
         }
 
-        public void setDuplex(Synapse synapse)
+        public void SetDuplex(Synapse synapse)
         {
             duplex = new AnimatedSynapse(synapse, this, true);
             drawables.Add(duplex);
@@ -226,7 +231,9 @@ namespace Brain3D
                 state.Scale = value;
 
                 if (duplex != null)
+                {
                     duplex.Scale = value;
+                }
             }
         }
 
@@ -245,7 +252,9 @@ namespace Brain3D
                 float weight = state.Weight;
 
                 if (duplex != null)
+                {
                     weight += duplex.Weight;
+                }
 
                 return weight;
             }

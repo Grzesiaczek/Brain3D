@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using Sanford.Multimedia.Midi;
 
@@ -14,31 +11,35 @@ namespace Brain3D
         Dictionary<int, HashSet<Sound>> finish;
 
         Timer timer;
-        Object locker = new Object();
         OutputDevice device;
+        object locker = new object();
 
         int time;
         int length;
 
-        public Melody(List<String> melody)
+        public Melody(List<string> melody)
         {
             start = new Dictionary<int, HashSet<Sound>>();
             finish = new Dictionary<int, HashSet<Sound>>();
 
             time = 0;
 
-            foreach (String s in melody)
+            foreach (string s in melody)
             {
                 Sound sound = new Sound(s);
 
                 if (!start.ContainsKey(time))
+                {
                     start.Add(time, new HashSet<Sound>());
+                }
 
                 start[time].Add(sound);
                 time += sound.Length;
 
                 if (!finish.ContainsKey(time))
+                {
                     finish.Add(time, new HashSet<Sound>());
+                }
 
                 finish[time].Add(sound);
             }
@@ -67,15 +68,25 @@ namespace Brain3D
             lock (locker)
             {
                 if (finish.ContainsKey(time))
+                {
                     foreach (Sound sound in finish[time])
+                    {
                         KeyUp(sound.Code);
+                    }
+                }
 
                 if (start.ContainsKey(time))
+                {
                     foreach (Sound sound in start[time])
+                    {
                         KeyDown(sound.Code);
+                    }
+                }
 
                 if (time++ == length)
+                {
                     Stop();
+                }
             }
         }
 

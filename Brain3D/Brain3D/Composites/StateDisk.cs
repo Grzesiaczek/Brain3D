@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 
 namespace Brain3D
 {
@@ -20,36 +15,39 @@ namespace Brain3D
         public StateDisk(Vector3 position, bool changes = false)
         {
             this.position = position;
-            this.radius = radius;
             color = Color.LightYellow;
 
             if (changes)
+            {
                 radius = 0.5f;
+            }
             else
+            {
                 radius = 1.2f;
+            }
 
-            prepare(changes);
+            Prepare(changes);
         }
 
         public StateDisk(float value, float factor)
         {
             radius = 12;
-            prepare(true);
+            Prepare(true);
 
-            setValue(value);
-            setFactor(factor);
+            SetValue(value);
+            SetFactor(factor);
         }
 
         public StateDisk(Change value, float factor)
         {
             radius = 12;
-            prepare(true);
+            Prepare(true);
 
-            setChange(value.Start, value.Finish);
-            setFactor(factor);
+            SetChange(value.Start, value.Finish);
+            SetFactor(factor);
         }
 
-        void prepare(bool changes)
+        void Prepare(bool changes)
         {
             disk = new Disk(position, pattern, color, radius);
             outer = new Ring(position, pattern, Color.LightGreen);
@@ -62,25 +60,27 @@ namespace Brain3D
                 drawables.Add(change);
             }
 
-            resize(true);
+            Resize(true);
 
             drawables.Add(disk);
             drawables.Add(outer);
             drawables.Add(border);
         }
 
-        public void setFactor(float factor)
+        public void SetFactor(float factor)
         {
             color = Color.LightYellow;
             color.R -= (byte)(12 * factor);
             color.G -= (byte)(48 * factor);
             color.B -= (byte)(60 * factor);
 
-            if(!activated)
+            if (!activated)
+            {
                 disk.Color = color;
+            }
         }
 
-        public void setChange(float source, float target)
+        public void SetChange(float source, float target)
         {
             if(target < source)
             {
@@ -96,33 +96,33 @@ namespace Brain3D
                 r2 = 1 - source;
             }
 
-            resize();
+            Resize();
             Rescale();
         }
 
-        public void setValue(float value)
+        public void SetValue(float value)
         {
             value = 1 - value;
 
             r1 = value;
             r2 = value;
 
-            resize();
+            Resize();
             disk.Rescale();
             outer.Rescale();
         }
 
-        public void changeValue(float value)
+        public void ChangeValue(float value)
         {
             if (value < 0)
             {
-                setValue(value + 1);
+                SetValue(value + 1);
                 disk.Color = Color.LightBlue;
                 outer.Color = color;
             }
             else if (value <= 1)
             {
-                setValue(value);
+                SetValue(value);
                 disk.Color = color;
                 outer.Color = Color.LightGreen;
             }
@@ -130,9 +130,9 @@ namespace Brain3D
             Rescale();
         }
 
-        public void refract()
+        public void Refract()
         {
-            setValue(0);
+            SetValue(0);
             disk.Color = Color.IndianRed;
             outer.Color = Color.IndianRed;
 
@@ -140,7 +140,7 @@ namespace Brain3D
             outer.refresh();
         }
 
-        public void refract(float factor)
+        public void Refract(float factor)
         {
             int red = 205 - (int)(factor * 32);
             int green = 92 + (int)(factor * 124);
@@ -149,7 +149,7 @@ namespace Brain3D
             disk.Color = new Color(red, green, blue);
         }
 
-        public void resize(bool all = false)
+        public void Resize(bool all = false)
         {
             disk.Radius = r1 * radius;
             outer.R1 = r2 * radius;
@@ -168,21 +168,21 @@ namespace Brain3D
             }
         }
 
-        public void activate()
+        public void Activate()
         {
             border.Color = Color.IndianRed;
             disk.Color = Color.LightCoral;
             activated = true;
         }
 
-        public void idle()
+        public void Idle()
         {
             border.Color = Color.Purple;
             disk.Color = color;
             activated = false;
         }
 
-        public void hover()
+        public void Hover()
         {
             border.Color = Color.MediumSeaGreen;
         }
@@ -192,7 +192,7 @@ namespace Brain3D
             set
             {
                 radius = value;
-                resize(true);
+                Resize(true);
             }
         }
     }

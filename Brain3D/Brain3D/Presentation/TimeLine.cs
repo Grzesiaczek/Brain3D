@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Brain3D
 {
@@ -21,12 +18,15 @@ namespace Brain3D
             display.Show(this);
             ChangeFrame(frame);
             controller.ChangeState(frame, length);
+            controller.Show(this);
+            visible = true;
         }
 
         public override void Hide()
         {
             balancing.Stop();
             display.Clear();
+            visible = false;
         }
 
         public override void Left()
@@ -42,33 +42,37 @@ namespace Brain3D
         public override void Back()
         {
             if (frame > 0)
+            {
                 ChangeFrame(--frame);
+            }
 
             controller.ChangeFrame(frame);
         }
 
         public override void Forth()
         {
-            if(frame < length)
+            if (frame < length)
+            {
                 ChangeFrame(++frame);
+            }
 
             controller.ChangeFrame(frame);
         }
 
         public override void Broaden()
         {
-            if (scale >= 2)
-                return;
-
-            rescale(scale + 0.1f);
+            if (scale < 2)
+            {
+                Rescale(scale + 0.1f);
+            }
         }
 
         public override void Tighten()
         {
-            if (scale <= 0.3f)
-                return;
-
-            rescale(scale - 0.1f);
+            if (scale > 0.3f)
+            {
+                Rescale(scale - 0.1f);
+            }
         }
 
         public override void Center()
@@ -77,7 +81,7 @@ namespace Brain3D
             ChangeFrame(frame);
         }
 
-        void rescale(float value)
+        void Rescale(float value)
         {
             scale = value;
             Rescale();

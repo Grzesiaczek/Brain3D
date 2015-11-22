@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
@@ -41,7 +36,9 @@ namespace Brain3D
             }
 
             for (int i = 0; i < points2; i++)
+            {
                 vertices[i] = new VertexPositionColor(framework[i] + position, color);
+            }
 
             int index = 6;
             int vertex = 2 * points - 2;
@@ -71,17 +68,21 @@ namespace Brain3D
 
         public override void Move()
         {
-            if (!initialized)
-                return;
-
-            for (int i = 0, j = offset; i < points2; i++)
-                buffer.Vertices[j++].Position = framework[i] + position;
+            if (initialized)
+            {
+                for (int i = 0, j = offset; i < points2; i++)
+                {
+                    buffer.Vertices[j++].Position = framework[i] + position;
+                }
+            }
         }
 
-        public override void repaint()
+        public override void Repaint()
         {
             for (int i = 0, j = offset; i < points2; i++)
+            {
                 buffer.Vertices[j++].Color = color;
+            }
         }
 
         public override void Rescale()

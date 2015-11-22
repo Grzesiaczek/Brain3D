@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
@@ -47,7 +42,9 @@ namespace Brain3D
         public bool Moved(int x, int y)
         {
             if (Math.Abs(start.X - x) > 1 || Math.Abs(start.Y - y) > 1)
+            {
                 return true;
+            }
 
             return false;
         }

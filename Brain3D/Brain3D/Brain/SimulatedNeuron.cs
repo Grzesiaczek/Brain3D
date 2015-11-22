@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Brain3D
 {
@@ -16,8 +14,8 @@ namespace Brain3D
 
         List<Tuple<double, int>> signals;
         NeuronActivity[] activity;
+        QuerySequence query;
 
-        int count;
         int index;
         int signum;
 
@@ -32,20 +30,28 @@ namespace Brain3D
         static double[] activation;
         static bool initialized;
 
-        public static event EventHandler Activate;
+        public event EventHandler ActivateQuery;
+        public static event EventHandler ActivateResponse;
 
         #endregion
 
-        public SimulatedNeuron(Neuron neuron)
+        public SimulatedNeuron(Neuron neuron, QuerySequence query)
         {
             if (!initialized)
+            {
                 throw new Exception("Neuron class not initialized!");
+            }
 
             this.neuron = neuron;
+            this.query = query;
+
             activity = new NeuronActivity[size];
+            ActivateQuery += new EventHandler(query.Activate);
 
             for (int i = 0; i < size; i++)
+            {
                 activity[i] = new NeuronActivity();
+            }
 
             input = new List<SimulatedSynapse>();
             output = new List<SimulatedSynapse>();
@@ -67,13 +73,17 @@ namespace Brain3D
             relaxation[0] = 1;
 
             for (int i = 1; i < omega; i++)
+            {
                 relaxation[i] = Math.Pow(1 - i / omega, 4);
+            }
 
             activation = new double[(int)tmax];
             activation[0] = 0;
 
             for (int i = 0; i < tmax; i++)
+            {
                 activation[i] = 1 - Math.Pow(1 - i / tmax, 2);
+            }
 
             initialized = true;
         }
@@ -89,10 +99,14 @@ namespace Brain3D
             double value = 0;
 
             if (time > 0)
+            {
                 value = activity[time - 1].Value;
+            }
 
             if (index < 0)
+            {
                 index = 0;
+            }
 
             if (signum > 1)
             {
@@ -117,7 +131,8 @@ namespace Brain3D
 
                     if (value >= treshold)
                     {
-                        Activate(new Tuple<Neuron, int>(neuron, time), null);
+                        ActivateQuery(new Tuple<Neuron, int>(neuron, time), null);
+                        ActivateResponse(new Tuple<QuerySequence, Neuron, int>(query, neuron, time), null);
                         activity[time].Phase = ActivityPhase.Start;
 
                         signals.Clear();
@@ -126,7 +141,9 @@ namespace Brain3D
                         signum = 0;
 
                         foreach (SimulatedSynapse synapse in output)
+                        {
                             synapse.Impulse(time);
+                        }
                     }
                 }
             }
@@ -138,7 +155,9 @@ namespace Brain3D
                     value = 0;
                 }
                 else
+                {
                     value = signum * relaxation[index];
+                }
             }
             else if (refraction)
             {
@@ -160,7 +179,9 @@ namespace Brain3D
             activity[time].Value = value;
 
             if (!refraction)
+            {
                 Receive(time, value);
+            }
         }
 
         void Receive(int time, double value)
@@ -177,19 +198,29 @@ namespace Brain3D
                         activated = true;
                     }
                     else if (signum == 2)
+                    {
                         target += signal.Item1;
+                    }
                     else if (signum == 0)
+                    {
                         target = treshold + signal.Item1;
+                    }
                     else
                     {
                         int finish = index + (int)tmax;
 
                         if (finish >= omega)
+                        {
                             target = treshold + signal.Item1;
+                        }
                         else if (signum < 0)
+                        {
                             target = signum * relaxation[finish] + treshold + signal.Item1;
+                        }
                         else
+                        {
                             target = value + treshold + signal.Item1;
+                        }
                     }
 
                     signum = 2;
@@ -198,22 +229,30 @@ namespace Brain3D
                     activity[time].Phase = ActivityPhase.Break;
 
                     if (factor < 0)
+                    {
                         index = (int)tmax - 1;
+                    }
                     else
+                    {
                         index = (int)((1 - Math.Pow(factor, 0.5)) * tmax);
+                    }
 
                     removed.Add(signal);
                 }
             }
 
             foreach (Tuple<double, int> signal in removed)
+            {
                 signals.Remove(signal);
+            }
         }
 
         public void Impulse(double value, int time)
         {
             if (!refraction)
+            {
                 signals.Add(new Tuple<double, int>(value, time));
+            }
         }
 
         public void Shot(double time)
@@ -224,6 +263,12 @@ namespace Brain3D
         public void Neutralize()
         {
             activated = false;
+            refraction = false;
+
+            foreach (NeuronActivity data in activity)
+            {
+                data.Zero();
+            }
         }
 
         public void Calculate()
@@ -233,9 +278,13 @@ namespace Brain3D
             foreach (NeuronActivity data in activity)
             {
                 if (data.Phase == ActivityPhase.Active)
+                {
                     ratio += 1;
+                }
                 else
+                {
                     ratio += data.Value * data.Value;
+                }
             }
         }
 

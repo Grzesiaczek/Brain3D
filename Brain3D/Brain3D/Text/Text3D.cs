@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Nuclex.Fonts;
-using Nuclex.Graphics;
 
 namespace Brain3D
 {
@@ -37,20 +31,24 @@ namespace Brain3D
             }
 
             for (int i = 0; i < index; i++)
+            {
                 indices[i] = text.Indices[i];
+            }
 
-            return new Tuple<Vector3[],int[]>(vertices, indices);
+            return new Tuple<Vector3[], int[]>(vertices, indices);
         }
 
         public override void Rotate()
         {
-            if (!initialized)
-                return;
+            if (initialized)
+            {
+                for (int i = 0; i < vertices.Length; i++)
+                {
+                    framework[i] = Vector3.Transform(pattern[i], camera.Rotation) * scale;
+                }
 
-            for (int i = 0; i < vertices.Length; i++)
-                framework[i] = Vector3.Transform(pattern[i], camera.Rotation) * scale;
-
-            Move();
+                Move();
+            }
         }
 
         public override void Rescale()

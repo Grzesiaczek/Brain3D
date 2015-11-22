@@ -57,7 +57,9 @@ namespace Brain3D
             if (string.IsNullOrEmpty(beginDrawError))
             {
                 while (limiter.ElapsedMilliseconds < 10)
+                {
                     Thread.Sleep(1);
+                }
 
                 limiter.Restart();
                 Draw();

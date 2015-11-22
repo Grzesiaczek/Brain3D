@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
@@ -29,39 +23,65 @@ namespace Brain3D
             layout = new ChartLayout();
         }
 
-        public void Reload()
+        public void Load()
         {
-            foreach (QuerySequence query in container.Data)
+            bool refresh = false;
+
+            if(visible)
+            {
+                Hide();
+                refresh = true;
+            }
+
+            foreach (QuerySequence query in QueryContainer.Data)
             {
                 if (data.ContainsKey(query))
+                {
                     data[query].Clear();
+                }
                 else
+                {
                     data.Add(query, new List<ChartedNeuron>());
+                }
 
-                List<SimulatedNeuron> neurons = new List<SimulatedNeuron>(brain.Neurons.Keys.Select(n => n.GetSimulated(query)));
+                List<SimulatedNeuron> neurons = new List<SimulatedNeuron>(Brain.Neurons.Keys.Select(n => n.GetSimulated(query)));
 
                 foreach (SimulatedNeuron neuron in neurons)
+                {
                     neuron.Calculate();
+                }
 
                 neurons.Sort(new Comparer());
                 int max = neurons.Count;
 
                 if (max > 10)
+                {
                     max = 10;
+                }
 
                 for (int i = 0; i < max; i++)
+                {
                     data[query].Add(new ChartedNeuron(neurons[i], new Point(100 + 120 * i, display.Height - 160), palette[i]));
+                }
             }
             
-            this.neurons = data[container.Query];
+            this.neurons = data[CurrentQuery];
+
+            if(refresh)
+            {
+                Show();
+                ShowQuery();
+            }
         }
 
         public override void Show()
         {
-            neurons = data[container.Query];
+            neurons = data[CurrentQuery];
 
             foreach (ChartedNeuron neuron in neurons)
+            {
                 neuron.Show();
+            }
 
             Resize();
             layout.Show();
@@ -70,16 +90,21 @@ namespace Brain3D
 
         public override void Hide()
         {
-            foreach (ChartedNeuron neuron in neurons)
-                neuron.Hide();
+            if (visible)
+            {
+                foreach (ChartedNeuron neuron in neurons)
+                {
+                    neuron.Hide();
+                }
 
-            layout.Hide();
-            base.Hide();
+                layout.Hide();
+                base.Hide();
+            }
         }
 
         public override void Refresh()
         {
-            if (neurons != data[container.Query])
+            if (neurons != data[CurrentQuery])
             {
                 Hide();
                 Show();
@@ -89,13 +114,17 @@ namespace Brain3D
         public override void Resize()
         {
             for (int i = 0; i < neurons.Count; i++)
+            {
                 neurons[i].Top = display.Height - 160;
+            }
         }
 
         protected override void Rescale()
         {
             foreach (ChartedNeuron neuron in neurons)
+            {
                 neuron.Scale = scale;
+            }
 
             layout.Scale = scale;
         }
@@ -105,12 +134,14 @@ namespace Brain3D
 
         public override void MouseClick(int x, int y)
         {
-            foreach(ChartedNeuron neuron in neurons)
-                if(neuron.Cursor(x, y))
+            foreach (ChartedNeuron neuron in neurons)
+            {
+                if (neuron.Cursor(x, y))
                 {
                     neuron.Change();
                     return;
                 }
+            }
         }
 
         public override void MouseMove(int x, int y)
@@ -118,11 +149,13 @@ namespace Brain3D
             ChartedNeuron hover = null;
 
             foreach (ChartedNeuron neuron in neurons)
+            {
                 if (neuron.Cursor(x, y))
                 {
                     hover = neuron;
                     break;
                 }
+            }
 
             if (highlight != null && highlight != hover)
             {

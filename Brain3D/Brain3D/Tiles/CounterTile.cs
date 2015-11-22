@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace Brain3D
 {
@@ -18,23 +14,27 @@ namespace Brain3D
 
             width = 60;
             height = 32;
-            reload();
+            Reload();
 
             recBorder = new Rectangle(point.X, point.Y, width, height);
             recBackground = new Rectangle(point.X + 3, point.Y + 3, width - 6, height - 6);
 
-            initialize();
-            idle();
+            Initialize();
+            Idle();
         }
 
-        void reload()
+        void Reload()
         {
             if (value < 0)
-                word = "";
+            {
+                word = string.Empty;
+            }
             else
+            {
                 word = value.ToString();
+            }
 
-            float x = ((float)width - Fonts.SpriteVerdana.MeasureString(word).X) / 2;
+            float x = (width - Fonts.SpriteVerdana.MeasureString(word).X) / 2;
             text = new Vector2(point.X + x, point.Y + 6);
         }
 
@@ -58,7 +58,7 @@ namespace Brain3D
             set
             {
                 this.value = value;
-                reload();
+                Reload();
             }
         }
     }

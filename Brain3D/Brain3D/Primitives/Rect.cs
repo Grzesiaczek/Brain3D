@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
@@ -17,16 +13,22 @@ namespace Brain3D
             this.size = size;
             this.color = color;
 
+            framework = new Vector3[4];
             vertices = new VertexPositionColor[4];
             indices = new int[6];
         }
 
         public override void Initialize()
         {
-            vertices[0] = new VertexPositionColor(position, color);
-            vertices[1] = new VertexPositionColor(position + new Vector3(0, size.Y, 0), color);
-            vertices[2] = new VertexPositionColor(position + new Vector3(size.X, 0, 0), color);
-            vertices[3] = new VertexPositionColor(position + size, color);
+            framework[0] = Vector3.Zero;
+            framework[1] = new Vector3(0, size.Y, 0);
+            framework[2] = new Vector3(size.X, 0, 0);
+            framework[3] = size;
+
+            for (int i = 0; i < 4; i++)
+            {
+                vertices[i] = new VertexPositionColor(position + framework[i], color);
+            }
 
             indices[0] = 0;
             indices[1] = 1;
@@ -41,10 +43,21 @@ namespace Brain3D
 
         public override void Move()
         {
-            buffer.Vertices[offset + 0].Position = position;
-            buffer.Vertices[offset + 1].Position = position + new Vector3(0, size.Y, 0);
-            buffer.Vertices[offset + 2].Position = position + new Vector3(size.X, 0, 0);
-            buffer.Vertices[offset + 3].Position = position + size;
+            for (int i = 0, j = offset; i < 4; i++)
+            {
+                buffer.Vertices[j++].Position = position + framework[i];
+            }
+        }
+
+        public override void Repaint()
+        {
+            if (initialized)
+            {
+                for (int i = 0, j = offset; i < 4; i++)
+                {
+                    buffer.Vertices[j++].Color = color;
+                }
+            }
         }
     }
 }

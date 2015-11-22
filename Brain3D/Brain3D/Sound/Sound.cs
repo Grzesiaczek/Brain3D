@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Brain3D
 {
     class Sound
@@ -11,7 +6,7 @@ namespace Brain3D
         int code;
         int length;
 
-        public Sound(String data)
+        public Sound(string data)
         {
             int k = 1;
             code = convert(data[0]);
@@ -30,14 +25,18 @@ namespace Brain3D
             code += (data[k++] - 47) * 12;
             bool dot = true;
 
-            if(data[k++] == 'N')
+            if (data[k++] == 'N')
+            {
                 dot = false;
+            }
 
-            int n = Int32.Parse(data.Substring(k));
+            int n = int.Parse(data.Substring(k));
             length = 32 / n;
 
             if (dot)
+            {
                 length += length / 2;
+            }
         }
 
         int convert(char c)

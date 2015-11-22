@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace Brain3D
 {
     abstract class CreatedElement : Mouse
@@ -10,7 +6,7 @@ namespace Brain3D
         protected AnimatedElement element;
         protected bool created;
 
-        public virtual void show()
+        public virtual void Show()
         {
             element.Show();
         }

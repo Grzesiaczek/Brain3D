@@ -1,15 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
@@ -27,16 +17,12 @@ namespace Brain3D
         double time = 0;
         double interval = 0.4;
 
-        public event EventHandler BalanceFinished;
-        public event EventHandler IntervalChanged;
-        public event EventHandler queryAccepted;
-
         #endregion
 
         public Animation()
         {
-            balancing.balanceEnded += BalanceEnded;
-            balancing.balanceUpdate += BalanceUpdate;
+            balancing.BalanceEnded += BalanceEnded;
+            balancing.BalanceUpdate += BalanceUpdate;
 
             neurons = new HashSet<AnimatedNeuron>();
             vectors = new HashSet<AnimatedVector>();
@@ -45,7 +31,7 @@ namespace Brain3D
 
         #region funkcje inicjujące
 
-        public void clear()
+        public void Clear()
         {
             neurons.Clear();
             vectors.Clear();
@@ -53,20 +39,26 @@ namespace Brain3D
             mouses.Clear();
         }
 
-        public void reload()
+        public void Reload()
         {
-            clear();
+            Clear();
             loaded = true;
             balanced = false;
 
-            foreach (Tuple<AnimatedNeuron, CreatedNeuron> tuple in brain.Neurons.Values)
+            foreach (Tuple<AnimatedNeuron, CreatedNeuron> tuple in Brain.Neurons.Values)
+            {
                 neurons.Add(tuple.Item1);
+            }
 
-            foreach (Tuple<AnimatedVector, CreatedVector> tuple in brain.Vectors.Values)
+            foreach (Tuple<AnimatedVector, CreatedVector> tuple in Brain.Vectors.Values)
+            {
                 vectors.Add(tuple.Item1);
+            }
 
-            foreach (Tuple<AnimatedSynapse, CreatedSynapse> tuple in brain.Synapses.Values)
+            foreach (Tuple<AnimatedSynapse, CreatedSynapse> tuple in Brain.Synapses.Values)
+            {
                 synapses.Add(tuple.Item1);
+            }
 
             mouses.AddRange(neurons);
             mouses.AddRange(synapses);
@@ -74,7 +66,7 @@ namespace Brain3D
 
         protected override void BrainLoaded(object sender, EventArgs e)
         {
-            reload();            
+            Reload();            
         }
 
         #endregion
@@ -84,7 +76,9 @@ namespace Brain3D
         public override void Start()
         {
             if (Started)
+            {
                 return;
+            }
 
             if (frame == 0)
             {
@@ -93,28 +87,34 @@ namespace Brain3D
             }
 
             base.Start();
-            AnimatedNeuron.Animation = true;
+            AnimatedElement.Animation = true;
         }
 
         public override void Stop()
         {
             if (!Started)
+            {
                 return;
+            }
 
             base.Stop();
-            AnimatedNeuron.Animation = false;
+            AnimatedElement.Animation = false;
         }
 
         public override void Back()
         {
             if (frame > 1)
+            {
                 ChangeFrame(frame - 1);
+            }
         }
 
         public override void Forth()
         {
             if (frame < length)
+            {
                 ChangeFrame(frame + 1);
+            }
         }
 
         public override void ChangeFrame(int frame)
@@ -144,65 +144,39 @@ namespace Brain3D
             balancing.Balance(neurons, vectors, 32);
         }
 
-        private void BalanceUpdate(object sender, EventArgs e)
-        {
-            display.Moved();
-        }
-
-        private void BalanceEnded(object sender, EventArgs e)
-        {
-            balanced = true;
-            controller.Idle();
-            BalanceFinished(this, new EventArgs());
-        }
-
         #endregion
 
         public override void MouseClick(int x, int y)
         {
             if (active == null)
+            {
                 return;
+            }
 
             if (Started && active is AnimatedNeuron && !active.Moved(x, y))
             {
                 //shot na simulatedneuron
                 //((AnimatedNeuron)active).Neuron.shot(time);
-                brain.Simulate((int)time + 1);
+                Brain.Simulate((int)time + 1);
             }
         }
 
         #region obsługa zapytań
 
-        public override void Enter()
-        {
-            if (!container.Insertion)
-            {
-                container.Execute();
-                ChangeFrame(0);
-                IntervalChanged(this, null);
-                return;
-            }
-
-            if (container.Execute())
-            {
-                //query = added;
-                //query.Load(brain);
-
-                ChangeInsertion();
-                controller.ChangeFrame(0);
-                //queryAccepted(null, null);
-                ChangeFrame(0);
-            }
-        }
-
         public override void Space()
         {
-            if(container.Insertion)
-                container.Space();
+            if (QueryContainer.Insertion)
+            {
+                QueryContainer.Space();
+            }
             else if (Started)
+            {
                 Stop();
+            }
             else
+            {
                 Start();
+            }
         }
 
         #endregion
@@ -212,39 +186,63 @@ namespace Brain3D
         public override void Show()
         {
             foreach (AnimatedNeuron neuron in neurons)
+            {
                 neuron.Show();
+            }
 
             foreach (AnimatedVector vector in vectors)
             {
                 vector.Show();
                 vector.Create();
             }
-
+            
+            controller.ChangeState(frame, length);
+            controller.Show(this);
             display.Show(this);
 
-            controller.ChangeState(frame, length);
-            controller.Show();
-
             foreach (AnimatedNeuron neuron in neurons)
+            {
                 neuron.Scale = 1;
+            }
 
-            if(!balanced)
+            if (!balanced)
+            {
                 Balance();
+            }
 
-            container.Insertion = false;
+            QueryContainer.Insertion = false;
             visible = true;
+        }
+
+        public override void Hide()
+        {
+            foreach (AnimatedNeuron neuron in neurons)
+            {
+                neuron.Hide();
+            }
+
+            foreach (AnimatedVector vector in vectors)
+            {
+                vector.Hide();
+            }
+
+            base.Hide();
         }
 
         public override void Refresh()
         {
             if (!Started)
+            {
                 ChangeFrame();
+            }
         }
 
         protected override void Tick()
         {
             if (!loaded || frame == 0)
+            {
                 return;
+            }
 
             time += interval;
             int step = (int)(time / 10);
@@ -262,24 +260,32 @@ namespace Brain3D
             }
 
             foreach (AnimatedNeuron neuron in neurons)
+            {
                 neuron.Tick(time);
+            }
 
             foreach (AnimatedVector vector in vectors)
+            {
                 vector.Tick(time);
+            }
 
-            container.Tick(time);
+            QueryContainer.Tick(time);
         }
 
         void ChangeFrame()
         {
             foreach (AnimatedNeuron neuron in neurons)
+            {
                 neuron.SetFrame(frame);
+            }
 
             foreach (AnimatedVector vector in vectors)
+            {
                 vector.SetFrame(frame);
+            }
 
             controller.ChangeFrame(frame);
-            container.SetFrame(frame);
+            QueryContainer.SetFrame(frame);
         }
 
         #endregion

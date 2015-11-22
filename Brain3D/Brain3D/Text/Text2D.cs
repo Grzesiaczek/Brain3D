@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,7 +7,7 @@ namespace Brain3D
     class Text2D : SpriteElement
     {
         SpriteFont font;
-        String text;
+        string text;
 
         Vector2 location;
         Vector2 corner;
@@ -27,8 +24,10 @@ namespace Brain3D
 
             corner = location;
 
-            if(width != 0)
+            if (width != 0)
+            {
                 corner.X += width - font.MeasureString(text).X / 2;
+            }
         }
 
         public override void Draw()
@@ -36,17 +35,17 @@ namespace Brain3D
             batch.DrawString(font, text, corner, color);
         }
 
-        public String Text
+        public string Text
         {
             set
             {
                 text = value;
 
-                if (width == 0)
-                    return;
-
-                corner = location;
-                corner.X += width - font.MeasureString(text).X / 2;
+                if (width != 0)
+                {
+                    corner = location;
+                    corner.X += width - font.MeasureString(text).X / 2;
+                }
             }
         }
 

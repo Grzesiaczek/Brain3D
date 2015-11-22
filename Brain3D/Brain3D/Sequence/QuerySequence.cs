@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
 namespace Brain3D
@@ -25,6 +22,8 @@ namespace Brain3D
         int index;
         int prev;
 
+        bool parallel;
+
         #endregion
 
         public QuerySequence(int length)
@@ -35,13 +34,15 @@ namespace Brain3D
             Prepare();
         }
 
-        public QuerySequence(String sentence, int length)
+        public QuerySequence(string sentence, int length)
         {
-            String[] words = sentence.Split(' ');
+            string[] words = sentence.Split(' ');
             this.length = length;
 
-            foreach (String word in words)
+            foreach (string word in words)
+            {
                 sequence.Add(new QueryTile(word, length));
+            }
 
             Prepare();
         }
@@ -51,7 +52,7 @@ namespace Brain3D
             counter = new CounterTile(new Point(20, 8), 0);
             interval = new CounterTile(new Point(100, 8), 20);
 
-            SimulatedNeuron.Activate += new EventHandler(Activate);
+            parallel = false;
             Arrange();
         }
 
@@ -91,7 +92,7 @@ namespace Brain3D
 
                 if (neuron != null)
                 {
-                    ((QueryTile)sequence[i]).add(neuron);
+                    ((QueryTile)sequence[i]).Add(neuron);
                     treshold++;
                 }
             }
@@ -104,7 +105,9 @@ namespace Brain3D
         public void LoadTiles()
         {
             foreach (QueryTile tile in sequence)
-                tile.load();
+            {
+                tile.Load();
+            }
         }
 
         public void SetFrame(int frame)
@@ -112,14 +115,20 @@ namespace Brain3D
             int time = 10 * frame;
 
             foreach (QueryTile tile in sequence)
-                tile.tick(time);
+            {
+                tile.Tick(time);
+            }
 
             counter.Value = activity[frame];
 
             if (counter.Value == 0)
-                counter.activate();
+            {
+                counter.Activate();
+            }
             else
-                counter.idle();
+            {
+                counter.Idle();
+            }
         }
 
         public void Tick(double time)
@@ -127,14 +136,20 @@ namespace Brain3D
             int frame = (int)time;
 
             foreach (QueryTile tile in sequence)
-                tile.tick(frame);
+            {
+                tile.Tick(frame);
+            }
 
             counter.Value = activity[frame / 10];
 
             if (counter.Value == 0)
-                counter.activate();
+            {
+                counter.Activate();
+            }
             else
-                counter.idle();
+            {
+                counter.Idle();
+            }
         }
 
         public void Tick(int time)
@@ -142,44 +157,58 @@ namespace Brain3D
             if (count > treshold)
             {
                 if (time % 10 == 0)
+                {
                     activity.Add(-1);
+                }
 
                 return;
             }
 
             if (time % 10 != 0)
+            {
                 return;
+            }
 
             int ticks = interval.Value - ((time - start) / 10) % interval.Value;
 
             if (ticks > interval.Value)
+            {
                 ticks -= interval.Value;
+            }
 
             if (ticks == interval.Value)
             {
-                ((QueryTile)sequence[index]).Shot(time);
-                activity.Add(0);
-
-                prev = index;
-
-                if (++index == sequence.Count)
+                if (parallel)
                 {
-                    index = 0;
-                    count = 0;
+                    foreach(QueryTile tile in sequence)
+                    {
+                        tile.Shot(time);
+                    }
                 }
+                else
+                {
+                    ((QueryTile)sequence[index]).Shot(time);
+                    prev = index;
+
+                    if (++index == sequence.Count)
+                    {
+                        index = 0;
+                        count = 0;
+                    }
+                }
+
+                activity.Add(0);
             }
             else
+            {
                 activity.Add(ticks);
+            }
         }
 
-        void Activate(object sender, EventArgs e)
+        public void Activate(object sender, EventArgs e)
         {
             Tuple<Neuron, int> tuple = (Tuple<Neuron, int>)sender;
-            Neuron neuron = tuple.Item1;
-            count++;
-
-            if (sequence.Find(k => k.Word == neuron.Word) != null)
-                activations.Add(tuple);
+            activations.Add(tuple);
         }
 
         protected override Tile CreateTile(BuiltTile builder)
@@ -191,10 +220,12 @@ namespace Brain3D
 
         public override bool Execute()
         {
-            interval.idle();
+            interval.Idle();
 
             if (builder == null)
+            {
                 return true;
+            }
 
             return base.Execute();
         }
@@ -213,20 +244,38 @@ namespace Brain3D
             interval.Hide();
         }
 
+        public void Switch()
+        {
+            if (parallel)
+            {
+                parallel = false;
+                interval.Switch();
+            }
+            else
+            {
+                parallel = true;
+                interval.Switch();
+            }
+        }
+
         public void IntervalUp()
         {
-            if (interval.Value < 40)
+            if (interval.Value < 100)
+            {
                 interval.Value++;
+            }
 
-            interval.activate();
+            interval.Activate();
         }
 
         public void IntervalDown()
         {
-            if (interval.Value > 5)
+            if (interval.Value > 1)
+            {
                 interval.Value--;
+            }
 
-            interval.activate();
+            interval.Activate();
         }
 
         #endregion

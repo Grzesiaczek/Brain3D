@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using Sanford.Multimedia.Midi;
 
 namespace Brain3D
@@ -26,23 +24,25 @@ namespace Brain3D
 
         public void Play(String seq)
         {
-            List<String> data = seq.Split(' ').ToList();
+            List<string> data = seq.Split(' ').ToList();
             Play(new Melody(data));
         }
 
         public void Stop()
         {
             if (melody != null)
+            {
                 melody.Stop();
+            }
         }
 
         public void SetInstrument(int code)
         {
-            if (code > 127 || code < 0)
-                return;
-
-            device.Close();
-            device = new OutputDevice(code);
+            if (code > -1 && code < 128)
+            {
+                device.Close();
+                device = new OutputDevice(code);
+            }
         }
 
         public void Close()

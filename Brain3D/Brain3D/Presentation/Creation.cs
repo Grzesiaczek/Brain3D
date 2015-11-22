@@ -1,12 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml;
 
 namespace Brain3D
 {
@@ -49,7 +42,7 @@ namespace Brain3D
 
         #region logika
 
-        public void clear()
+        public void Clear()
         {
             neurons.Clear();
             vectors.Clear();
@@ -62,40 +55,57 @@ namespace Brain3D
 
         protected override void BrainLoaded(object sender, EventArgs e)
         {
-            clear();
+            Clear();
 
-            foreach (Tuple<AnimatedNeuron, CreatedNeuron> tuple in brain.Neurons.Values)
+            foreach (Tuple<AnimatedNeuron, CreatedNeuron> tuple in Brain.Neurons.Values)
+            {
                 neurons.Add(tuple.Item2);
+            }
 
-            foreach (Tuple<AnimatedVector, CreatedVector> tuple in brain.Vectors.Values)
+            foreach (Tuple<AnimatedVector, CreatedVector> tuple in Brain.Vectors.Values)
+            {
                 vectors.Add(tuple.Item2);
+            }
 
-            foreach (Tuple<AnimatedSynapse, CreatedSynapse> tuple in brain.Synapses.Values)
+            foreach (Tuple<AnimatedSynapse, CreatedSynapse> tuple in Brain.Synapses.Values)
+            {
                 synapses.Add(tuple.Item2);
+            }
 
             mouses.AddRange(neurons);
             mouses.AddRange(synapses);
 
-            sequences = brain.Sequences;
+            sequences = Brain.Sequences;
 
             foreach (CreationSequence sequence in sequences)
+            {
                 foreach (CreationFrame frame in sequence.Frames)
                 {
                     CreatedNeuron neuron = frame.Neuron;
                     frames.Add(frame);
 
                     if (neuron.Frame == 0)
+                    {
                         neuron.Frame = frames.Count;
+                    }
                 }
+            }
         }
 
         public override void Show()
         {
             foreach (CreatedNeuron neuron in neurons)
-                neuron.show();
+            {
+                neuron.Show();
+            }
 
             foreach (CreatedVector vector in vectors)
-                vector.show();
+            {
+                vector.Show();
+            }
+
+            controller.ChangeState(count, frames.Count);
+            controller.Show(this);
 
             display.Show(this);
             display.HideDisplay();
@@ -103,20 +113,23 @@ namespace Brain3D
             if (!balanced)
             {
                 balancing.Stop();
-                balancing.balance(neurons, vectors);
+                balancing.Balance(neurons, vectors);
             }
 
             foreach (CreatedNeuron neuron in neurons)
+            {
                 neuron.Hide();
+            }
 
             foreach (CreatedVector vector in vectors)
+            {
                 vector.Hide();
+            }
 
             for (int i = 0; i < count; i++)
+            {
                 frames[i].Create();
-
-            controller.ChangeState(count, frames.Count);
-            controller.Show();
+            }
 
             insertion = false;
             visible = true;
@@ -124,7 +137,7 @@ namespace Brain3D
 
         public override void BalanceSynapses()
         {
-            balancing.balance(vectors);
+            balancing.Balance(vectors);
         }
         
         protected override void Tick()
@@ -134,7 +147,7 @@ namespace Brain3D
             if (frame != null && frame.Tick(interval))
             {
                 if (count < frames.Count)
-                    setFrame(count + 1);
+                    SetFrame(count + 1);
             }
         }
 
@@ -165,12 +178,16 @@ namespace Brain3D
         public override void Start()
         {
             if (Started)
+            {
                 return;
+            }
 
             if (count < frames.Count - 1)
             {
                 if (count == 0)
+                {
                     frames[0].Activate();
+                }
 
                 if (!paused)
                 {
@@ -191,24 +208,30 @@ namespace Brain3D
         public override void Back()
         {
             if (count == 0)
+            {
                 return;
+            }
 
-            setFrame(count - 1);
+            SetFrame(count - 1);
             controller.ChangeFrame(count);
         }
 
         public override void Forth()
         {
-            if(frame != null)
+            if (frame != null)
+            {
                 frame.Create();
+            }
 
-            if(count < frames.Count)
-                setFrame(++count);
+            if (count < frames.Count)
+            {
+                SetFrame(++count);
+            }
         }
 
         public override void ChangeFrame(int frame)
         {
-            setFrame(frame);
+            SetFrame(frame);
         }
 
         public override void ChangePace(int pace)
@@ -219,11 +242,13 @@ namespace Brain3D
         public override void Add(char key)
         {
             if (!insertion)
+            {
                 return;
+            }
 
             if (invitation)
             {
-                clear();
+                Clear();
                 invitation = false;
                 addSequence();
             }
@@ -239,20 +264,30 @@ namespace Brain3D
         public override void Space()
         {
             if (insertion)
+            {
                 sequence.Space();
+            }
             else if (Started)
+            {
                 Stop();
+            }
             else
+            {
                 Start();
+            }
         }
 
         public override void Enter()
         {
             if (!insertion)
+            {
                 return;
+            }
 
             if (sequence.Frames.Count == 0)
+            {
                 return;
+            }
 
             addFrame(true);
             addSequence();
@@ -267,7 +302,7 @@ namespace Brain3D
         {
             if(insertion)
             {
-                setFrame(frames.Count);
+                SetFrame(frames.Count);
                 addSequence();
             }
         }
@@ -286,6 +321,7 @@ namespace Brain3D
         void addMap(Dictionary<object, object> map)
         {
             foreach (object key in map.Keys)
+            {
                 if (map[key] is bool)
                 {/*
                     CreatedNeuron neuron = mapNeurons[(Neuron)key];
@@ -301,7 +337,7 @@ namespace Brain3D
                     //mapNeurons.Add((Neuron)key, neuron);
                     neurons.Add(neuron);
 
-                    neuron.show();
+                    neuron.Show();
                     neuron.Frame = count;
                 }
                 else
@@ -309,8 +345,9 @@ namespace Brain3D
                     CreatedVector synapse = (CreatedVector)(map[key]);
                     //mapSynapses.Add((Synapse)key, synapse);
                     vectors.Add(synapse);
-                    synapse.show();
+                    synapse.Show();
                 }
+            }
         }
 
         void addSequence()
@@ -326,33 +363,43 @@ namespace Brain3D
 
         #region zmiany klatek
 
-        void setFrame(int index)
+        void SetFrame(int index)
         {
             controller.ChangeFrame(index);
             bool forward = true;
             paused = false;
 
             if (count > index)
+            {
                 forward = false;
+            }
 
             if (forward)
             {
                 for (int i = count + 1; i < index; i++)
+                {
                     frames[i - 1].Create();
+                }
             }
             else
             {
                 for (int i = count; i > index; i--)
+                {
                     frames[i - 1].Undo();
+                }
             }
 
             if (index == 0)
             {
-                if(frame != null)
+                if (frame != null)
+                {
                     frame.Idle();
+                }
 
                 if (sequence != null)
+                {
                     sequence.Hide();
+                }
 
                 sequence = null;
                 frame = null;
@@ -365,7 +412,9 @@ namespace Brain3D
                 frame.Idle();
 
                 if (Started)
+                {
                     frame.Execute();
+                }
             }
 
             frame = frames[index - 1];
@@ -379,8 +428,10 @@ namespace Brain3D
                 display.Show(sequence);
             }
 
-            if(!Started && frame != null)
+            if (!Started && frame != null)
+            {
                 frame.Create();
+            }
         }
 
         #endregion

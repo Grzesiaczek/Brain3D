@@ -30,17 +30,17 @@ namespace Brain3D
         void prepare(int left)
         {
             word = "";
-            prepare();
+            Prepare();
 
             builder = new StringBuilder(word);
             Left = left;
             Top = 8;
         }
 
-        public override void initialize()
+        public override void Initialize()
         {
-            active = texturesBuilt;
-            normal = texturesBuilt;
+            active = texturesBuild;
+            normal = texturesBuild;
         }
 
         #endregion

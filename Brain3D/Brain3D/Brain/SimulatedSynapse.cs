@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Brain3D
 {
@@ -20,7 +17,9 @@ namespace Brain3D
             activity = new Tuple<bool, double>[size];
 
             for (int i = 0; i < size; i++)
+            {
                 activity[i] = new Tuple<bool, double>(false, 0);
+            }
         }
 
         public void Impulse(int time)
@@ -28,7 +27,9 @@ namespace Brain3D
             post.Impulse(synapse.Weight, time + 20);
 
             for (int i = 0, j = time; i < 20 && j < activity.Length; i++, j++)
+            {
                 activity[j] = new Tuple<bool, double>(true, (double)i / 20);
+            }
         }
 
         public Synapse Synapse

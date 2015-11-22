@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<data>
+  <shortcuts>
+    <shortcut>
+      <keys>F1</keys>
+      <description>Włącza lub wyłącza okienko pomocy.</description>
+    </shortcut>
+    <shortcut>
+      <keys>F4</keys>
+      <description>Wykonuje zrzut ekranu do pliku.</description>
+    </shortcut>
+    <shortcut>
+      <keys>F7</keys>
+      <description>Zatrzymuje graną melodię.</description>
+    </shortcut>
+    <shortcut>
+      <keys>F8</keys>
+      <description>Odtwarza melodię, jeśli jest to możliwe.</description>
+    </shortcut>
+    <shortcut>
+      <keys>F9</keys>
+      <description>Balansowanie synaps.</description>
+    </shortcut>
+    <shortcut>
+      <keys>F10</keys>
+      <description>Wymusza przejście do kolejnej fazy balansowania grafu.</description>
+    </shortcut>
+    <shortcut>
+      <keys>F12</keys>
+      <description>Zmienia tryb aktywacji normalny/równoległy.</description>
+    </shortcut>
+    <shortcut>
+      <keys>Escape</keys>
+      <description>Natychmiastowe zakończenie balansowania.</description>
+    </shortcut>
+    <shortcut>
+      <keys>Insert</keys>
+      <description>Włącza tryb nowego zapytania.</description>
+    </shortcut>
+    <shortcut>
+      <keys>Left</keys>
+      <description>Przesuwa czas/wykres w lewo.</description>
+    </shortcut>
+    <shortcut>
+      <keys>Right</keys>
+      <description>Przesuwa czas/wykres w prawo.</description>
+    </shortcut>
+    <shortcut>
+      <keys>Up</keys>
+      <description>Zwiększa interwał.</description>
+    </shortcut>
+    <shortcut>
+      <keys>Down</keys>
+      <description>Zmniejsza interwał.</description>
+    </shortcut>
+    <shortcut>
+      <keys>PageUp</keys>
+      <description>Zmienia zapytanie na następne.</description>
+    </shortcut>
+    <shortcut>
+      <keys>PageDown</keys>
+      <description>Ustawia aktualne zapytanie na poprzednie.</description>
+    </shortcut>
+    <shortcut>
+      <keys>Ctrl + PageUp</keys>
+      <description>Ustawia zbiór sekwencji na poprzedni.</description>
+    </shortcut>
+    <shortcut>
+      <keys>Ctrl + PageDown</keys>
+      <description>Zmienia zbiór sekwencji na kolejny.</description>
+    </shortcut>
+  </shortcuts>
+</data>

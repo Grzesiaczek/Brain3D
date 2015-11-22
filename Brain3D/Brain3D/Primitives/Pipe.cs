@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -24,7 +22,9 @@ namespace Brain3D
         public Pipe(Vector3 source, Vector3 target, float r1, float r2, int mode)
         {
             if (palettes == null)
+            {
                 throw new Exception("Pipe class not initialized!");
+            }
 
             framework = new Vector3[6];
             vertices = new VertexPositionColor[6];
@@ -41,7 +41,7 @@ namespace Brain3D
             Rotate();
         }
 
-        public static void initializePalettes()
+        public static void InitializePalettes()
         {
             palettes = new List<Tuple<Color, Color>>();
 
@@ -54,7 +54,9 @@ namespace Brain3D
             Rotate();
 
             for (int i = 0; i < 6; i++)
+            {
                 vertices[i] = new VertexPositionColor(framework[i], palette.Item1);
+            }
 
             vertices[2].Color = palette.Item2;
             vertices[3].Color = palette.Item2;
@@ -78,13 +80,15 @@ namespace Brain3D
 
         public override void Move()
         {
-            if (!initialized || buffer == null)
-                return;
+            if (initialized && buffer != null)
+            {
+                Rotate();
 
-            Rotate();
-
-            for (int i = 0, j = offset; i < 6; i++)
-                buffer.Vertices[j++].Position = framework[i];
+                for (int i = 0, j = offset; i < 6; i++)
+                {
+                    buffer.Vertices[j++].Position = framework[i];
+                }
+            }
         }
 
         public override void Rotate()
@@ -114,7 +118,7 @@ namespace Brain3D
             Move();
         }
 
-        public void add()
+        public void Add()
         {
             display.Add(this);
             buffer.Block(indices);

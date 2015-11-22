@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 
 namespace Brain3D
@@ -29,48 +27,64 @@ namespace Brain3D
             branches = new List<BalancedBranch>(leaf.branches);
         }
 
-        public void load(List<BalancedLeaf> leafs, List<BalancedBranch> branches)
+        public void Load(List<BalancedLeaf> leafs, List<BalancedBranch> branches)
         {
             this.leafs = new List<BalancedLeaf>();
             this.branches = new List<BalancedBranch>();
 
             foreach (BalancedLeaf leaf in leafs)
+            {
                 if (leaf != this && Math.Abs(leaf.position.X - position.X) < 0.1f)
+                {
                     this.leafs.Add(leaf);
+                }
+            }
 
             foreach (BalancedBranch branch in branches)
+            {
                 if (position.X > branch.Source.position.X && position.X < branch.Target.position.X)
+                {
                     this.branches.Add(branch);
+                }
+            }
         }
 
-        public void refresh(Dictionary<BalancedLeaf, BalancedLeaf> mapLeafs, Dictionary<BalancedBranch, BalancedBranch> mapBranches)
+        public void Refresh(Dictionary<BalancedLeaf, BalancedLeaf> mapLeafs, Dictionary<BalancedBranch, BalancedBranch> mapBranches)
         {
             for (int i = 0; i < leafs.Count; i++)
+            {
                 leafs[i] = mapLeafs[leafs[i]];
+            }
 
             for (int i = 0; i < branches.Count; i++)
+            {
                 branches[i] = mapBranches[branches[i]];
+            }
         }
 
-        public void moveY(float y)
+        public void MoveY(float y)
         {
             position = new Vector2(position.X, y);
         }
 
-        public void shift()
+        public void Shift()
         {
             leaf.Position = new Vector3(position, 0);
         }
 
-        public float getCost()
+        public float GetCost()
         {
             float cost = (float)Math.Abs(position.Y - 0.8f) / 2;
 
             foreach (BalancedLeaf leaf in leafs)
+            {
                 cost += (float)Math.Abs(leaf.Position.Y - position.Y);
+            }
 
             foreach (BalancedBranch branch in branches)
-                cost += branch.getCost(this);
+            {
+                cost += branch.GetCost(this);
+            }
 
             return cost;
         }

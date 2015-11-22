@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Brain3D
 {
@@ -16,9 +12,13 @@ namespace Brain3D
             frames = new List<CreationFrame>();
 
             if (sequence.Count == 0)
+            {
                 builder = new BuiltTile();
+            }
             else
+            {
                 builder = new BuiltTile(sequence.Last().Right + 10);
+            }
 
             Add(builder);
         }
@@ -35,15 +35,17 @@ namespace Brain3D
             Arrange();
         }
 
-        public CreationFrame get(int index)
+        public CreationFrame Get(int index)
         {
             return frames[index];
         }
 
-        public CreationFrame add(Brain brain, int index)
+        public CreationFrame Add(Brain brain, int index)
         {
             if (builder == null)
+            {
                 return null;
+            }
             /*
             CreationFrame frame = brain.add(this, builder, index);
             SequenceTile neuron = frame.Neuron;

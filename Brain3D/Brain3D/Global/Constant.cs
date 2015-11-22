@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.Xna.Framework;
 
@@ -14,9 +9,8 @@ namespace Brain3D
     {
         #region deklaracje
 
+        static string path;
         static Random random;
-        static String path;
-        static QuerySequence query;
 
         static Vector3 box;
         static Vector3 balance;
@@ -29,7 +23,7 @@ namespace Brain3D
         static float radius;
 
         static SpaceMode space;
-        public static event EventHandler spaceChanged;
+        public static event EventHandler SpaceChanged;
 
         #endregion
 
@@ -50,7 +44,7 @@ namespace Brain3D
                 path = node.InnerText;
 
                 node = node.NextSibling;
-                int text = Int32.Parse(node.InnerText);
+                int text = int.Parse(node.InnerText);
             }
             catch(Exception)
             {
@@ -95,20 +89,20 @@ namespace Brain3D
             writer.Close();
         }
 
-        static void ChangePath(String path)
+        static void ChangePath(string path)
         {
             Constant.path = path;
-            Constant.Save();
+            Save();
 
-            if (File.Exists(System.IO.Path.Combine(path, "data.xml")))
-                return;
-
-            Directory.CreateDirectory(path);
-            File.Create(System.IO.Path.Combine(path, "data.xml"));
-            Directory.CreateDirectory(System.IO.Path.Combine(path, "Data"));
-            Directory.CreateDirectory(System.IO.Path.Combine(path, "Images"));
-            Directory.CreateDirectory(System.IO.Path.Combine(path, "Save"));
-            Directory.CreateDirectory(System.IO.Path.Combine(path, "Simulation"));
+            if (!File.Exists(System.IO.Path.Combine(path, "data.xml")))
+            {
+                Directory.CreateDirectory(path);
+                File.Create(System.IO.Path.Combine(path, "data.xml"));
+                Directory.CreateDirectory(System.IO.Path.Combine(path, "Data"));
+                Directory.CreateDirectory(System.IO.Path.Combine(path, "Images"));
+                Directory.CreateDirectory(System.IO.Path.Combine(path, "Save"));
+                Directory.CreateDirectory(System.IO.Path.Combine(path, "Simulation"));
+            }
         }
 
         static void LoadDefault()
@@ -120,8 +114,10 @@ namespace Brain3D
         {
             Vector3 area;
 
-            if (Constant.Space == SpaceMode.Box)
-                area = Constant.Box;
+            if (Space == SpaceMode.Box)
+            {
+                area = Box;
+            }
             else
             {
                 float radius = Constant.Radius * 0.7f;
@@ -138,9 +134,13 @@ namespace Brain3D
         public static void SetBox(Balancing.Phase phase)
         {
             if (phase == Balancing.Phase.Three)
+            {
                 box = normal;
+            }
             else
+            {
                 box = balance;
+            }
         }
 
         public static void SetBox(float factor)
@@ -192,23 +192,11 @@ namespace Brain3D
             }
         }
 
-        public static String Path
+        public static string Path
         {
             get
             {
                 return path;
-            }
-        }
-
-        public static QuerySequence Query
-        {
-            get
-            {
-                return query;
-            }
-            set
-            {
-                query = value;
             }
         }
 
@@ -221,7 +209,7 @@ namespace Brain3D
             set
             {
                 space = value;
-                spaceChanged(space, null);
+                SpaceChanged(space, null);
             }
         }
 

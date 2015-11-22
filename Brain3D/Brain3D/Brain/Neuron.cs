@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Brain3D
 {
@@ -14,7 +11,8 @@ namespace Brain3D
         List<Synapse> output;
 
         Dictionary<QuerySequence, SimulatedNeuron> data;
-        String word;
+        QueryContainer queryContainer;
+        string word;
 
         int count;
 
@@ -22,12 +20,13 @@ namespace Brain3D
 
         #region konstruktory
 
-        public Neuron(String word)
+        public Neuron(string word, QueryContainer container)
         {
             data = new Dictionary<QuerySequence, SimulatedNeuron>();
             input = new List<Synapse>();
             output = new List<Synapse>();
-            
+
+            queryContainer = container;
             this.word = word;
         }
 
@@ -37,12 +36,16 @@ namespace Brain3D
 
         public void Initialize(QuerySequence query)
         {
-            SimulatedNeuron neuron = new SimulatedNeuron(this);
+            SimulatedNeuron neuron = new SimulatedNeuron(this, query);
 
             if (data.ContainsKey(query))
+            {
                 data[query] = neuron;
+            }
             else
+            {
                 data.Add(query, neuron);
+            }
         }
 
         public SimulatedNeuron GetSimulated(QuerySequence query)
@@ -52,7 +55,7 @@ namespace Brain3D
 
         public SimulatedNeuron GetSimulated()
         {
-            return data[Constant.Query];
+            return data[queryContainer.Query];
         }
 
         public void SetSimulated(QuerySequence query)
@@ -65,10 +68,14 @@ namespace Brain3D
             output.Clear();
 
             foreach (Synapse synapse in Input)
+            {
                 input.Add(synapse.GetSimulated(query));
+            }
 
             foreach (Synapse synapse in Output)
+            {
                 output.Add(synapse.GetSimulated(query));
+            }
         }
 
         #endregion
@@ -79,7 +86,7 @@ namespace Brain3D
         {
             get
             {
-                return data[Constant.Query].Activity;
+                return data[queryContainer.Query].Activity;
             }
         }
 

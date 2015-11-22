@@ -89,7 +89,7 @@
             this.buttonPaceDown.TabIndex = 2;
             this.buttonPaceDown.Text = "-";
             this.buttonPaceDown.UseVisualStyleBackColor = true;
-            this.buttonPaceDown.Click += new System.EventHandler(this.buttonPaceDown_Click);
+            this.buttonPaceDown.Click += new System.EventHandler(this.ButtonPaceDown_Click);
             // 
             // buttonPaceUp
             // 
@@ -99,7 +99,7 @@
             this.buttonPaceUp.TabIndex = 3;
             this.buttonPaceUp.Text = "+";
             this.buttonPaceUp.UseVisualStyleBackColor = true;
-            this.buttonPaceUp.Click += new System.EventHandler(this.buttonPaceUp_Click);
+            this.buttonPaceUp.Click += new System.EventHandler(this.ButtonPaceUp_Click);
             // 
             // buttonSimulate
             // 
@@ -109,7 +109,7 @@
             this.buttonSimulate.TabIndex = 5;
             this.buttonSimulate.Text = "Simulate";
             this.buttonSimulate.UseVisualStyleBackColor = true;
-            this.buttonSimulate.Click += new System.EventHandler(this.buttonSimulate_Click);
+            this.buttonSimulate.Click += new System.EventHandler(this.ButtonSimulate_Click);
             // 
             // labelPace
             // 
@@ -173,7 +173,7 @@
             this.radioButtonChart.TabIndex = 19;
             this.radioButtonChart.Text = "Chart";
             this.radioButtonChart.UseVisualStyleBackColor = true;
-            this.radioButtonChart.CheckedChanged += new System.EventHandler(this.radioButtonChart_CheckedChanged);
+            this.radioButtonChart.CheckedChanged += new System.EventHandler(this.RadioButtonChart_CheckedChanged);
             // 
             // radioButtonSimulation
             // 
@@ -186,7 +186,7 @@
             this.radioButtonSimulation.TabStop = true;
             this.radioButtonSimulation.Text = "Simulation";
             this.radioButtonSimulation.UseVisualStyleBackColor = true;
-            this.radioButtonSimulation.CheckedChanged += new System.EventHandler(this.radioButtonSimulation_CheckedChanged);
+            this.radioButtonSimulation.CheckedChanged += new System.EventHandler(this.RadioButtonSimulation_CheckedChanged);
             // 
             // radioButtonCreation
             // 
@@ -197,7 +197,7 @@
             this.radioButtonCreation.TabIndex = 26;
             this.radioButtonCreation.Text = "Creation";
             this.radioButtonCreation.UseVisualStyleBackColor = true;
-            this.radioButtonCreation.CheckedChanged += new System.EventHandler(this.radioButtonCreation_CheckedChanged);
+            this.radioButtonCreation.CheckedChanged += new System.EventHandler(this.RadioButtonCreation_CheckedChanged);
             // 
             // checkBoxWhite
             // 
@@ -208,7 +208,7 @@
             this.checkBoxWhite.TabIndex = 42;
             this.checkBoxWhite.Text = "White";
             this.checkBoxWhite.UseVisualStyleBackColor = true;
-            this.checkBoxWhite.CheckedChanged += new System.EventHandler(this.checkBoxWhite_CheckedChanged);
+            this.checkBoxWhite.CheckedChanged += new System.EventHandler(this.CheckBoxWhite_CheckedChanged);
             // 
             // radioButtonTree
             // 
@@ -219,7 +219,7 @@
             this.radioButtonTree.TabIndex = 41;
             this.radioButtonTree.Text = "Tree";
             this.radioButtonTree.UseVisualStyleBackColor = true;
-            this.radioButtonTree.CheckedChanged += new System.EventHandler(this.radioButtonTree_CheckedChanged);
+            this.radioButtonTree.CheckedChanged += new System.EventHandler(this.RadioButtonTree_CheckedChanged);
             // 
             // checkBoxAuto
             // 
@@ -252,7 +252,7 @@
             this.radioButtonSquare.TabIndex = 39;
             this.radioButtonSquare.Text = "Square";
             this.radioButtonSquare.UseVisualStyleBackColor = true;
-            this.radioButtonSquare.CheckedChanged += new System.EventHandler(this.radioButtonSquare_CheckedChanged);
+            this.radioButtonSquare.CheckedChanged += new System.EventHandler(this.RadioButtonSquare_CheckedChanged);
             // 
             // radioButtonBox
             // 
@@ -276,7 +276,7 @@
             this.radioButtonSphere.TabIndex = 38;
             this.radioButtonSphere.Text = "Sphere";
             this.radioButtonSphere.UseVisualStyleBackColor = true;
-            this.radioButtonSphere.CheckedChanged += new System.EventHandler(this.radioButtonSphere_CheckedChanged);
+            this.radioButtonSphere.CheckedChanged += new System.EventHandler(this.RadioButtonSphere_CheckedChanged);
             // 
             // checkBoxState
             // 
@@ -289,7 +289,7 @@
             this.checkBoxState.TabIndex = 35;
             this.checkBoxState.Text = "State";
             this.checkBoxState.UseVisualStyleBackColor = true;
-            this.checkBoxState.CheckedChanged += new System.EventHandler(this.checkBoxState_CheckedChanged);
+            this.checkBoxState.CheckedChanged += new System.EventHandler(this.CheckBoxState_CheckedChanged);
             // 
             // buttonBalance
             // 
@@ -299,7 +299,7 @@
             this.buttonBalance.TabIndex = 36;
             this.buttonBalance.Text = "Balance";
             this.buttonBalance.UseVisualStyleBackColor = true;
-            this.buttonBalance.Click += new System.EventHandler(this.buttonBalance_Click);
+            this.buttonBalance.Click += new System.EventHandler(this.ButtonBalance_Click);
             // 
             // buttonLoad
             // 
@@ -309,7 +309,7 @@
             this.buttonLoad.TabIndex = 33;
             this.buttonLoad.Text = "Load";
             this.buttonLoad.UseVisualStyleBackColor = true;
-            this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
+            this.buttonLoad.Click += new System.EventHandler(this.ButtonLoad_Click);
             // 
             // trackBarLength
             // 
@@ -324,7 +324,7 @@
             this.trackBarLength.TickFrequency = 10;
             this.trackBarLength.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarLength.Value = 25;
-            this.trackBarLength.Scroll += new System.EventHandler(this.trackBarLength_Scroll);
+            this.trackBarLength.Scroll += new System.EventHandler(this.TrackBarLength_Scroll);
             // 
             // trackBarPace
             // 
@@ -340,7 +340,7 @@
             this.trackBarPace.TickFrequency = 100;
             this.trackBarPace.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarPace.Value = 50;
-            this.trackBarPace.Scroll += new System.EventHandler(this.trackBarPace_Scroll);
+            this.trackBarPace.Scroll += new System.EventHandler(this.TrackBarPace_Scroll);
             // 
             // buttonLengthUp
             // 
@@ -350,7 +350,7 @@
             this.buttonLengthUp.TabIndex = 24;
             this.buttonLengthUp.Text = "+";
             this.buttonLengthUp.UseVisualStyleBackColor = true;
-            this.buttonLengthUp.Click += new System.EventHandler(this.buttonLengthUp_Click);
+            this.buttonLengthUp.Click += new System.EventHandler(this.ButtonLengthUp_Click);
             // 
             // buttonLengthDown
             // 
@@ -360,7 +360,7 @@
             this.buttonLengthDown.TabIndex = 23;
             this.buttonLengthDown.Text = "-";
             this.buttonLengthDown.UseVisualStyleBackColor = true;
-            this.buttonLengthDown.Click += new System.EventHandler(this.buttonLengthDown_Click);
+            this.buttonLengthDown.Click += new System.EventHandler(this.ButtonLengthDown_Click);
             // 
             // labelLength
             // 
@@ -376,7 +376,7 @@
             // openFile
             // 
             this.openFile.InitialDirectory = "Files";
-            this.openFile.FileOk += new System.ComponentModel.CancelEventHandler(this.openFile_FileOk);
+            this.openFile.FileOk += new System.ComponentModel.CancelEventHandler(this.OpenFile_FileOk);
             // 
             // display
             // 
@@ -398,7 +398,7 @@
             this.buttonBack.TabIndex = 9;
             this.buttonBack.Text = "<<";
             this.buttonBack.UseVisualStyleBackColor = true;
-            this.buttonBack.Click += new System.EventHandler(this.buttonBack_Click);
+            this.buttonBack.Click += new System.EventHandler(this.ButtonBack_Click);
             // 
             // buttonForth
             // 
@@ -408,7 +408,7 @@
             this.buttonForth.TabIndex = 10;
             this.buttonForth.Text = ">>";
             this.buttonForth.UseVisualStyleBackColor = true;
-            this.buttonForth.Click += new System.EventHandler(this.buttonForth_Click);
+            this.buttonForth.Click += new System.EventHandler(this.ButtonForth_Click);
             // 
             // trackBarFrame
             // 
@@ -422,7 +422,7 @@
             this.trackBarFrame.TabIndex = 27;
             this.trackBarFrame.TickFrequency = 10;
             this.trackBarFrame.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBarFrame.Scroll += new System.EventHandler(this.trackBarFrame_Scroll);
+            this.trackBarFrame.Scroll += new System.EventHandler(this.TrackBarFrame_Scroll);
             // 
             // trackBarDensity
             // 
@@ -438,7 +438,7 @@
             this.trackBarDensity.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarDensity.Value = 4;
             this.trackBarDensity.Visible = false;
-            this.trackBarDensity.Scroll += new System.EventHandler(this.trackBarDensity_Scroll);
+            this.trackBarDensity.Scroll += new System.EventHandler(this.TrackBarDensity_Scroll);
             // 
             // Simulation
             // 

@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Nuclex.Fonts;
-using Nuclex.Graphics;
 
 namespace Brain3D
 {
@@ -14,7 +8,7 @@ namespace Brain3D
     {
         static Tuple<Vector3[], int[]>[] patterns;
         static bool change;
-        static bool visible;
+        static bool visibility;
 
         int number;
 
@@ -30,7 +24,9 @@ namespace Brain3D
             patterns = new Tuple<Vector3[], int[]>[101];
 
             for (int i = 0; i < 100; i++)
+            {
                 patterns[i] = getPattern(i.ToString());
+            }
 
             patterns[100] = getPattern("R");
         }
@@ -54,7 +50,9 @@ namespace Brain3D
             }
 
             for (int i = 0; i < index; i++)
+            {
                 indices[i] = numbers[i];
+            }
 
             offset = buffer.Add(vertices, indices);
             initialized = true;
@@ -84,7 +82,7 @@ namespace Brain3D
         {
             set
             {
-                visible = value;
+                visibility = value;
             }
         }
     }

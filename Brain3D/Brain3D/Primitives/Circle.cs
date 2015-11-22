@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 
 namespace Brain3D
 {
@@ -37,14 +31,20 @@ namespace Brain3D
         public override void Rotate()
         {
             if (direction.Length() == 0)
+            {
                 for (int i = 0; i < points; i++)
+                {
                     framework[i] = Vector3.Transform(circle[i], camera.Rotation);
+                }
+            }
             else
             {
                 Matrix rotation = new Spherical(direction).getRotation();
 
                 for (int i = 0; i < points; i++)
+                {
                     framework[i] = Vector3.Transform(circle[i], rotation);
+                }
             }
         }
 

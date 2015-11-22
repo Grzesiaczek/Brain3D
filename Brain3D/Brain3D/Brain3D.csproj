@@ -107,40 +107,47 @@
     <Compile Include="Animation\AnimatedNeuron.cs" />
     <Compile Include="Animation\AnimatedSynapse.cs" />
     <Compile Include="Animation\AnimatedVector.cs" />
-    <Compile Include="BalancedBranch.cs" />
-    <Compile Include="BalancedLeaf.cs" />
-    <Compile Include="BalancedTree.cs" />
+    <Compile Include="Balancing\BalancedBranch.cs" />
+    <Compile Include="Balancing\BalancedLeaf.cs" />
+    <Compile Include="Balancing\BalancedTree.cs" />
     <Compile Include="Balancing\BalancedSynapse.cs" />
+    <Compile Include="Containers\BrainContainer.cs" />
     <Compile Include="Charting\ChartedTile.cs" />
     <Compile Include="Charting\Chart.cs" />
     <Compile Include="Charting\ChartLayout.cs" />
     <Compile Include="Composites\DottedLine.cs" />
     <Compile Include="Global\Fonts.cs" />
-    <Compile Include="QueryContainer.cs" />
+    <Compile Include="Main\Help.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main\Help.Designer.cs">
+      <DependentUpon>Help.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Containers\QueryContainer.cs" />
     <Compile Include="Sound\Melody.cs" />
     <Compile Include="Sound\Player.cs" />
-    <Compile Include="Response.cs" />
+    <Compile Include="Presentation\Response.cs" />
     <Compile Include="Sequence\ResponseSequence.cs" />
-    <Compile Include="SimulatedNeuron.cs" />
-    <Compile Include="SimulatedSynapse.cs" />
+    <Compile Include="Brain\SimulatedNeuron.cs" />
+    <Compile Include="Brain\SimulatedSynapse.cs" />
     <Compile Include="Sound\Sound.cs" />
     <Compile Include="Tiles\CounterTile.cs" />
     <Compile Include="Creation\CreatedSynapse.cs" />
     <Compile Include="Tiles\CreationTile.cs" />
     <Compile Include="Global\Mouse.cs" />
-    <Compile Include="Main\Graph.cs" />
+    <Compile Include="Presentation\Graph.cs" />
     <Compile Include="Tiles\QueryTile.cs" />
     <Compile Include="Primitives\Rect.cs" />
     <Compile Include="Elements\SpriteComposite.cs" />
     <Compile Include="Text\LabelTL.cs" />
     <Compile Include="Primitives\Line.cs" />
-    <Compile Include="TimeLine.cs" />
+    <Compile Include="Presentation\TimeLine.cs" />
     <Compile Include="Response\TreeLayout.cs" />
     <Compile Include="Response\Branch.cs" />
     <Compile Include="Elements\DrawableComposite.cs" />
     <Compile Include="Graphics\Controller.cs" />
     <Compile Include="Response\Leaf.cs" />
-    <Compile Include="Main\Animation.cs" />
+    <Compile Include="Presentation\Animation.cs" />
     <Compile Include="Balancing\BalancedNeuron.cs" />
     <Compile Include="Balancing\BalancedVector.cs" />
     <Compile Include="Composites\BorderedDisk.cs" />
@@ -156,13 +163,13 @@
     <Compile Include="Tiles\BuiltTile.cs" />
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Charting\ChartedNeuron.cs" />
-    <Compile Include="Main\Charting.cs" />
+    <Compile Include="Presentation\Charting.cs" />
     <Compile Include="Primitives\Circle.cs" />
     <Compile Include="Global\Comparer.cs" />
     <Compile Include="Global\Constant.cs" />
     <Compile Include="Creation\CreatedNeuron.cs" />
     <Compile Include="Creation\CreatedVector.cs" />
-    <Compile Include="Main\Creation.cs" />
+    <Compile Include="Presentation\Creation.cs" />
     <Compile Include="Creation\CreationData.cs" />
     <Compile Include="Creation\CreationFrame.cs" />
     <Compile Include="Creation\CreationHistory.cs" />
@@ -214,6 +221,9 @@
     <Content Include="Files\GameThumbnail.png">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
     </Content>
+    <Content Include="Files\help.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Brain3DContent\Brain3DContent.contentproj">
@@ -244,6 +254,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Main\Help.resx">
+      <DependentUpon>Help.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main\Simulation.resx">
       <DependentUpon>Simulation.cs</DependentUpon>
     </EmbeddedResource>

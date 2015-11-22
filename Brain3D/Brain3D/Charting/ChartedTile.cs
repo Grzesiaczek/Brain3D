@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -13,7 +10,7 @@ namespace Brain3D
 
         public ChartedTile(String name, Point corner, Color color)
         {
-            this.word = name;
+            word = name;
             Vector2 size = Fonts.SpriteVerdana.MeasureString(name);
 
             width = 100;
@@ -24,9 +21,9 @@ namespace Brain3D
             recBorder = new Rectangle(corner.X, corner.Y, width, height);
             recBackground = new Rectangle(corner.X + 3, corner.Y + 3, width - 6, height - 6);
 
-            active = getTextures(color, Color.DarkBlue);
-            normal = getTextures(color, Color.Purple);
-            tex = getTextures(color, Color.Wheat);
+            active = GetTextures(color, Color.DarkBlue);
+            normal = GetTextures(color, Color.Purple);
+            tex = GetTextures(color, Color.Wheat);
         }
     
         public void hover()

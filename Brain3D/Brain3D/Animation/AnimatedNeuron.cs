@@ -1,13 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Nuclex.Fonts;
-using Nuclex.Graphics;
 
 namespace Brain3D
 {
@@ -59,7 +52,9 @@ namespace Brain3D
         public override void Move()
         {
             foreach (DrawableElement drawable in drawables)
+            {
                 drawable.Position = position;
+            }
 
             screen = device.Viewport.Project(position, effect.Projection, effect.View, effect.World);
             base.Move();
@@ -78,24 +73,24 @@ namespace Brain3D
             switch(data.Phase)
             {
                 case ActivityPhase.Normal:
-                    disk.changeValue((float)value);
+                    disk.ChangeValue((float)value);
                     number.Value = (int)(Math.Abs(value) * 100);
                     break;
 
                 case ActivityPhase.Start:
                     number.Value = 100;
-                    disk.refract();
+                    disk.Refract();
                     break;
 
                 case ActivityPhase.Active:
                     number.Value = 100;
-                    disk.setValue(0);
-                    disk.refract((float)data.Refraction / 30);
+                    disk.SetValue(0);
+                    disk.Refract((float)data.Refraction / 30);
                     break;
 
                 case ActivityPhase.Finish:
                     number.Value = 100;
-                    disk.setValue(0);
+                    disk.SetValue(0);
                     break;
             }      
         }
@@ -132,7 +127,9 @@ namespace Brain3D
             float rad = radius * 1.1f;
 
             if (direction.Y < 0)
+            {
                 angle = 2 * Math.PI - angle;
+            }
 
             return Vector3.Transform(new Vector3((float)Math.Cos(angle) * rad,(float)Math.Sin(angle) * rad, 0), camera.Rotation) + position;
         }
@@ -143,10 +140,14 @@ namespace Brain3D
             Move();
 
             foreach (AnimatedVector synapse in input)
+            {
                 synapse.Move();
+            }
 
             foreach (AnimatedVector synapse in output)
+            {
                 synapse.Move();
+            }
         }
 
         public override bool Cursor(int x, int y)
@@ -156,28 +157,28 @@ namespace Brain3D
 
         public override void Activate()
         {
-            disk.activate();
-        }
-
-        public override void Idle()
-        {
-            disk.idle();
+            disk.Activate();
         }
 
         public override void Hover()
         {
-            disk.hover();
+            disk.Hover();
+        }
+
+        public override void Idle()
+        {
+            disk.Idle();
         }
 
         public override void Show()
         {
             base.Show();
-            disk.setFactor((float)(neuron.Count - 1) / 4);
+            disk.SetFactor((float)(neuron.Count - 1) / 4);
         }
 
         public void Create()
         {
-            disk.setValue(0);
+            disk.SetValue(0);
             number.Value = 0;
             Show();
         }
@@ -194,7 +195,7 @@ namespace Brain3D
             }
         }
 
-        public String Word
+        public string Word
         {
             get
             {

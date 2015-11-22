@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
 
 namespace Brain3D
 {
@@ -14,22 +10,24 @@ namespace Brain3D
         Neuron pre;
         Neuron post;
 
+        List<CreationData> history;
+        Dictionary<QuerySequence, SimulatedSynapse> data;
+
+        QueryContainer queryContainer;
+
         float change;
         float factor;
         float weight;
-
-        List<CreationData> history;
-        
-        Dictionary<QuerySequence, SimulatedSynapse> data;
 
         #endregion
 
         #region konstruktory
 
-        public Synapse(Neuron pre, Neuron post)
+        public Synapse(Neuron pre, Neuron post, QueryContainer container)
         {
             this.pre = pre;
             this.post = post;
+            this.queryContainer = container;
 
             change = 0;
             data = new Dictionary<QuerySequence, SimulatedSynapse>();
@@ -65,7 +63,7 @@ namespace Brain3D
         {
             get
             {
-                return data[Constant.Query].Activity;
+                return data[queryContainer.Query].Activity;
             }
         }
 

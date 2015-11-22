@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Brain3D
 {
     class CreatedVector : CreatedElement
@@ -24,11 +18,11 @@ namespace Brain3D
 
         public void setDuplex(Synapse synapse)
         {
-            this.synapse.setDuplex(synapse);
+            this.synapse.SetDuplex(synapse);
             duplex = new CreatedSynapse(this.synapse.Duplex);
         }
 
-        public override void show()
+        public override void Show()
         {
             Scale = 0;
             synapse.Show();
@@ -36,7 +30,7 @@ namespace Brain3D
 
         public void init()
         {
-            synapse.init();
+            synapse.Init();
         }
 
         public void create()

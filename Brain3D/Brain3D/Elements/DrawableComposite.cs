@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace Brain3D
@@ -18,19 +15,25 @@ namespace Brain3D
         public override void Initialize()
         {
             foreach (DrawableElement drawable in drawables)
+            {
                 drawable.Initialize();
+            }
         }
 
         public override void Move()
         {
             foreach (DrawableElement drawable in drawables)
+            {
                 drawable.Move();
+            }
         }
 
         public override void Rescale()
         {
             foreach (DrawableElement drawable in drawables)
+            {
                 drawable.Rescale();
+            }
         }
 
         public override void Rotate()
@@ -38,35 +41,51 @@ namespace Brain3D
             base.Rotate();
 
             foreach (DrawableElement drawable in drawables)
+            {
                 drawable.Rotate();
+            }
         }
 
         public override void Show()
         {
-            foreach (DrawableElement drawable in drawables)
-                drawable.Show();
+            if (!visible)
+            {
+                foreach (DrawableElement drawable in drawables)
+                {
+                    drawable.Show();
+                }
 
-            visible = true;
+                visible = true;
+            }
         }
 
         public override void Hide()
         {
-            foreach (DrawableElement drawable in drawables)
-                drawable.Hide();
+            if (visible)
+            {
+                foreach (DrawableElement drawable in drawables)
+                {
+                    drawable.Hide();
+                }
 
-            visible = false;
+                visible = false;
+            }
         }
 
         public override void Remove()
         {
             foreach (DrawableElement drawable in drawables)
+            {
                 drawable.Remove();
+            }
         }
 
-        public override void moveX(float x)
+        public override void MoveX(float x)
         {
             foreach (DrawableElement drawable in drawables)
-                drawable.moveX(x);
+            {
+                drawable.MoveX(x);
+            }
         }
 
         public override GraphicsBuffer Buffer
@@ -74,7 +93,9 @@ namespace Brain3D
             set
             {
                 foreach (DrawableElement drawable in drawables)
+                {
                     drawable.Buffer = value;
+                }
             }
         }
 
@@ -89,7 +110,9 @@ namespace Brain3D
                 position = value;
 
                 foreach (DrawableElement drawable in drawables)
+                {
                     drawable.Position = position;
+                }
             }
         }
 
@@ -100,7 +123,9 @@ namespace Brain3D
                 scale = value;
 
                 foreach (DrawableElement drawable in drawables)
+                {
                     drawable.Scale = scale;
+                }
             }
         }
     }

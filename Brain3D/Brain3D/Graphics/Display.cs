@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Nuclex.Fonts;
-using Nuclex.Graphics;
 
 namespace Brain3D
 {
@@ -54,14 +49,14 @@ namespace Brain3D
         protected override void Initialize()
         {
             camera = new Camera(10);
-            DrawableElement.Camera = camera;
+            GraphicsElement.Camera = camera;
 
             elements = new HashSet<AnimatedElement>();
             sprites = new HashSet<SpriteElement>();
             comparer = new Comparer();
 
             ContentManager content = new ContentManager(Services, "Content");
-            DrawableElement.Content = content;
+            GraphicsElement.Content = content;
 
             Fonts.initialize(content);
             Application.Idle += delegate { Invalidate(); };
@@ -80,20 +75,20 @@ namespace Brain3D
             Device.BlendState = BlendState.Opaque;
             Device.SamplerStates[0] = SamplerState.LinearWrap;
 
-            DrawableElement.Device = Device;
-            DrawableElement.Effect = effect;
-            DrawableElement.Display = this;
+            GraphicsElement.Device = Device;
+            GraphicsElement.Effect = effect;
+            GraphicsElement.Display = this;
             SpriteElement.Batch = batch;
 
-            BorderedDisk.initializeCircle(); 
+            BorderedDisk.InitializeCircle(); 
             Number3D.initializePatterns();
-            Pipe.initializePalettes();
+            Pipe.InitializePalettes();
 
             Chart.InitializeAngles();                
-            Tile.initializeTextures();
+            Tile.InitializeTextures();
 
             controller = new Controller();
-            controller.resize();
+            controller.Resize();
 
             buffer = new GraphicsBuffer(Device, effect);
             numbers = new GraphicsBuffer(Device, effect);
@@ -119,8 +114,10 @@ namespace Brain3D
                 numbers.Clear(false);
                 numbers.Initialize();
 
-                if(presentation is Animation)
+                if (presentation is Animation)
+                {
                     numbers.Show();
+                }
             }
 
             buffer.Draw();
@@ -130,7 +127,9 @@ namespace Brain3D
             batch.Begin();
 
             foreach (SpriteElement sprite in sprites)
+            {
                 sprite.Draw();
+            }
 
             batch.End();
         }
@@ -140,9 +139,13 @@ namespace Brain3D
             effect.View = Matrix.CreateLookAt(camera.Position, camera.Target, camera.Up);
 
             if (presentation is Graph)
+            {
                 effect.Projection = Matrix.CreatePerspectiveFieldOfView(viewArea, Device.Viewport.AspectRatio, 40, 100);
+            }
             else
+            {
                 effect.Projection = Matrix.CreatePerspectiveFieldOfView(viewArea, Device.Viewport.AspectRatio, 4, 6);
+            }
 
             effect2.Projection = Matrix.CreateOrthographicOffCenter(0, Device.Viewport.Width, Device.Viewport.Height, 0, 0, 2);
         }
@@ -157,13 +160,19 @@ namespace Brain3D
             viewArea = 0.84f;
 
             if (presentation is Graph)
+            {
                 camera = new Camera(Constant.Radius + 50);
+            }
             else if (presentation is Charting)
+            {
                 camera = new Camera(new Vector3(3, -0.5f, 5.0f));
+            }
             else
+            {
                 camera = new Camera(new Vector3(3, 0.25f, 5.0f));
+            }
             
-            DrawableElement.Camera = camera;
+            GraphicsElement.Camera = camera;
 
             InitializeEffect();
             InitializeBuffers();
@@ -199,16 +208,22 @@ namespace Brain3D
                 Balancing.Instance.Stop();
 
                 while (locked)
+                {
                     Thread.Sleep(2);
+                }
 
                 foreach (AnimatedElement element in elements)
+                {
                     element.Remove();
+                }
 
                 elements.Clear();
             }
 
             if (sprites != null)
+            {
                 sprites.Clear();
+            }
 
             buffer.Clear();
             numbers.Clear();
@@ -223,11 +238,11 @@ namespace Brain3D
 
         public void Moved()
         {
-            if (locked || !initialized)
-                return;
-
-            locked = true;
-            ThreadPool.QueueUserWorkItem(Moving);
+            if (initialized && !locked)
+            {
+                locked = true;
+                ThreadPool.QueueUserWorkItem(Moving);
+            }
         }
 
         void Moving(object state)
@@ -235,7 +250,9 @@ namespace Brain3D
             HashSet<AnimatedElement> elements = new HashSet<AnimatedElement>(this.elements);
 
             foreach (AnimatedElement element in elements)
+            {
                 element.Move();
+            }
 
             locked = false;
         }
@@ -250,7 +267,9 @@ namespace Brain3D
             HashSet<AnimatedElement> elements = new HashSet<AnimatedElement>(this.elements);
 
             foreach (AnimatedElement element in elements)
+            {
                 element.Rotate();
+            }
         }
 
         public void ResizeWindow()
@@ -259,10 +278,14 @@ namespace Brain3D
             Height = Parent.Height;
 
             if (controller != null)
-                controller.resize();
+            {
+                controller.Resize();
+            }
 
-            if(presentation != null)
+            if (presentation != null)
+            {
                 presentation.Resize();
+            }
         }
 
         #endregion
@@ -276,19 +299,27 @@ namespace Brain3D
 
         void Screen(object state)
         {
-            String title = "";
+            string title = "";
 
             if (state is Animation)
+            {
                 title = "simulation";
+            }
 
             if (state is Creation)
+            {
                 title = "creation";
+            }
 
             if (state is Charting)
+            {
                 title = "chart";
+            }
 
             if (state is Tree)
+            {
                 title = "tree";
+            }
 
             RenderTarget2D target = new RenderTarget2D(Device, Width, Height, false, Device.DisplayMode.Format, DepthFormat.Depth24, 4, RenderTargetUsage.PlatformContents);
 
@@ -304,7 +335,9 @@ namespace Brain3D
             batch.Begin();
 
             foreach (SpriteElement sprite in sprites)
+            {
                 sprite.Draw();
+            }
 
             batch.End();
             Device.SetRenderTarget(null);
@@ -400,18 +433,18 @@ namespace Brain3D
 
         public void Broaden()
         {
-            if (viewArea >= 2.0f)
-                return;
-
-            viewArea += 0.01f;
+            if (viewArea < 2.0f)
+            {
+                viewArea += 0.01f;
+            }
         }
 
         public void Tighten()
         {
-            if (viewArea <= 0.4f)
-                return;
-
-            viewArea -= 0.01f;
+            if (viewArea > 0.4f)
+            {
+                viewArea -= 0.01f;
+            }
         }
 
         #endregion
@@ -426,9 +459,13 @@ namespace Brain3D
         public void Add(DrawableElement element)
         {
             if (element is Number3D)
+            {
                 element.Buffer = numbers;
+            }
             else
+            {
                 element.Buffer = buffer;
+            }
         }
 
         public void Add(SpriteElement element)
@@ -444,7 +481,9 @@ namespace Brain3D
         public void Show(Sequence sequence)
         {
             if (this.sequence != null)
+            {
                 this.sequence.Hide();
+            }
 
             this.sequence = sequence;
             presentation.Refresh();

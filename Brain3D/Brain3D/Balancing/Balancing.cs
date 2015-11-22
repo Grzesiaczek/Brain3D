@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Timers;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
@@ -25,7 +18,7 @@ namespace Brain3D
 
         static Balancing instance = new Balancing();
         Stopwatch sw = new Stopwatch();
-        Object locker = new Object();
+        object locker = new object();
 
         float delta;
         float step;
@@ -43,55 +36,65 @@ namespace Brain3D
         bool pause;
         bool regular;
 
-        public event EventHandler balanceEnded;
-        public event EventHandler balanceState;
-        public event EventHandler balanceUpdate;
+        public event EventHandler BalanceEnded;
+        public event EventHandler BalanceState;
+        public event EventHandler BalanceUpdate;
 
         #endregion
 
         private Balancing()
         {
             step = 0.010f;
-            Constant.spaceChanged += new EventHandler(spaceChanged);
+            Constant.SpaceChanged += new EventHandler(SpaceChanged);
         }
 
         public void Balance(HashSet<AnimatedNeuron> neurons, HashSet<AnimatedVector> vectors, int steps)
         {
             while (pause)
+            {
                 Thread.Sleep(10);
+            }
 
             interval = 2;
             regular = true;
             
             this.steps = steps;
-            initialize(neurons, vectors);
+            Initialize(neurons, vectors);
         }
 
-        public void balance(HashSet<CreatedNeuron> neurons, HashSet<CreatedVector> vectors)
+        public void Balance(HashSet<CreatedNeuron> neurons, HashSet<CreatedVector> vectors)
         {
             while (pause)
+            {
                 Thread.Sleep(10);
+            }
 
             HashSet<AnimatedNeuron> animatedNeurons = new HashSet<AnimatedNeuron>();
             HashSet<AnimatedVector> animatedVectors = new HashSet<AnimatedVector>();
 
             foreach (CreatedNeuron neuron in neurons)
+            {
                 animatedNeurons.Add(neuron.Neuron);
+            }
 
             foreach (CreatedVector vector in vectors)
+            {
                 animatedVectors.Add(vector.Synapse);
+            }
 
             interval = 0;
             regular = false;
 
-            initialize(animatedNeurons, animatedVectors);
-            ThreadPool.QueueUserWorkItem(balance);
+            Initialize(animatedNeurons, animatedVectors);
+            ThreadPool.QueueUserWorkItem(Balance);
         }
 
         public void Balance(HashSet<AnimatedVector> vectors, bool regular = true)
         {
             if (action)
+            {
                 return;
+            }
 
             this.vectors = new HashSet<BalancedVector>();
             synapses = new HashSet<BalancedSynapse>();
@@ -101,10 +104,12 @@ namespace Brain3D
                 synapses.Add(new BalancedSynapse(vector.State));
 
                 if (vector.Duplex != null)
+                {
                     synapses.Add(new BalancedSynapse(vector.Duplex));
+                }
             }
 
-            ThreadPool.QueueUserWorkItem(calculateSynapse);
+            ThreadPool.QueueUserWorkItem(CalculateSynapse);
             this.regular = regular;
 
             if(regular)
@@ -112,21 +117,23 @@ namespace Brain3D
                 sw.Start();
                 action = true;
                 phase = Phase.Four;
-                ThreadPool.QueueUserWorkItem(timer);
+                ThreadPool.QueueUserWorkItem(Timer);
             }
         }
 
-        public void balance(HashSet<CreatedVector> vectors)
+        public void Balance(HashSet<CreatedVector> vectors)
         {
             HashSet<AnimatedVector> animatedVectors = new HashSet<AnimatedVector>();
 
             foreach (CreatedVector vector in vectors)
+            {
                 animatedVectors.Add(vector.Synapse);
+            }
 
             Balance(animatedVectors, false);
         }
 
-        void initialize(HashSet<AnimatedNeuron> neurons, HashSet<AnimatedVector> vectors)
+        void Initialize(HashSet<AnimatedNeuron> neurons, HashSet<AnimatedVector> vectors)
         {
             this.neurons = new HashSet<BalancedNeuron>();
             this.vectors = new HashSet<BalancedVector>();
@@ -151,7 +158,9 @@ namespace Brain3D
                 synapses.Add(new BalancedSynapse(vector.State));
 
                 if (vector.Duplex != null)
+                {
                     synapses.Add(new BalancedSynapse(vector.Duplex));
+                }
             }
 
             overall = neurons.Count + vectors.Count;
@@ -163,18 +172,22 @@ namespace Brain3D
             treshold = 1;
 
             if (Constant.Space == SpaceMode.Box)
+            {
                 phase = Phase.One;
+            }
             else
+            {
                 phase = Phase.Auto;
+            }
 
             BalancedNeuron.K = 32;
             Constant.SetBox(phase);
 
             sw.Start();
-            ThreadPool.QueueUserWorkItem(timer);
+            ThreadPool.QueueUserWorkItem(Timer);
         }
 
-        void timer(object state)
+        void Timer(object state)
         {
             while(action)
             {
@@ -185,27 +198,35 @@ namespace Brain3D
                     if (regular)
                     {
                         if (phase == Phase.Four)
-                            ThreadPool.QueueUserWorkItem(shift);
+                        {
+                            ThreadPool.QueueUserWorkItem(Shift);
+                        }
                         else
-                            ThreadPool.QueueUserWorkItem(balance);
+                        {
+                            ThreadPool.QueueUserWorkItem(Balance);
+                        }
                     }
                     else
-                        balanceUpdate(this, null);
+                    {
+                        BalanceUpdate(this, null);
+                    }
                 }
 
                 Thread.Sleep(2);
             }
 
             pause = false;
-            balanceUpdate(this, null);
+            BalanceUpdate(this, null);
         }
 
-        void update()
+        void Update()
         {
             delta = 0;
 
             foreach (BalancedNeuron neuron in neurons)
-                delta += neuron.update(step);
+            {
+                delta += neuron.Update(step);
+            }
 
             if (phase == Phase.One && Math.Abs(delta) < 5)
             {
@@ -228,56 +249,72 @@ namespace Brain3D
                     Constant.SetBox(phase);
                 }
                 else
+                {
                     Constant.SetBox((float)count / 200);
+                }
             }
 
             if (Math.Abs(delta) < treshold)
             {
                 phase = Phase.Four;
-                balanceState(phase, null);
-                ThreadPool.QueueUserWorkItem(calculateSynapse);
+                BalanceState(phase, null);
+                ThreadPool.QueueUserWorkItem(CalculateSynapse);
                 return;
             }
 
             if(++updates == interval)
             {
                 if (interval < steps)
+                {
                     interval++;
+                }
 
                 updates = 0;
-                balanceUpdate(this, null);
+                BalanceUpdate(this, null);
                 return;
             }
 
-            balanceState(phase, null);
+            BalanceState(phase, null);
 
             if (action)
-                ThreadPool.QueueUserWorkItem(balance);
+            {
+                ThreadPool.QueueUserWorkItem(Balance);
+            }
             else
+            {
                 pause = false;
+            }
         }
 
-        void balance(object state)
+        void Balance(object state)
         {
             updated = 0;
 
             foreach (BalancedNeuron neuron in neurons)
+            {
                 ThreadPool.QueueUserWorkItem(calculateNeuron, neuron);
+            }
 
             foreach (BalancedVector vector in vectors)
-                ThreadPool.QueueUserWorkItem(calculateVector, vector);
+            {
+                ThreadPool.QueueUserWorkItem(CalculateVector, vector);
+            }
         }
 
         void calculateNeuron(object state)
         {
             BalancedNeuron neuron = (BalancedNeuron)state;
 
-            neuron.repulse();
-            neuron.rotate();
+            neuron.Repulse();
+            neuron.Rotate();
 
             foreach (BalancedNeuron other in neurons)
+            {
                 if (neuron != other)
-                    neuron.repulse(other.Position);
+                {
+                    neuron.Repulse(other.Position);
+                }
+            }
 
             Interlocked.Increment(ref updated);
 
@@ -286,20 +323,24 @@ namespace Brain3D
                 if(updated == overall)
                 {
                     updated = 0;
-                    update();
+                    Update();
                 }
             }
         }
 
-        void calculateVector(object state)
+        void CalculateVector(object state)
         {
             BalancedVector vector = (BalancedVector)state;
 
-            vector.attract();
+            vector.Attract();
 
             if (phase != Phase.One)
+            {
                 foreach (BalancedNeuron neuron in neurons)
-                    vector.repulse(neuron);
+                {
+                    vector.Repulse(neuron);
+                }
+            }
 
             Interlocked.Increment(ref updated);
 
@@ -308,78 +349,98 @@ namespace Brain3D
                 if (updated == overall)
                 {
                     updated = 0;
-                    update();
+                    Update();
                 }
             }
         }
 
-        void calculateSynapse(object State)
+        void CalculateSynapse(object State)
         {
             int max = 0;
 
             foreach (BalancedNeuron neuron in neurons)
+            {
                 if (neuron.Neuron.Neuron.Count > max)
+                {
                     max = neuron.Neuron.Neuron.Count;
+                }
+            }
 
             foreach (BalancedNeuron neuron in neurons)
-                neuron.calculate(max);
+            {
+                neuron.Calculate(max);
+            }
 
             foreach (BalancedSynapse synapse in synapses)
-                synapse.calculate();
-            
+            {
+                synapse.Calculate();
+            }
+
             updated = 0;
 
             if (regular)
+            {
                 return;
+            }
 
             foreach (BalancedNeuron neuron in neurons)
-                neuron.rescale();
+            {
+                neuron.Rescale();
+            }
 
             foreach (BalancedSynapse synapse in synapses)
-                synapse.update();
+            {
+                synapse.Update();
+            }
 
-            finish(true);
+            Finish(true);
         }
 
-        void shift(object State)
+        void Shift(object State)
         {
             if (++updated == 128)
-                finish(true);
+            {
+                Finish(true);
+            }
 
             float scale = (float)updated / 128;
 
             foreach (BalancedNeuron neuron in neurons)
-                neuron.rescale(scale);
+            {
+                neuron.Rescale(scale);
+            }
 
             foreach (BalancedSynapse synapse in synapses)
-                synapse.update(scale);
+            {
+                synapse.Update(scale);
+            }
 
-            balanceUpdate(this, null);
+            BalanceUpdate(this, null);
         }
 
-        void finish(bool finished = false)
+        void Finish(bool finished = false)
         {
             sw.Stop();
             action = false;
-            balanceUpdate(this, null);
-            balanceEnded(finished, null);
+            BalanceUpdate(this, null);
+            BalanceEnded(finished, null);
         }
 
         public void Stop()
         {
-            if (!action)
-                return;
-
-            pause = true;
-            finish();
+            if (action)
+            {
+                pause = true;
+                Finish();
+            }
         }
 
-        public void phaseFour()
+        public void PhaseFour()
         {
             treshold = 1000;
         }
 
-        void spaceChanged(object sender, EventArgs e)
+        void SpaceChanged(object sender, EventArgs e)
         {
 
         }

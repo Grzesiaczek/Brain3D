@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Brain3D
 {
@@ -9,14 +7,27 @@ namespace Brain3D
     {
         Melody melody;
 
+        bool canPlay;
+
         public void Reload()
         {
-            melody = new Melody(sequence.Select(t => t.Word).ToList());
+            try
+            {
+                melody = new Melody(sequence.Select(t => t.Word).ToList());
+                canPlay = true;
+            }
+            catch(Exception)
+            {
+                canPlay = false;
+            }
         }
 
         public void Play(Player player)
         {
-            player.Play(melody);
+            if (canPlay)
+            {
+                player.Play(melody);
+            }
         }
 
         public void Clear()

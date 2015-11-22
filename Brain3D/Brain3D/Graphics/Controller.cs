@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Brain3D
 {
     class Controller : SpriteComposite
     {
+        Text2D brains;
+        Text2D queries;
+
         Text2D fps;
         Text2D status;
 
@@ -21,7 +19,10 @@ namespace Brain3D
         List<DateTime> times = new List<DateTime>();
         Action<int> updateFrame;
 
-        String normal;
+        string brainsPattern = "Brain {0}/{1}";
+        string queriesPattern = "Query {0}/{1}";
+
+        string normal;
         bool insertion;
 
         int count = 0;
@@ -30,19 +31,18 @@ namespace Brain3D
 
         public Controller()
         {
-            fps = new Text2D("FPS: 0", Fonts.SpriteVerdana, new Vector2(position.X, 20), Color.DarkMagenta);
-            status = new Text2D("Waiting...", Fonts.SpriteVerdana, new Vector2(position.X, 50), Color.DarkOliveGreen);
+            brains = new Text2D(string.Empty, Fonts.SpriteVerdana, new Vector2(position.X, 20), Color.DarkBlue);
+            queries = new Text2D(string.Empty, Fonts.SpriteVerdana, new Vector2(position.X, 50), Color.Purple);
+
+            status = new Text2D("Status OK", Fonts.SpriteVerdana, new Vector2(position.X, 80), Color.DarkOliveGreen);
+            fps = new Text2D("FPS: 0", Fonts.SpriteVerdana, new Vector2(position.X, 100), Color.DarkMagenta);
             counter = new CounterTile(new Point(20, display.Height - 80), 0);
 
-            Balancing.Instance.balanceState += new EventHandler(updateState);
+            Balancing.Instance.BalanceState += new EventHandler(UpdateState);
             updateFrame = new Action<int>((value) => trackBar.Value = value);
 
             Presentation.Controller = this;
             normal = "Status OK";
-
-            sprites.Add(fps);
-            sprites.Add(status);
-            sprites.Add(counter);
         }
 
         public override void Draw()
@@ -80,8 +80,27 @@ namespace Brain3D
             ChangeFrame(frame);
         }
 
-        public override void Show()
+        public void UpdateBrains(int index, int count)
         {
+            brains.Text = string.Format(brainsPattern, index, count);
+        }
+
+        public void UpdateQueries(int index, int count)
+        {
+            queries.Text = string.Format(queriesPattern, index, count);
+        }
+
+        public void Show(Presentation presentation)
+        {
+            if(presentation is TimeLine)
+            {
+                AddSpritesForTimeLine();
+            }
+            else
+            {
+                AddAllSprites();
+            }
+
             display.Add(this);
             insertion = false;
         }
@@ -96,31 +115,52 @@ namespace Brain3D
             status.Text = normal;
         }
 
-        void updateState(object sender, EventArgs e)
+        void AddSpritesForTimeLine()
         {
-            if (insertion)
-                return;
+            sprites.Clear();
+            sprites.Add(brains);
+            sprites.Add(queries);
+            sprites.Add(status);
+        }
 
-            Balancing.Phase phase = (Balancing.Phase)sender;
+        void AddAllSprites()
+        {
+            AddSpritesForTimeLine();
+            sprites.Add(fps);
+            sprites.Add(counter);
+        }
 
-            switch(phase)
+        void UpdateState(object sender, EventArgs e)
+        {
+            if (!insertion)
             {
-                case Balancing.Phase.One:
-                    status.Text = "Faza 1";
-                    break;
-                case Balancing.Phase.Two:
-                    status.Text = "Faza 2";
-                    break;
-                case Balancing.Phase.Four:
-                    status.Text = "Faza 3";
-                    break;
+                Balancing.Phase phase = (Balancing.Phase)sender;
+
+                switch (phase)
+                {
+                    case Balancing.Phase.One:
+                        status.Text = "Faza 1";
+                        break;
+
+                    case Balancing.Phase.Two:
+                        status.Text = "Faza 2";
+                        break;
+
+                    case Balancing.Phase.Four:
+                        status.Text = "Faza 3";
+                        break;
+                }
             }
         }
 
-        public void resize()
+        public void Resize()
         {
-            fps.Location = new Vector2(display.Width - 100, 20);
-            status.Location = new Vector2(display.Width - 100, 50);
+            brains.Location = new Vector2(display.Width - 100, 20);
+            queries.Location = new Vector2(display.Width - 100, 50);
+
+            status.Location = new Vector2(display.Width - 100, 80);
+            fps.Location = new Vector2(display.Width - 100, 110);
+            
             counter.Top = display.Height - 84;
         }
 
@@ -131,9 +171,13 @@ namespace Brain3D
                 insertion = value;
 
                 if (insertion)
+                {
                     normal = "Insert";
+                }
                 else
+                {
                     normal = "Status OK";
+                }
 
                 status.Text = normal;
             }

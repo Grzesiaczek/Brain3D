@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Brain3D
 {
@@ -42,29 +38,31 @@ namespace Brain3D
         {
             if (!neuron.Created)
             {
-                neuron.show();
+                neuron.Show();
                 neuron.create();
             }
 
             foreach (CreatedVector synapse in vectors)
             {
-                synapse.show();
+                synapse.Show();
                 synapse.create();
             }
 
             foreach (CreationData cd in data)
+            {
                 cd.Execute();
+            }
         }
 
         public void Activate()
         {
-            tile.activate();
+            tile.Activate();
             neuron.activate();
         }
 
         public void Idle()
         {
-            tile.idle();
+            tile.Idle();
             neuron.Idle();
         }
 
@@ -72,20 +70,28 @@ namespace Brain3D
         {
             Idle();
 
-            if(neuron.Frame == frame)
+            if (neuron.Frame == frame)
+            {
                 neuron.Hide();
+            }
 
             foreach (CreatedVector vector in vectors)
+            {
                 vector.Hide();
+            }
 
             foreach (CreationData cd in data)
+            {
                 cd.Undo();
+            }
         }
 
         public void Execute()
         {
             foreach (CreationData cd in data)
+            {
                 cd.Execute();
+            }
         }
 
         public bool Tick(double interval)
@@ -97,20 +103,28 @@ namespace Brain3D
             {
                 case Phase.Zero:
                     neuron.Scale = 0;
-                    neuron.show();
+                    neuron.Show();
                     time = 50;
                     break;
+
                 case Phase.One:
                     neuron.Scale = scale;
                     break;
+
                 case Phase.Two:
-                    foreach(CreatedVector synapse in vectors)
+                    foreach (CreatedVector synapse in vectors)
+                    {
                         synapse.Scale = scale;
+                    }
 
                     break;
+
                 case Phase.Three:
+
                     foreach (CreationData cd in data)
+                    {
                         cd.Tick(scale);
+                    }
 
                     break;
             }
@@ -127,32 +141,45 @@ namespace Brain3D
                         case Phase.Zero:
                             phase = Phase.One;
 
-                            if(!neuron.Created)
+                            if (!neuron.Created)
+                            {
                                 finish = true;
+                            }
 
                             break;
+
                         case Phase.One:
                             neuron.create();
                             phase = Phase.Two;
 
                             foreach (CreatedVector synapse in vectors)
+                            {
                                 synapse.init();
+                            }
 
-                            if(vectors.Count != 0)
+                            if (vectors.Count != 0)
+                            {
                                 finish = true;
+                            }
 
                             break;
+
                         case Phase.Two:
-                            if(data.Count == 0)
+                            if (data.Count == 0)
+                            {
                                 return true;
+                            }
 
                             phase = Phase.Three;
                             finish = true;
 
                             break;
+
                         case Phase.Three:
                             foreach (CreatedVector synapse in vectors)
+                            {
                                 synapse.create();
+                            }
 
                             return true;
                     }
